@@ -1,0 +1,72 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "RTS.Integra",
+    "collectionId": "6d9d570e-05d8-4800-ab47-198c1e99a266",
+    "dateExported": "2025-06-02T20:54:05.643Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "d9d9779a-732d-4044-85a0-25680f23986c",
+            "colId": "6d9d570e-05d8-4800-ab47-198c1e99a266",
+            "containerId": "",
+            "name": "Login",
+            "url": "http://localhost:3000/api/auth/login",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2025-06-02T17:41:29.035Z",
+            "modified": "2025-06-02T20:47:05.274Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"marcos@example.com\",\n  \"password\": \"senha123\"\n}\n",
+                "form": []
+            }
+        },
+        {
+            "_id": "6cedb390-43c7-40b5-8a17-f34f2beaa323",
+            "colId": "6d9d570e-05d8-4800-ab47-198c1e99a266",
+            "containerId": "",
+            "name": "Registro",
+            "url": "http://localhost:3000/api/auth/register",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2025-06-02T17:41:39.375Z",
+            "modified": "2025-06-02T20:47:08.614Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"marcos@example.com\",\n  \"password\": \"senha123\"\n}\n",
+                "form": []
+            }
+        },
+        {
+            "_id": "a622b2c0-9a73-4b86-b118-6414c8496d8d",
+            "colId": "6d9d570e-05d8-4800-ab47-198c1e99a266",
+            "containerId": "",
+            "name": "Autenticação protegida",
+            "url": "http://localhost:3000/api/private/profile",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2025-06-02T20:46:05.592Z",
+            "modified": "2025-06-02T20:47:47.852Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmNvc0BleGFtcGxlLmNvbSIsImlhdCI6MTc0ODg5NzIzMCwiZXhwIjoxNzQ4OTAwODMwfQ.fDIfMv4hl9ARjv2lrGGEj1l-xMnokZotwKsA87Szl14"
+            }
+        }
+    ],
+    "ref": "AZ8CTTcSIbpoYcfLbb2GIivgLFbmcnTeMPVThGCqnWsiW9KiwjRdiZGRCNIWqi5lw7AnXN7boTLAE1A6P-aOpQ"
+}
