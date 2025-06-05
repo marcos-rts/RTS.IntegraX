@@ -1,5 +1,7 @@
 require('dotenv').config();
 const mysql = require('mysql2');
+const Loogger = require('../modules/utils/Console_Logger');
+const logger = new Loogger();
 
 const config = {
     production: {
@@ -20,10 +22,10 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) {
-        console.error('🔴 Erro ao conectar:', err);
+        logger.Error('Erro ao conectar ao banco de dados:', err);
         return;
     }
-    console.log(`🟢 Conectado ao banco: ${connection.config.database} (${env})`);
+    logger.Success(`Conectado ao banco: ${connection.config.database} (${env})`);
 });
 
 module.exports = connection;
