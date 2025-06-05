@@ -4,6 +4,13 @@ body {
     margin-top: 100px;
 }
 
+form {
+    display: inline-block;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
 input {
     display: block;
     margin: 10px auto;
@@ -14,8 +21,19 @@ input {
 button {
     padding: 8px 16px;
     margin: 10px;
+    cursor: pointer;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 #error {
     color: red;
+    margin-top: 10px;
 }

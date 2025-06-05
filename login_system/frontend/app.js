@@ -1,4 +1,7 @@
 const apiBase = 'http://localhost:3000/api';
+const cors = require('cors');
+app.use(cors());
+
 
 // 🔑 Login
 const loginForm = document.getElementById('loginForm');
@@ -116,4 +119,34 @@ async function refreshAccessToken() {
         console.error('Erro no refresh:', err);
         return false;
     }
+}
+
+// 👤 Registro de usuário
+const registerForm = document.getElementById('registerForm');
+if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const res = await fetch(`${apiBase}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert('Usuário registrado com sucesso! Faça login.');
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('error').innerText = data.message || 'Erro no registro';
+            }
+        } catch (err) {
+            document.getElementById('error').innerText = 'Erro ao conectar.';
+            console.error(err);
+        }
+    });
 }
