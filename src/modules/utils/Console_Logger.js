@@ -23,7 +23,16 @@ class Logger {
     }
 
     _FormatTime() {
-        return colors.green(new Date().toLocaleTimeString());
+        return colors.green(new Date().toLocaleTimeString( "pt-BR", {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false,
+            timeZone: 'America/Sao_Paulo',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }));
     }
 }
 
