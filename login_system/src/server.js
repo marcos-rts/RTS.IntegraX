@@ -5,10 +5,15 @@ const sequelize = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const user = require('./models/user');
 
+sequelize.sync({ alter: true }) // CUIDADO: 'alter' faz update nas tabelas se mudar os modelos
+  .then(() => console.log('🔧 Banco sincronizado'))
+  .catch(err => console.error(err));
+
+
 app.use(express.json());
 
-// Rotas
-app.use('/api', authRoutes);
+// // Rotas
+// app.use('/api', authRoutes);
 
 // Banco conectado
 sequelize.sync()

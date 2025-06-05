@@ -7,6 +7,7 @@ const sequelize = new Sequelize(
     process.env.DB_PASSWORD,
     {
         host: process.env.DB_HOST,
+        port: process.env.DB_PORT, // 👈 A porta vai aqui, SEPARADO
         dialect: 'mysql', // ou 'postgres', 'sqlite', etc.
         logging: false, // Desativa logs SQL
     }
