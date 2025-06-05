@@ -24,6 +24,7 @@ meu-projeto/
 │   │   ├── env.js
 │   │   └── constants.js
 │   ├── app.js             # Configuração principal da aplicação
+│   ├── controller/        # 
 │   └── routes/            # Rotas principais
 │       ├── api.js
 │       └── web.js

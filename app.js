@@ -6,7 +6,7 @@ const logger = new Logger();
 const app = express();
 require('dotenv').config();
 
-const rotasAutenticacao = require('./src/modules/auth/routes/autenticacaoRota');
+const rotasAutenticacao = require('./src/modules/auth/auth.route');
 app.use('/api/autenticacao', rotasAutenticacao);
 
 app.listen(process.env.PORT, () => {
