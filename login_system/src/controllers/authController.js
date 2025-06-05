@@ -148,19 +148,67 @@ const refresh = (req, res) => {
     });
 };
 
-const logout = (req, res) => {
+const refreshToken = async (req, res) => {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-        return res.status(400).json({ message: 'Refresh Token não fornecido' });
+        return res.status(401).json({ message: 'Token de atualização ausente' });
     }
 
-    const user = findUserByRefreshToken(refreshToken);
-    if (user) {
-        removeRefreshToken(user.email);
-    }
+    try {
+        // Procura o refresh no banco
+        const user = await User.findOne({ where: { refreshToken } });
 
-    res.status(200).json({ message: 'Logout bem-sucedido' });
+        if (!user) {
+            return res.status(403).json({ message: 'Refresh token inválido' });
+        }
+
+        // Valida o refresh token
+        jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+            if (err || user.email !== decoded.email) {
+                return res.status(403).json({ message: 'Refresh token inválido' });
+            }
+
+            // Gera novo access token
+            const accessToken = jwt.sign(
+                { id: user.id, email: user.email },
+                process.env.JWT_SECRET,
+                { expiresIn: '15m' }
+            );
+
+            res.json({ accessToken });
+        });
+    } catch (error) {
+        console.error('Erro no refresh:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
 };
 
-module.exports = { register, login, refresh, logout };
+
+const logout = async (req, res) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+        return res.sendStatus(204); // Sem conteúdo
+    }
+
+    try {
+        const user = await User.findOne({ where: { refreshToken } });
+
+        if (!user) {
+            return res.sendStatus(204); // Mesmo se não achou, responde igual (pra segurança)
+        }
+
+        // Remove o refresh token do banco
+        user.refreshToken = null;
+        await user.save();
+
+        res.json({ message: 'Logout realizado com sucesso' });
+    } catch (error) {
+        console.error('Erro no logout:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
+};
+
+
+module.exports = { register, login, refreshToken, logout };
