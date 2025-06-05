@@ -7,6 +7,7 @@ const {
     removeRefreshToken,
     findUserByRefreshToken
 } = require('../models/userModel');
+const User = require('../models/user'); // Importa o modelo User
 
 const generateAccessToken = (user) => {
     return jwt.sign(
@@ -30,37 +31,99 @@ const register = async (req, res) => {
     if (!email || !password)
         return res.status(400).json({ message: 'Email e senha são obrigatórios.' });
 
-    const existingUser = findUserByEmail(email);
-    if (existingUser)
-        return res.status(409).json({ message: 'Usuário já existe.' });
+    try {
+        // Verifica se o usuário já existe
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(409).json({ message: 'Email já cadastrado.' });
+        }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = createUser({ email, password: hashedPassword });
+        // Cria hash da senha
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.status(201).json({ message: 'Usuário criado com sucesso', user: { email: newUser.email } });
+        // Cia usuario no banco
+        await User.create({
+            email,
+            password: hashedPassword,
+        });
+        res.status(201).json({ message: 'Usuário cadastrado com sucesso.' });
+    } catch (error) {
+        console.error('Erro ao cadastrar usuário:', error);
+        res.status(500).json({ message: 'Erro interno do servidor.' });
+    };
+
+    // const existingUser = findUserByEmail(email);
+    // if (existingUser)
+    //     return res.status(409).json({ message: 'Usuário já existe.' });
+
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    // const newUser = createUser({ email, password: hashedPassword });
+
+    // res.status(201).json({ message: 'Usuário criado com sucesso', user: { email: newUser.email } });
 };
 
 const login = async (req, res) => {
     const { email, password } = req.body;
 
-    const user = findUserByEmail(email);
-    if (!user)
-        return res.status(401).json({ message: 'Credenciais inválidas' });
+    try {
+        // Procura usuário
+        const user = await User.findOne({ where: { email } });
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado' });
+        }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-        return res.status(401).json({ message: 'Credenciais inválidas' });
+        // Verifica senha
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ message: 'Senha incorreta' });
+        }
 
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
+        // Gera tokens
+        const accessToken = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' }
+        );
 
-    saveRefreshToken(email, refreshToken);
+        const refreshToken = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_REFRESH_SECRET,
+            { expiresIn: '7d' }
+        );
 
-    res.status(200).json({
-        message: 'Login bem-sucedido',
-        accessToken,
-        refreshToken
-    });
+        // Salva refresh no banco
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        // Retorna os tokens
+        res.json({
+            accessToken,
+            refreshToken
+        });
+
+    } catch (error) {
+        console.error('Erro no login:', error);
+        res.status(500).json({ message: 'Erro interno no servidor' });
+    }
+
+    // const user = findUserByEmail(email);
+    // if (!user)
+    //     return res.status(401).json({ message: 'Credenciais inválidas' });
+
+    // const isMatch = await bcrypt.compare(password, user.password);
+    // if (!isMatch)
+    //     return res.status(401).json({ message: 'Credenciais inválidas' });
+
+    // const accessToken = generateAccessToken(user);
+    // const refreshToken = generateRefreshToken(user);
+
+    // saveRefreshToken(email, refreshToken);
+
+    // res.status(200).json({
+    //     message: 'Login bem-sucedido',
+    //     accessToken,
+    //     refreshToken
+    // });
 };
 
 const refresh = (req, res) => {
