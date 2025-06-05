@@ -1,0 +1,142 @@
+-- Criação do esquema completo baseado no DBML original
+-- Autor: Marcos
+-- Data: 2025-06-05
+
+-- Tabela: RTS_usuario
+CREATE TABLE RTS_usuario (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario VARCHAR(255),
+  senha_hash VARCHAR(255),
+  email VARCHAR(255),
+  tipo ENUM('Admin', 'Comun'),
+  data_login TIMESTAMP NULL,
+  data_logout TIMESTAMP NULL,
+  token VARCHAR(255),
+  data_token TIMESTAMP NULL,
+  is_api BOOLEAN DEFAULT FALSE,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: RTS_status
+CREATE TABLE RTS_status (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  descricao TEXT,
+  tipo ENUM('CT', 'RTS', 'FX'),
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: RTS_pessoa
+CREATE TABLE RTS_pessoa (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  nome_exibicao VARCHAR(255),
+  usuario_id INT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (usuario_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: RTS_auditoria
+CREATE TABLE RTS_auditoria (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  tabela VARCHAR(255),
+  id_registro INT,
+  acao ENUM('CRIAR', 'EDITAR', 'EXCLUIR', 'ATIVAR', 'INATIVAR'),
+  antes TEXT,
+  depos TEXT,
+  feito_por_id INT,
+  feito_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (feito_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: CT_itens
+CREATE TABLE CT_itens (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  descricao TEXT,
+  status_id INT NULL,
+  quantidade INT NOT NULL DEFAULT 1,
+  observacao TEXT,
+  excluido BOOLEAN DEFAULT FALSE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: FX_conta
+CREATE TABLE FX_conta (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  valor DECIMAL(10,2) DEFAULT 0.0,
+  descricao TEXT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  tipo ENUM('Credito', 'Debito'),
+  status_id INT,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: FX_categoria
+CREATE TABLE FX_categoria (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  descricao TEXT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: FX_subcategoria
+CREATE TABLE FX_subcategoria (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  categoria_id INT,
+  descricao TEXT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (categoria_id) REFERENCES FX_categoria(id),
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
