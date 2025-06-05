@@ -18,9 +18,12 @@ class Logger {
     System(...args) {
         console.log(colors.gray("(" + this._FormatTime() + ") "), colors.yellow("[System]"), ...args);
     }
+    Success(...args) {
+        console.log(colors.gray("(" + this._FormatTime() + ") "), colors.green("[Success]"), ...args);
+    }
 
     _FormatTime() {
-        return colors.green(new Date().getTime());
+        return colors.green(new Date().toLocaleTimeString());
     }
 }
 
