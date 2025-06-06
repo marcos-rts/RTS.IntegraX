@@ -16,3 +16,6 @@ Este projeto tem como objetivo facilitar a integração de sistemas e otimizar p
 
 Descreva aqui o propósito do projeto, principais funcionalidades e tecnologias utilizadas.
 
+## Changelog
+
+Confira as alterações e atualizações do projeto no [CHANGELOG.md](CHANGELOG.md).
