@@ -4,8 +4,18 @@ const Logger = require('../utils/Console_Logger');
 const logger = new Logger();
 
 const login = async (req, res) => {
+    const { email, password } = req.body;
+
 
 };
+
+const users = async (req, res) => {
+    const [rows] = await db.execute('SELECT * FROM RTS_usuario');
+    if (rows.length === 0) {
+        return res.status(404).json({ message: 'Nenhum usuário encontrado.' });
+    }
+    res.status(200).json(rows);
+}
 
 const register = async (req, res) => {
     const { email, password } = req.body;
@@ -34,5 +44,6 @@ const register = async (req, res) => {
 
 module.exports = {
     login,
-    register
+    register,
+    users
 };
