@@ -6,6 +6,24 @@ const logger = new Logger();
 const login = async (req, res) => {
     const { email, password } = req.body;
 
+    try {
+        const [rows] = await db.execute('SELECT * FROM RTS_usuario WHERE email = ?', [email])
+        if (rows.length === 0){
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+
+        // Verifica a senha
+        const validaSenha = await bcrypt.compare(password, rows[0].senha_hash);
+        if (!validaSenha) {
+            return res.status(401).json({ message: 'Senha incorreta.' });
+        }
+
+        // Gera tokens
+
+    } catch (error) {
+        logger.Error('Erro ao fazer login:', error.message);
+        return res.status(500).json({ message: 'Erro ao fazer login.' });
+    }
 
 };
 
