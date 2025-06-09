@@ -1,7 +1,6 @@
 const express = require('express');
 const Logger = require('./src/modules/utils/Console_Logger');
 const FileLogger = require('./src/modules/utils/FileLogger');
-const connection = require('./src/config/database');
 require('dotenv').config();
 
 const fileLogger = new FileLogger('logs/app.log', 'logs/app.json');
