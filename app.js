@@ -1,8 +1,10 @@
 const express = require('express');
 const Logger = require('./src/modules/utils/Console_Logger');
+const FileLogger = require('./src/modules/utils/FileLogger');
 const connection = require('./src/config/database');
 require('dotenv').config();
 
+const fileLogger = new FileLogger('logs/app.log', 'logs/app.json');
 const logger = new Logger();
 const app = express();
 
@@ -17,12 +19,13 @@ app.use('/api/autenticacao', rotasAutenticacao);
 // Start do servidor
 app.listen(process.env.PORT, () => {
   logger.System(`Servidor rodando na porta: ${process.env.PORT}`);
+  fileLogger.system(`Servidor rodando na porta: ${process.env.PORT}`);
   
-  try {
-    const setupItensModule = require('./src/modules/services/controle_de_itens/itens.module');
-    setupItensModule(app);
-    logger.System('Módulo de Itens carregado com sucesso.');
-  } catch (error) {
-    logger.Error('Módulo de Itens não pôde ser carregado:', error.message);
-  }
+  // try {
+  //   const setupItensModule = require('./src/modules/services/controle_de_itens/itens.module');
+  //   setupItensModule(app);
+  //   logger.System('Módulo de Itens carregado com sucesso.');
+  // } catch (error) {
+  //   logger.Error('Módulo de Itens não pôde ser carregado:', error.message);
+  // }
 });
