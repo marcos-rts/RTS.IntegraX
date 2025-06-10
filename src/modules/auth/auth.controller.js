@@ -7,6 +7,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
+        // Procura o usuário pelo email
         const [rows] = await db.execute('SELECT * FROM RTS_usuario WHERE email = ?', [email])
         if (rows.length === 0){
             return res.status(404).json({ message: 'Usuário não encontrado.' });
@@ -18,7 +19,10 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Senha incorreta.' });
         }
 
-        // Gera tokens
+        // Login bem-sucedido
+        logger.Success(`Usuário logado com sucesso: ${email}`);
+        return res.status(200).json({ message: 'Login realizado com sucesso.' });
+        
 
     } catch (error) {
         logger.Error('Erro ao fazer login:', error.message);
