@@ -1,4 +1,5 @@
 const db = require('../../config/database');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const Logger = require('../utils/Console_Logger');
 const logger = new Logger();
@@ -19,9 +20,16 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Senha incorreta.' });
         }
 
+        // Gera o token JWT
+        const token = jwt.sign(
+            {id: rows[0].id, email: rows[0].email}, //payload
+            process.env.JWT_SECRET, // Chave secreta do JWT
+            { expiresIn: '2h' } // Opções do token
+        )
+
         // Login bem-sucedido
         logger.Success(`Usuário logado com sucesso: ${email}`);
-        return res.status(200).json({ message: 'Login realizado com sucesso.' });
+        return res.status(200).json({ message: 'Login realizado com sucesso.', token });
         
 
     } catch (error) {
