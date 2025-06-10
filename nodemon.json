@@ -1,0 +1,15 @@
+{
+  "watch": ["src", "public"],
+  "ignore": [
+    "node_modules",
+    "logs",
+    "*.log",
+    "tmp",
+    ".git",
+    "package-lock.json",
+    "public",
+    "uploads"
+  ],
+  "ext": "js,json",
+  "delay": "1000"
+}
