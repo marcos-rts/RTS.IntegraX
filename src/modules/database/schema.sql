@@ -8,6 +8,8 @@
 
 DROP DATABASE IF EXISTS Test_RTS_IntegraX;
 CREATE DATABASE Test_RTS_IntegraX;
+USE Test_RTS_IntegraX;
+
 
 -- Tabela: RTS_usuario
 CREATE TABLE RTS_usuario (
@@ -101,6 +103,9 @@ CREATE TABLE TK_tickets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255),
   description TEXT,
+  status_id INT,
+  prioridade ENUM('Baixa', 'Média', 'Alta', 'Urgente') DEFAULT 'Média',
+  solicitante_id INT,
   excluido BOOLEAN DEFAULT FALSE,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -108,6 +113,7 @@ CREATE TABLE TK_tickets (
   atualizado_por_id INT,
   FOREIGN KEY (status_id) REFERENCES RTS_status(id)
     ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (solicitante_id) REFERENCES RTS_pessoa(id),
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
