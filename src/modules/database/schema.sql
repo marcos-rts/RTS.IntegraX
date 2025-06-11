@@ -1,6 +1,13 @@
 -- Criação do esquema completo baseado no DBML original
 -- Autor: Marcos
--- Data: 2025-06-05
+-- Banco de Dados: Test_RTS_IntegraX
+-- Data de criação: 2025-06-05
+-- Data de atualização: 2025-06-10
+-- Descrição: Script para criação do banco de dados Test_RTS_IntegraX com todas as tabelas e relacionamentos necessários.
+-- Este script deve ser executado em um ambiente MySQL compatível.
+
+DROP DATABASE IF EXISTS Test_RTS_IntegraX;
+CREATE DATABASE Test_RTS_IntegraX;
 
 -- Tabela: RTS_usuario
 CREATE TABLE RTS_usuario (
@@ -29,7 +36,8 @@ CREATE TABLE RTS_status (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255),
   descricao TEXT,
-  tipo ENUM('CT', 'RTS', 'FX'),
+  tipo ENUM('CT', 'RTS', 'FX', 'TK'),
+  cor VARCHAR(7) DEFAULT '#FFFFFF',
   excluido BOOLEAN DEFAULT FALSE,
   ativo BOOLEAN DEFAULT TRUE,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -78,6 +86,21 @@ CREATE TABLE CT_itens (
   status_id INT NULL,
   quantidade INT NOT NULL DEFAULT 1,
   observacao TEXT,
+  excluido BOOLEAN DEFAULT FALSE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+CREATE TABLE TK_tickets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255),
+  description TEXT,
   excluido BOOLEAN DEFAULT FALSE,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
