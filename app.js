@@ -20,11 +20,19 @@ app.listen(process.env.PORT, () => {
   logger.System(`Servidor rodando na porta: ${process.env.PORT}`);
   fileLogger.system(`Servidor rodando na porta: ${process.env.PORT}`);
   
-  // try {
-  //   const setupItensModule = require('./src/modules/services/controle_de_itens/itens.module');
-  //   setupItensModule(app);
-  //   logger.System('Módulo de Itens carregado com sucesso.');
-  // } catch (error) {
-  //   logger.Error('Módulo de Itens não pôde ser carregado:', error.message);
-  // }
+  try {
+    const setupItensModule = require('./src/modules/services/controle_de_itens/itens.module');
+    setupItensModule(app);
+    logger.System('Módulo de Itens carregado com sucesso.');
+  } catch (error) {
+    logger.Error('Módulo de Itens não pôde ser carregado:', error.message);
+  }
+
+    try {
+    const setupTicketsModule = require('./src/modules/services/controle_tickets/tickets.module');
+    setupTicketsModule(app);
+    logger.System('Módulo de Tickets carregado com sucesso.');
+  } catch (error) {
+    logger.Error('Módulo de Tickets não pôde ser carregado:', error.message);
+  }
 });

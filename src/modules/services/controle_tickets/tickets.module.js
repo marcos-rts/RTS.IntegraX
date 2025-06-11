@@ -11,3 +11,5 @@ function setupTicketsModule(app) {
   app.use(express.urlencoded({ extended: true }));
   app.use('/api/tickets', ticketsRoutes);
 }
+
+module.exports = setupTicketsModule;
