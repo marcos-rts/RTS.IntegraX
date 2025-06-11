@@ -1,4 +1,4 @@
-const db = require('../config/database');
+const db = require('./../../../../../config/database');
 
 exports.getTickets = (req, res) => {
   db.query('SELECT * FROM TK_tickets', (err, results) => {
