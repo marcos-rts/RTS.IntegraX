@@ -1,2 +1,62 @@
-node_modules
-logs
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Diretórios temporários
+tmp/
+temp/
+*.tmp
+
+# Diretórios de builds
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ambiente
+.env
+.env.*.local
+.env.local
+
+# Editor/IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Testes
+jest-cache/
+jest-output/
+test-results/
+
+# PM2
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional: excluir backups
+*.bak
+*.old
+
+# Optional: excluir arquivos do ESLint e Prettier (se forem gerados)
+.eslintcache
+.prettiercache
