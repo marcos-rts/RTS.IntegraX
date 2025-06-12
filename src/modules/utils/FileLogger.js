@@ -52,6 +52,18 @@ class FileLogger {
     success(...args) {
         this.write('Success', args.join(' '));
     }
+    debug(...args) {
+        this.write('Debug', args.join(' '));
+    }
+    warning(...args) {
+        this.write('Warning', args.join(' '));
+    }
+    verbose(...args) {
+        this.write('Verbose', args.join(' '));
+    }
+    trace(...args) {
+        this.write('Trace', args.join(' '));
+    }
 
     _getTimeText() {
         const now = new Date();

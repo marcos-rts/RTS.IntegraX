@@ -21,6 +21,20 @@ class Logger {
     Success(...args) {
         console.log(colors.gray("(" + this._FormatTime() + ") "), colors.green("[Success]"), ...args);
     }
+    Debug(...args) {
+        console.log(colors.gray("(" + this._FormatTime() + ") "), colors.cyan("[Debug]"), ...args);
+    }
+    Warning(...args) {
+        console.log(colors.gray("(" + this._FormatTime() + ") "), colors.orange("[Warning]"), ...args);
+    }
+    Verbose(...args) {
+        console.log(colors.gray("(" + this._FormatTime() + ") "), colors.magenta("[Verbose]"), ...args);
+    }
+    Trace(...args) {
+        console.log(colors.gray("(" + this._FormatTime() + ") "), colors.cyan("[Trace]"), ...args);
+    }
+
+
 
     _FormatTime() {
         return colors.green(new Date().toLocaleTimeString( "pt-BR", {
