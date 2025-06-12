@@ -5,7 +5,7 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('./../../../../../config/database');
+const db = require('./../config/database');
 const Logger = require('./../../../../utils/Console_Logger');
 const logger = new Logger();
 
