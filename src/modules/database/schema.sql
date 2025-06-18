@@ -204,6 +204,10 @@ CREATE TABLE FX_subcategoria (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+-- INSEREÇÃO DE DADOS INICIAIS
+
+-- Inserção de usuário admin
+-- A senha 'admin' foi convertida para hash usando bcrypt
 INSERT INTO RTS_usuario (
   usuario,
   senha_hash,
@@ -221,3 +225,24 @@ INSERT INTO RTS_usuario (
   FALSE,
   FALSE
 );
+
+-- Inserção de tipos de banco
+INSERT INTO RTS_tipoBanco (nome, descricao, ativo, excluido, criado_por_id) VALUES
+('RTS', 'Core do sistema', TRUE, FALSE, 1),
+('CT', 'Controle de Itens', TRUE, FALSE, 1),
+('FX', 'Finanças e Contabilidade', TRUE, FALSE, 1),
+('TK', 'Tickets de Suporte', TRUE, FALSE, 1);
+
+-- Inserção de status para Controle de Itens (CT)
+INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, criado_por_id) VALUES
+('Disponível', 'Status disponível', 2, '#D4EDDA', TRUE, FALSE, 1),
+('Em uso', 'Status em uso', 2, '#CCE5FF', TRUE, FALSE, 1),
+('Manutenção', 'Status Manutenção', 2, '#FFF3CD', TRUE, FALSE, 1),
+('Descartado', 'Status descartado', 2, '#F8D7DA', TRUE, FALSE, 1);
+
+-- Inserção de status para Tickets (TK)
+INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, criado_por_id) VALUES
+('Aberto', 'Ticket aberto', 4, '#D4EDDA', TRUE, FALSE, 1),
+('Em andamento', 'Ticket em andamento', 4, '#CCE5FF', TRUE, FALSE, 1),
+('Fechado', 'Ticket fechado', 4, '#FFF3CD', TRUE, FALSE, 1),
+('Cancelado', 'Ticket cancelado', 4, '#F8D7DA', TRUE, FALSE, 1);
