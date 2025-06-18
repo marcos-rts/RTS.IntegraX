@@ -3,9 +3,7 @@ const router = express.Router();
 const ticketController = require('../controller/ticket.controller');
 const authMiddleware = require('./../../../../auth/auth.middleware')
 
-router.get('/protegido', authMiddleware, (req, res) => {
-    res.json({ message: `Você está autenticado como ${req.usuario.email}` });
-});
+router.use(authMiddleware);
 
 router.get('/', ticketController.getTickets);
 router.post('/', ticketController.createTicket);
