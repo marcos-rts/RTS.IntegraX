@@ -169,3 +169,21 @@ CREATE TABLE FX_subcategoria (
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
+
+INSERT INTO RTS_usuario (
+  usuario,
+  senha_hash,
+  email,
+  tipo,
+  ativo,
+  excluido,
+  is_api
+)
+SELECT 'admin',
+       '$2b$10$YGPW9xXQeOFpl7CN/W8hQuiIHG3qcIiPLhtKLIYwTfVvQI8j9yGJy',
+       'admin@exemplo.com',
+       'Admin',
+       TRUE,
+       FALSE,
+       FALSE
+WHERE NOT EXISTS (SELECT 1 FROM RTS_usuario);
