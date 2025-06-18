@@ -33,13 +33,11 @@ CREATE TABLE RTS_usuario (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
--- Tabela: RTS_status
-CREATE TABLE RTS_status (
+-- Tabela: RTS_tipoBanco
+CREATE TABLE RTS_tipoBanco (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255),
   descricao TEXT,
-  tipo ENUM('CT', 'RTS', 'FX', 'TK'),
-  cor VARCHAR(7) DEFAULT '#FFFFFF',
   excluido BOOLEAN DEFAULT FALSE,
   ativo BOOLEAN DEFAULT TRUE,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -48,6 +46,25 @@ CREATE TABLE RTS_status (
   atualizado_por_id INT,
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: RTS_status
+CREATE TABLE RTS_status (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  descricao TEXT,
+  -- tipo ENUM('CT', 'RTS', 'FX', 'TK'),
+  tipoBanco_id INT,
+  cor VARCHAR(7) DEFAULT '#FFFFFF',
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id)
 );
 
 -- Tabela: RTS_pessoa
@@ -63,6 +80,23 @@ CREATE TABLE RTS_pessoa (
   criado_por_id INT,
   atualizado_por_id INT,
   FOREIGN KEY (usuario_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+-- Tabela: RTS_grupo
+CREATE TABLE RTS_grupo (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  descricao TEXT,
+  tipoBanco_id INT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id),
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
