@@ -16,22 +16,22 @@ app.use(express.urlencoded({ extended: true }));
 const rotasAutenticacao = require('./src/modules/auth/auth.route');
 app.use('/api/autenticacao', rotasAutenticacao);
 
-// app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Start do servidor
 app.listen(process.env.PORT, () => {
   logger.System(`Servidor rodando na porta: ${process.env.PORT}`);
   fileLogger.system(`Servidor rodando na porta: ${process.env.PORT}`);
   
-  try {
-    const setupItensModule = require('./src/modules/services/controle_de_itens/itens.module');
-    setupItensModule(app);
-    logger.System('Módulo de Itens carregado com sucesso.');
-  } catch (error) {
-    logger.Error('Módulo de Itens não pôde ser carregado:', error.message);
-  }
+  // try {
+  //   const setupItensModule = require('./src/modules/services/controle_de_itens/itens.module');
+  //   setupItensModule(app);
+  //   logger.System('Módulo de Itens carregado com sucesso.');
+  // } catch (error) {
+  //   logger.Error('Módulo de Itens não pôde ser carregado:', error.message);
+  // }
 
     try {
     const setupTicketsModule = require('./src/modules/services/controle_tickets/tickets.module');
