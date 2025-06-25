@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path'); // Não esquece esse também, tá usando path sem importar
 const Logger = require('./src/modules/utils/Console_Logger');
 const FileLogger = require('./src/modules/utils/FileLogger');
 require('dotenv').config();
@@ -14,6 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 // Rotas de autenticação
 const rotasAutenticacao = require('./src/modules/auth/auth.route');
 app.use('/api/autenticacao', rotasAutenticacao);
+
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// });
 
 // Start do servidor
 app.listen(process.env.PORT, () => {
