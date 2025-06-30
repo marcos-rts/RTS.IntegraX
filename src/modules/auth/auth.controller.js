@@ -31,7 +31,7 @@ const login = async (req, res) => {
         logger.Success(`Usuário logado com sucesso: ${email}`);
         return res.status(200).json({
             success: true, message: 'Login realizado com sucesso.', token, usuario: {
-                nome: rows[0].nome, // ou qualquer campo que você tenha
+                usuario: rows[0].usuario, // ou qualquer campo que você tenha
                 email: rows[0].email
             }
         });
