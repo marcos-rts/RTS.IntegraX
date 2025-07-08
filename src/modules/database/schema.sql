@@ -247,3 +247,10 @@ INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, cri
 ('Em andamento', 'Ticket em andamento', 4, '#CCE5FF', TRUE, FALSE, 1),
 ('Fechado', 'Ticket fechado', 4, '#FFF3CD', TRUE, FALSE, 1),
 ('Cancelado', 'Ticket cancelado', 4, '#F8D7DA', TRUE, FALSE, 1);
+
+INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, criado_por_id) VALUES
+('Em Uso', 'Banco usado no dia a dia', 3, '#D4EDDA', TRUE, FALSE, 1),
+('Poupança', 'Banco usado para poupança', 3, '#CCE5FF', TRUE, FALSE, 1),
+('Investimentos', 'Banco usado para investimentos', 3, '#FFF3CD', TRUE, FALSE, 1),
+('Verificando', 'Banco em verificação', 3, '#F8D7DA', TRUE, FALSE, 1),
+('Congelado', 'Banco congelado', 3, '#F8D7DA', TRUE, FALSE, 1);
