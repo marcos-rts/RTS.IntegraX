@@ -32,3 +32,4 @@ INSERT INTO FX_subcategoria (nome, categoria_id, descricao) VALUES
 
 -- Tabela: FX_conta
 INSERT INTO FX_conta (nome, descricao, tipo, status_id) VALUES
+('PicPay', 'Conta do PicPay', 'Debito', 1);
