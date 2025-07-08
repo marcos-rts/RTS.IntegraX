@@ -93,6 +93,9 @@ const reset_senha_admin = async (req, res) => {
         if (rows.length === 0) {
             return res.status(404).json({ message: 'Usuário não encontrado.' });
         }
+        if (rows[0].tipo !== 'Admin') {
+            return res.status(403).json({ message: 'Apenas administradores podem resetar senhas.' });
+        }
         const hashedPassword = await bcrypt.hash(newpassword, 10);
 
         await db.execute('UPDATE RTS_usuario SET senha_hash = ? WHERE email = ?', [hashedPassword, email]);
