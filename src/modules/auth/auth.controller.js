@@ -1,6 +1,10 @@
 const db = require('../../config/database');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+// Importa o FileLogger personalizado
+// const FileLogger = require('../utils/FileLogger');
+// const fileLogger = new FileLogger('../../../logs/app.log', '../../../logs/app.json');
+// Importa o Logger personalizado
 const Logger = require('../utils/Console_Logger');
 const logger = new Logger();
 
@@ -77,8 +81,33 @@ const register = async (req, res) => {
     }
 };
 
+const reset_senha_admin = async (req, res) => {
+    const { email, newpassword} = req.body;
+
+    if (!email || !newpassword)
+        return res.status(400).json({ message: 'Email e nova senha são obrigatorios.'});
+
+    try {
+        //Logica de reset de senha
+        const [rows] = await db.execute('SELECT * FROM RTS_usuario WHERE email = ?', [email] );
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+        const hashedPassword = await bcrypt.hash(newpassword, 10);
+
+        await db.execute('UPDATE RTS_usuario SET senha_hash = ? WHERE email = ?', [hashedPassword, email]);
+        logger.Success(`Senha do usuário com email: ${email} foi atualizada com sucesso.`);
+        // fileLogger(`Senha do usuário com email: ${email} foi atualizada com sucesso.`);
+    } catch (error) {
+        logger.Error('Erro ao atualizar senha do usuário:', error.message);
+        // fileLogger(`Erro ao atualizar senha do usuário: ${error.message}`);
+        return res.status(500).json({ message: 'Erro ao atualizar senha do usuário.' });
+    }
+}
+
 module.exports = {
     login,
     register,
-    users
+    users,
+    reset_senha_admin
 };
