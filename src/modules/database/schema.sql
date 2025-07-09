@@ -68,6 +68,22 @@ CREATE TABLE RTS_status (
   FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id)
 );
 
+CREATE TABLE RTS_tabela (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  descricao TEXT,
+  tipoBanco_id INT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id),
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
 -- Tabela: RTS_pessoa
 CREATE TABLE RTS_pessoa (
   id INT AUTO_INCREMENT PRIMARY KEY,
