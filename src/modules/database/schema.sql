@@ -225,6 +225,38 @@ CREATE TABLE FX_subcategoria (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+CREATE TABLE FX_transacao (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  valor DECIMAL(10,2) NOT NULL,
+  tipo ENUM('Entrada', 'Saída', 'Transferência') NOT NULL DEFAULT 'Saída',
+  informacao TEXT,
+  conta_id INT NOT NULL, -- vínculo com FX_conta
+  conta_2_id INT NULL, -- opcional, pode ser NULL se não for movimentação segmentada
+  subcategoria_id INT NULL, -- vínculo com FX_subcategoria
+  pessoa_id INT NULL, -- vínculo com RTS_pessoa (quem esta associado)
+  observacao TEXT,
+  status_id INT, -- vínculo com RTS_status
+  data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (conta_id) REFERENCES FX_conta(id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (conta_2_id) REFERENCES FX_conta(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (subcategoria_id) REFERENCES FX_subcategoria(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
 -- INSEREÇÃO DE DADOS INICIAIS
 
 -- Inserção de usuário admin
