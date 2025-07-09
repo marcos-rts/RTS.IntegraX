@@ -56,6 +56,7 @@ CREATE TABLE RTS_status (
   descricao TEXT,
   -- tipo ENUM('CT', 'RTS', 'FX', 'TK'),
   tipoBanco_id INT,
+  tabela_id INT,
   cor VARCHAR(7) DEFAULT '#FFFFFF',
   excluido BOOLEAN DEFAULT FALSE,
   ativo BOOLEAN DEFAULT TRUE,
@@ -65,7 +66,8 @@ CREATE TABLE RTS_status (
   atualizado_por_id INT,
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id)
+  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id),
+  FOREIGN KEY (tabela_id) REFERENCES RTS_tabela(id)
 );
 
 CREATE TABLE RTS_tabela (
@@ -302,6 +304,11 @@ INSERT INTO RTS_tipoBanco (nome, descricao, ativo, excluido, criado_por_id) VALU
 ('FX', 'Finanças e Contabilidade', TRUE, FALSE, 1),
 ('TK', 'Tickets de Suporte', TRUE, FALSE, 1);
 
+-- Inserção de tabela RTS_tabela
+INSERT INTO RTS_tabela (nome, descricao, tipoBanco_id, ativo, excluido, criado_por_id) VALUES
+('FX_conta', 'Tabela com informações das contas digitais', 3, TRUE, FALSE, 1),
+('FX_transacao', 'Tabela com informações das transações financeiras', 3, TRUE, FALSE, 1);
+
 -- Inserção de status para Controle de Itens (CT)
 INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, criado_por_id) VALUES
 ('Disponível', 'Status disponível', 2, '#D4EDDA', TRUE, FALSE, 1),
@@ -316,9 +323,16 @@ INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, cri
 ('Fechado', 'Ticket fechado', 4, '#FFF3CD', TRUE, FALSE, 1),
 ('Cancelado', 'Ticket cancelado', 4, '#F8D7DA', TRUE, FALSE, 1);
 
-INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, criado_por_id) VALUES
-('Em Uso', 'Banco usado no dia a dia', 3, '#D4EDDA', TRUE, FALSE, 1),
-('Poupança', 'Banco usado para poupança', 3, '#CCE5FF', TRUE, FALSE, 1),
-('Investimentos', 'Banco usado para investimentos', 3, '#FFF3CD', TRUE, FALSE, 1),
-('Verificando', 'Banco em verificação', 3, '#F8D7DA', TRUE, FALSE, 1),
-('Congelado', 'Banco congelado', 3, '#F8D7DA', TRUE, FALSE, 1);
+-- Inserção de status para conta digitais (FX)
+INSERT INTO RTS_status (nome, descricao, tipoBanco_id, tabela_id, cor, ativo, excluido, criado_por_id) VALUES
+('Em Uso', 'Banco usado no dia a dia', 3, 1, '#D4EDDA', TRUE, FALSE, 1),
+('Poupança', 'Banco usado para poupança', 3, 1, '#CCE5FF', TRUE, FALSE, 1),
+('Investimentos', 'Banco usado para investimentos', 3, 1, '#FFF3CD', TRUE, FALSE, 1),
+('Verificando', 'Banco em verificação', 3, 1, '#F8D7DA', TRUE, FALSE, 1),
+('Congelado', 'Banco congelado', 3, 1, '#F8D7DA', TRUE, FALSE, 1);
+
+-- Inserção de status para Finanças (FX)
+INSERT INTO RTS_status (nome, descricao, tipoBanco_id, tabela_id, cor, ativo, excluido, criado_por_id) VALUES
+('Pendente', 'Transação pendente', 3, 2, '#D4EDDA', TRUE, FALSE, 1),
+('Confirmado', 'Transação confirmada', 3, 2, '#F8D7DA', TRUE, FALSE, 1),
+('Cancelado', 'Transação cancelada', 3, 2, '#CCE5FF', TRUE, FALSE, 1);
