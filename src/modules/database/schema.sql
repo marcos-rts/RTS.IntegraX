@@ -161,7 +161,7 @@ CREATE TABLE FX_conta (
   descricao TEXT,
   excluido BOOLEAN DEFAULT FALSE,
   ativo BOOLEAN DEFAULT TRUE,
-  tipo ENUM('Credito', 'Debito'),
+  tipo ENUM('Credito', 'Debito') DEFAULT 'Debito',
   status_id INT,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -172,6 +172,26 @@ CREATE TABLE FX_conta (
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
+
+CREATE TABLE FX_subconta (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  conta_id INT NOT NULL, -- vínculo com FX_conta
+  nome VARCHAR(255),
+  valor DECIMAL(10,2) DEFAULT 0.0,
+  tipo ENUM('Cofrinho', 'Investimento', 'Reserva', 'Outros') DEFAULT 'Cofrinho',
+  descricao TEXT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (conta_id) REFERENCES FX_conta(id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
 
 -- Tabela: FX_categoria
 CREATE TABLE FX_categoria (
