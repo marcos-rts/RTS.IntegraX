@@ -117,4 +117,14 @@ INSERT INTO FX_subcategoria (nome, categoria_id, descricao) VALUES
 
 -- Tabela: FX_conta
 INSERT INTO FX_conta (nome, descricao, tipo, status_id) VALUES
-('PicPay', 'Conta do PicPay', 'Debito', 1);
+('PicPay', 'Conta do PicPay', 'Debito', 9),
+('Santader', 'Conta do Santader', 'Debito', 12),
+('Nubank', 'Conta do Nubank', 'Debito', 13),
+('Neon', 'Conta do Neon', 'Debito', 12),
+('Itau', 'Conta do Itau', 'Debito', 12),
+('Pagbank', 'Conta do Pagbank', 'Debito', 9),
+('Inter', 'Conta do Inter', 'Debito', 10),
+('C6', 'Conta do C6 Bank', 'Debito', 12),
+('Bradesco', 'Conta do Bradesco', 'Debito', 9),
+('Next', 'Conta do Next', 'Debito', 10),
+('Rico', 'Conta da Rico', 'Debito', 12);
