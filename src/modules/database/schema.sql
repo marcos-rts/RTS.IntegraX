@@ -171,9 +171,26 @@ CREATE TABLE TK_tickets (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+CREATE TABLE FX_carteira( 
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255),
+  descricao TEXT,
+  responsavel_id INT,
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (responsavel_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
 -- Tabela: FX_conta
 CREATE TABLE FX_conta (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  carteira_id INT, -- FK para FX_carteira
   nome VARCHAR(255),
   valor DECIMAL(10,2) DEFAULT 0.0,
   descricao TEXT,
@@ -185,6 +202,7 @@ CREATE TABLE FX_conta (
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   criado_por_id INT,
   atualizado_por_id INT,
+  FOREIGN KEY (carteira_id) REFERENCES FX_carteira(id),
   FOREIGN KEY (status_id) REFERENCES RTS_status(id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
