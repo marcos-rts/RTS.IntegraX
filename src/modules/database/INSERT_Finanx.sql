@@ -1,5 +1,8 @@
 USE Test_RTS_IntegraX;
 
+INSERT INTO FX_carteira (nome, descricao, responsavel_id) VALUES
+('Carteira Pessoal', 'Carteira para despesas pessoais', (SELECT id FROM RTS_usuario WHERE usuario = 'marcos.alexandre'));
+
 -- Tabela: FX_categoria
 INSERT INTO FX_categoria (nome, descricao) VALUES
 ('!Historico!','Histórico de antigos meios de armazenagem (sem histórico)'),
@@ -116,15 +119,15 @@ INSERT INTO FX_subcategoria (nome, categoria_id, descricao) VALUES
 
 
 -- Tabela: FX_conta
-INSERT INTO FX_conta (nome, descricao, tipo, status_id) VALUES
-('PicPay', 'Conta do PicPay', 'Debito', 9),
-('Santader', 'Conta do Santader', 'Debito', 12),
-('Nubank', 'Conta do Nubank', 'Debito', 13),
-('Neon', 'Conta do Neon', 'Debito', 12),
-('Itau', 'Conta do Itau', 'Debito', 12),
-('Pagbank', 'Conta do Pagbank', 'Debito', 9),
-('Inter', 'Conta do Inter', 'Debito', 10),
-('C6', 'Conta do C6 Bank', 'Debito', 12),
-('Bradesco', 'Conta do Bradesco', 'Debito', 9),
-('Next', 'Conta do Next', 'Debito', 10),
-('Rico', 'Conta da Rico', 'Debito', 12);
+INSERT INTO FX_conta (nome, carteira_id, descricao, tipo, status_id) VALUES
+('PicPay', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do PicPay', 'Debito', 9),
+('Santader', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Santader', 'Debito', 12),
+('Nubank', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Nubank', 'Debito', 13),
+('Neon', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Neon', 'Debito', 12),
+('Itau', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Itau', 'Debito', 12),
+('Pagbank', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Pagbank', 'Debito', 9),
+('Inter', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Inter', 'Debito', 10),
+('C6', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do C6 Bank', 'Debito', 12),
+('Bradesco', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Bradesco', 'Debito', 9),
+('Next', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta do Next', 'Debito', 10),
+('Rico', (SELECT id FROM FX_carteira WHERE nome = 'Carteira Pessoal'), 'Conta da Rico', 'Debito', 12);
