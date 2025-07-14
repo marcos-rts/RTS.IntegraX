@@ -1,7 +1,16 @@
 USE Test_RTS_IntegraX;
 
 INSERT INTO FX_carteira (nome, descricao, responsavel_id) VALUES
-('Carteira Pessoal', 'Carteira para despesas pessoais', (SELECT id FROM RTS_usuario WHERE usuario = 'marcos.alexandre'));
+(
+    'Carteira Pessoal', 
+    'Carteira para despesas pessoais', 
+    (
+        SELECT Pessoa.id
+        FROM RTS_pessoa as Pessoa 
+        LEFT JOIN RTS_usuario Usuario ON Usuario.id = Pessoa.usuario_id
+        WHERE Usuario.usuario = 'marcos.alexandre'
+    )
+);
 
 -- Tabela: FX_categoria
 INSERT INTO FX_categoria (nome, descricao) VALUES
