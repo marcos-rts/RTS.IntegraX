@@ -182,7 +182,7 @@ CREATE TABLE FX_carteira(
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   criado_por_id INT,
   atualizado_por_id INT,
-  FOREIGN KEY (responsavel_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (responsavel_id) REFERENCES RTS_pessoa(id),
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
