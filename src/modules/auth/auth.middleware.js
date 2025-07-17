@@ -1,18 +1,35 @@
 const jwt = require('jsonwebtoken');
+const db = require('../../config/database');
 
-const autenticar = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+// Função para verificar se o tokens esta na blacklist
+const isTokenBlackListed = async (token) => {
+    const [rows] = await db.execute('SELECT * FROM JWT_blacklist WHERE token = ? AND expira_em > NOW()', [token]);
+    return rows.lenghth > 0;
+}
 
-    if (!authHeader) return res.status(401).json({ message: 'Token não fornecido.' });
+const autenticar = async (req, res, next) => {
+    try {
+        const authHeader = req.headers.authorization;
 
-    const token = authHeader.split(' ')[1]; // "Bearer <token>"
+        if (!authHeader) {
+            return res.status(401).json({ message: 'Token não fornecido.' });
+        }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) return res.status(403).json({ message: 'Token inválido ou expirado.' });
+        const token = authHeader.split(' ')[1]; // "Bearer <token>"
 
-        req.usuario = decoded; // ID e e-mail que você colocou no payload
+        // Verifica se o token está na blacklist
+        const tokenNegado = await isTokenBlackListed(token);
+        if (tokenNegado) {
+            return res.status(401).json({ message: 'Token foi invalidado (logout).' });
+        }
+
+        // Verifica a validade do token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.usuario = decoded; // payload com { id, email }
         next();
-    });
+    } catch (err) {
+        return res.status(403).json({ message: 'Token inválido ou expirado.' });
+    }
 };
 
 module.exports = autenticar;

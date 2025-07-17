@@ -293,6 +293,11 @@ CREATE TABLE FX_transacao (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+CREATE TABLE JWT_blacklist (
+    token TEXT NOT NULL,
+    expira_em DATETIME NOT NULL
+);
+
 -- CRIAÇÃO DE VIEWS
 CREATE VIEW vw_status_simples AS
 SELECT Status.nome as "id_nome",
