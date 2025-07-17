@@ -12,6 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Configuração do diretório público
 // Rotas de autenticação
 const rotasAutenticacao = require('./src/modules/auth/auth.route');
 app.use('/api/autenticacao', rotasAutenticacao);
@@ -26,6 +27,10 @@ app.get('/painel', (req, res) => {
 
 app.get('/esqueci-senha', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'esqueci-senha.html'));
+});
+
+app.get('/controle_usuarios', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'usuarios.html'));
 });
 
 // Start do servidor
