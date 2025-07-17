@@ -293,6 +293,17 @@ CREATE TABLE FX_transacao (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+-- CRIAÇÃO DE VIEWS
+CREATE VIEW vw_status_simples AS
+SELECT Status.nome as "id_nome",
+Status.id as "id_status",
+Banco.nome as "nome_Banco",
+Tabela.nome as "nome_tabela"
+FROM Test_RTS_IntegraX.RTS_status Status
+left join Test_RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
+left join Test_RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
+
+
 -- INSEREÇÃO DE DADOS INICIAIS
 
 -- Inserção de usuário admin
