@@ -32,6 +32,7 @@ const login = async (req, res) => {
         )
 
         // Login bem-sucedido
+        await db.execute('UPDATE RTS_usuario SET data_login = NOW() WHERE id = ?', [rows[0].id]);
         logger.Success(`Usuário logado com sucesso: ${email}`);
         return res.status(200).json({
             success: true, message: 'Login realizado com sucesso.', token, usuario: {
@@ -46,6 +47,33 @@ const login = async (req, res) => {
         return res.status(500).json({ message: 'Erro ao fazer login.' });
     }
 
+};
+
+const logout = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(400).json({ message: 'Token não fornecido.' });
+    }
+
+    try {
+        // Decodifica o token para pegar a data de expiração
+        const decoded = jwt.decode(token);
+        const expTimestamp = decoded.exp * 1000;
+        const expirationDate = new Date(expTimestamp);
+
+        await db.execute('INSERT INTO JWT_blacklist (token, expira_em) VALUES (?, ?)', [
+            token,
+            expirationDate,
+        ]);
+
+        await db.execute('UPDATE RTS_usuario SET data_logout = NOW() WHERE id = ?', [req.usuario.id]);
+
+        logger.Info(`Token do usuário com email ${decoded.email} foi invalidado via logout.`);
+        res.status(200).json({ message: 'Logout realizado com sucesso.' });
+    } catch (error) {
+        logger.Error('Erro ao processar logout:', error.message);
+        res.status(500).json({ message: 'Erro ao fazer logout.' });
+    }
 };
 
 const users = async (req, res) => {
@@ -112,5 +140,6 @@ module.exports = {
     login,
     register,
     users,
-    reset_senha_admin
+    reset_senha_admin,
+    logout
 };
