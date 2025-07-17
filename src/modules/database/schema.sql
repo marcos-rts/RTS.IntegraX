@@ -5,6 +5,9 @@
 -- Data de atualização: 2025-06-10
 -- Descrição: Script para criação do banco de dados Test_RTS_IntegraX com todas as tabelas e relacionamentos necessários.
 -- Este script deve ser executado em um ambiente MySQL compatível.
+-- Ligar o event_scheduler manualmente, mesmo que já esteja ON
+-- Não causa erro, apenas reatribui
+-- SET GLOBAL event_scheduler = ON;
 
 DROP DATABASE IF EXISTS Test_RTS_IntegraX;
 CREATE DATABASE Test_RTS_IntegraX;
