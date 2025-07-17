@@ -298,6 +298,14 @@ CREATE TABLE JWT_blacklist (
     expira_em DATETIME NOT NULL
 );
 
+-- CRIAÇÂO DE EVENTOS
+-- Evento para limpar a blacklist de JWTs expirados diariamente
+CREATE EVENT limpeza_jwt_blacklist
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP
+DO
+    DELETE FROM JWT_blacklist WHERE expira_em < NOW();
+
 -- CRIAÇÃO DE VIEWS
 CREATE VIEW vw_status_simples AS
 SELECT Status.nome as "id_nome",
