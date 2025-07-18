@@ -77,6 +77,9 @@
             // Exemplo: salvar token no localStorage
             localStorage.setItem("token", dados.token);
             localStorage.setItem("usuario_nome", dados.usuario.usuario);
+            localStorage.setItem("usuario_id", dados.usuario.id);
+            localStorage.setItem("usuario_email", dados.usuario.email);
+            localStorage.setItem("usuario_tipo", dados.usuario.tipo);
             // Redirecionar para o painel, por exemplo
             window.location.href = "/painel";
           } else {
