@@ -37,7 +37,9 @@ const login = async (req, res) => {
         return res.status(200).json({
             success: true, message: 'Login realizado com sucesso.', token, usuario: {
                 usuario: rows[0].usuario, // ou qualquer campo que você tenha
-                email: rows[0].email
+                email: rows[0].email,
+                id: rows[0].id,
+                tipo: rows[0].tipo
             }
         });
 
@@ -85,7 +87,7 @@ const users = async (req, res) => {
 }
 
 const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, usuario, tipo, criado_por_id, ativo } = req.body;
 
     if (!email || !password)
         return res.status(400).json({ message: 'Email e senha são obrigatorios.' });
@@ -98,7 +100,7 @@ const register = async (req, res) => {
         }
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await db.execute('INSERT INTO RTS_usuario (email, senha_hash) VALUES (?, ?)', [email, hashedPassword]);
+        await db.execute('INSERT INTO RTS_usuario (email, senha_hash, usuario, tipo, criado_por_id, ativo) VALUES (?, ?, ?, ?, ?, ?)', [email, hashedPassword, usuario, tipo, criado_por_id, ativo]);
         logger.Success(`Usuário registrado com email: ${email}`);
 
         res.status(201).json({ message: 'Usuário registrado com sucesso.' });
