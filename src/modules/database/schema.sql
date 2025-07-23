@@ -111,6 +111,8 @@ CREATE TABLE RTS_grupo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(255),
   descricao TEXT,
+  exemplo TEXT,
+  cor VARCHAR(7) DEFAULT '#FFFFFF',
   tipoBanco_id INT,
   excluido BOOLEAN DEFAULT FALSE,
   ativo BOOLEAN DEFAULT TRUE,
@@ -162,12 +164,15 @@ CREATE TABLE TK_tickets (
   status_id INT,
   prioridade ENUM('Baixa', 'Média', 'Alta', 'Urgente') DEFAULT 'Média',
   solicitante_id INT,
+  grupo_id INT,
   excluido BOOLEAN DEFAULT FALSE,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   criado_por_id INT,
   atualizado_por_id INT,
   FOREIGN KEY (status_id) REFERENCES RTS_status(id)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (grupo_id) REFERENCES RTS_grupo(id)
     ON DELETE SET NULL ON UPDATE CASCADE,
   FOREIGN KEY (solicitante_id) REFERENCES RTS_pessoa(id),
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
@@ -344,10 +349,10 @@ INSERT INTO RTS_usuario (
 
 -- Inserção de tipos de banco
 INSERT INTO RTS_tipoBanco (nome, descricao, ativo, excluido, criado_por_id) VALUES
-('RTS', 'Core do sistema', TRUE, FALSE, 1),
-('CT', 'Controle de Itens', TRUE, FALSE, 1),
-('FX', 'Finanças e Contabilidade', TRUE, FALSE, 1),
-('TK', 'Tickets de Suporte', TRUE, FALSE, 1);
+('RTS', 'Core do sistema', TRUE, FALSE, 1), -- ID: 1
+('CT', 'Controle de Itens', TRUE, FALSE, 1), -- ID: 2
+('FX', 'Finanças e Contabilidade', TRUE, FALSE, 1), -- ID: 3
+('TK', 'Tickets de Suporte', TRUE, FALSE, 1); -- ID: 4
 
 -- Inserção de tabela RTS_tabela
 INSERT INTO RTS_tabela (nome, descricao, tipoBanco_id, ativo, excluido, criado_por_id) VALUES
@@ -381,3 +386,14 @@ INSERT INTO RTS_status (nome, descricao, tipoBanco_id, tabela_id, cor, ativo, ex
 ('Pendente', 'Transação pendente', 3, 2, '#D4EDDA', TRUE, FALSE, 1),
 ('Confirmado', 'Transação confirmada', 3, 2, '#F8D7DA', TRUE, FALSE, 1),
 ('Cancelado', 'Transação cancelada', 3, 2, '#CCE5FF', TRUE, FALSE, 1);
+
+-- Inserção de Grupos (TK)
+INSERT INTO RTS_grupo (nome, descricao, exemplo, cor, tipoBanco_id, ativo, excluido, criado_por_id) VALUES
+('Incidente/Bug', 'Algo que quebrou, precisa correção imediata.', '"Erro 500 na tela de login", "Sistema não salva dados"', '#FF0000', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Requisição', 'Pedido de serviço novo, mas não é bug nem melhoria.', '"Criar novo usuário", "Instalar ferramenta X"', '#d4c600ff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Melhoria', 'Algo que já existe mas pode ser otimizado.', '"Aumentar performance da API", "Melhorar layout de tela"', '#00eb89ff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Projeto', 'Demanda maior, com entregas em fases ou várias tarefas relacionadas.', '"Implantar nova API", "Refatoração geral do módulo Y"', '#690931ff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Tarefa Interna', 'Tarefas administrativas ou rotinas operacionais.', '"Backup semanal", "Organizar documentação"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Demanda Externa', 'Algo vindo de cliente, fornecedor ou outro time.', '"Solicitação do time financeiro", "Cliente pediu ajuste"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Teste', 'Atividades de QA, homologações e validações.', '"Testar novo deploy", "Homologar nova versão do app"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Planejamento', 'Ticket criado para registrar ações de análise, arquitetura, decisões.', '"Definir arquitetura do projeto Z", "Criar roadmap 2025"', '#efff5fff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
