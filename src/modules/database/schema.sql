@@ -76,7 +76,7 @@ CREATE TABLE RTS_status (
   -- tipo ENUM('CT', 'RTS', 'FX', 'TK'),
   tipoBanco_id INT,
   tabela_id INT,
-  cor VARCHAR(7) DEFAULT '#FFFFFF',
+  cor VARCHAR(10) DEFAULT '#FFFFFF',
   excluido BOOLEAN DEFAULT FALSE,
   ativo BOOLEAN DEFAULT TRUE,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -112,7 +112,7 @@ CREATE TABLE RTS_grupo (
   nome VARCHAR(255),
   descricao TEXT,
   exemplo TEXT,
-  cor VARCHAR(7) DEFAULT '#FFFFFF',
+  cor VARCHAR(10) DEFAULT '#FFFFFF',
   tipoBanco_id INT,
   excluido BOOLEAN DEFAULT FALSE,
   ativo BOOLEAN DEFAULT TRUE,
@@ -396,4 +396,4 @@ INSERT INTO RTS_grupo (nome, descricao, exemplo, cor, tipoBanco_id, ativo, exclu
 ('Tarefa Interna', 'Tarefas administrativas ou rotinas operacionais.', '"Backup semanal", "Organizar documentação"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
 ('Demanda Externa', 'Algo vindo de cliente, fornecedor ou outro time.', '"Solicitação do time financeiro", "Cliente pediu ajuste"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
 ('Teste', 'Atividades de QA, homologações e validações.', '"Testar novo deploy", "Homologar nova versão do app"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Planejamento', 'Ticket criado para registrar ações de análise, arquitetura, decisões.', '"Definir arquitetura do projeto Z", "Criar roadmap 2025"', '#efff5fff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
+('Planejamento', 'Ticket criado para registrar ações de análise, arquitetura, decisões.', '"Definir arquitetura do projeto Z", "Criar roadmap 2025"', '#efff5fff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1);
