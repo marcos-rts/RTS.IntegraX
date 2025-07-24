@@ -2,29 +2,34 @@ const express = require('express');
 const path = require('path');
 const router = express.Router();
 
-// Paginas públicas (HTML)
+const publicPath = path.join(__dirname, '../../public');
+
+// 🏠 Página principal
 router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'index.html'));
+    res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 router.get('/painel', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'painel.html'));
+    res.sendFile(path.join(publicPath, 'painel.html'));
 });
 
+// 🔑 Autenticação
 router.get('/esqueci-senha', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'esqueci-senha.html'));
+    res.sendFile(path.join(publicPath, 'auth', 'esqueci-senha.html'));
 });
 
+// 🧑‍💻 Usuários
 router.get('/controle_usuarios', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'usuarios.html'));
+    res.sendFile(path.join(publicPath, 'users', 'usuarios.html'));
 });
 
 router.get('/cadastrar_usuario', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'cria_usuario.html'));
+    res.sendFile(path.join(publicPath, 'users', 'cria_usuario.html'));
 });
 
+// 🎟️ Tickets
 router.get('/lista_tickets', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../public', 'lista_tickets.html'));
+    res.sendFile(path.join(publicPath, 'tickets', 'lista_tickets.html'));
 });
 
 module.exports = router;
