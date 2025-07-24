@@ -2,7 +2,7 @@ const db = require('./../../../../../config/database');
 
 exports.getTickets = async (req, res) => {
   try {
-    const [results] = await db.execute('SELECT * FROM TK_tickets');
+    const [results] = await db.execute('SELECT * FROM vw_tickets_simples');
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: 'Erro ao buscar tickets', details: err.message });

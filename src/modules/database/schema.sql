@@ -324,6 +324,21 @@ FROM Test_RTS_IntegraX.RTS_status Status
 left join Test_RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
 left join Test_RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
 
+CREATE VIEW vw_tickets_simples AS
+SELECT 
+Tickets.id as "ID",
+Tickets.title as "Titulo",
+Status.nome as "Status",
+Status.cor as "Cor_Status",
+Grupo.nome as "Grupo",
+Grupo.cor as "Cor_Grupo",
+Tickets.prioridade as "Prioriedade",
+Tickets.description as "Descricao"
+FROM TK_tickets Tickets
+JOIN RTS_status Status ON Status.id = Tickets.status_id
+JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id
+
+
 
 -- INSEREÇÃO DE DADOS INICIAIS
 

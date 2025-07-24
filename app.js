@@ -37,6 +37,10 @@ app.get('/cadastrar_usuario', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'cria_usuario.html'));
 });
 
+app.get('/lista_tickets', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'lista_tickets.html'));
+});
+
 // Start do servidor
 app.listen(process.env.PORT, () => {
   logger.System(`Servidor rodando na porta: ${process.env.PORT}`);
