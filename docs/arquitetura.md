@@ -4,27 +4,26 @@ meu-projeto/
 ├── README.md
 ├── node_modules/          # Dependências instaladas (gerado automaticamente)
 ├── src/                   # Código fonte principal
-│   ├── main.js            # Ponto de entrada principal
+│   ├── database/          # Módulo de banco de dados
+│   │   ├── schema.sql
+│   │   ├── INSERT_Finanx.sql
+│   │   └── INSERT_myuser.sql
 │   ├── modules/           # Módulos internos do sistema
 │   │   ├── auth/          # Exemplo: módulo de autenticação
-│   │   │   ├── auth.service.js
+│   │   │   ├── auth.middleware.js
 │   │   │   ├── auth.controller.js
-│   │   │   ├── auth.routes.js
-│   │   │   └── index.js   # Exportação consolidada do módulo
-│   │   ├── database/      # Módulo de banco de dados
-│   │   │   ├── connection.js
-│   │   │   ├── models/
-│   │   │   └── index.js
+│   │   │   └── auth.route.js   
+│   │   ├── services/          # Exemplo: módulo de serviço do sistema
+│   │   │   ├── controle_de_itens/ 
+│   │   │   ├── controle_de_itens/ 
+│   │   │   └── Finanx/  
+│   │   ├── notification/  # Scripts para integração com notificação (Telegram, email, etc.)
 │   │   └── utils/         # Utilitários compartilhados
-│   │       ├── logger.js
-│   │       ├── helpers.js
-│   │       └── index.js
+│   │       ├── Console_Logger.js
+│   │       └── FileLogger.js
 │   ├── config/            # Configurações do sistema
-│   │   ├── app.js
-│   │   ├── env.js
-│   │   └── constants.js
-│   ├── app.js             # Configuração principal da aplicação
-│   ├── controller/        # 
+│   │   └── database.js
+│   ├── controller/        # Controllers Genericos variados
 │   └── routes/            # Rotas principais
 │       ├── api.js
 │       └── web.js
