@@ -152,9 +152,35 @@
       carregarUsuarios();
     });
 
-    function logout() {
-      localStorage.clear();
-      window.location.href = "/";
+    async function logout() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          // Já está deslogado
+          window.location.href = "/";
+          return;
+        }
+
+        const response = await fetch("http://localhost:3000/api/autenticacao/logout", {
+          method: "POST", // ou DELETE, se quiser mais semântico
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          localStorage.clear();
+          window.location.href = "/"; // Redireciona para a home após logout
+        } else {
+          const result = await response.json();
+          console.error("Erro no logout:", result.message);
+          alert("Erro ao sair: " + result.message);
+        }
+      } catch (err) {
+        console.error("Erro ao tentar logout:", err);
+        alert("Erro inesperado ao sair.");
+      }
     }
 
     async function carregarUsuarios() {
