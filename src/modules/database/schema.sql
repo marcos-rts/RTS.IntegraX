@@ -1,17 +1,17 @@
 -- Criação do esquema completo baseado no DBML original
 -- Autor: Marcos
--- Banco de Dados: Test_RTS_IntegraX
+-- Banco de Dados: DEV_RTS_IntegraX
 -- Data de criação: 2025-06-05
--- Data de atualização: 2025-06-10
--- Descrição: Script para criação do banco de dados Test_RTS_IntegraX com todas as tabelas e relacionamentos necessários.
+-- Data de atualização: 2025-07-24
+-- Descrição: Script para criação do banco de dados DEV_RTS_IntegraX com todas as tabelas e relacionamentos necessários.
 -- Este script deve ser executado em um ambiente MySQL compatível.
 -- Ligar o event_scheduler manualmente, mesmo que já esteja ON
 -- Não causa erro, apenas reatribui
 -- SET GLOBAL event_scheduler = ON;
 
-DROP DATABASE IF EXISTS Test_RTS_IntegraX;
-CREATE DATABASE Test_RTS_IntegraX;
-USE Test_RTS_IntegraX;
+DROP DATABASE IF EXISTS DEV_RTS_IntegraX;
+CREATE DATABASE DEV_RTS_IntegraX;
+USE DEV_RTS_IntegraX;
 
 
 -- Tabela: RTS_usuario
@@ -320,9 +320,9 @@ SELECT Status.nome as "id_nome",
 Status.id as "id_status",
 Banco.nome as "nome_Banco",
 Tabela.nome as "nome_tabela"
-FROM Test_RTS_IntegraX.RTS_status Status
-left join Test_RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
-left join Test_RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
+FROM DEV_RTS_IntegraX.RTS_status Status
+left join DEV_RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
+left join DEV_RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
 
 CREATE VIEW vw_tickets_simples AS
 SELECT 

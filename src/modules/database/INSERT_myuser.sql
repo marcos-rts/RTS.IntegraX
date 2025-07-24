@@ -1,4 +1,4 @@
-USE Test_RTS_IntegraX;
+USE DEV_RTS_IntegraX;
 
 INSERT INTO RTS_usuario (
   usuario,
