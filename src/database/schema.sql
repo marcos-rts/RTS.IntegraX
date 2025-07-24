@@ -336,7 +336,7 @@ Tickets.prioridade as "Prioriedade",
 Tickets.description as "Descricao"
 FROM TK_tickets Tickets
 JOIN RTS_status Status ON Status.id = Tickets.status_id
-JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id
+JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id;
 
 
 
