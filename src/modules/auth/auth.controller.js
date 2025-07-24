@@ -103,6 +103,8 @@ const register = async (req, res) => {
         await db.execute('INSERT INTO RTS_usuario (email, senha_hash, usuario, tipo, criado_por_id, ativo) VALUES (?, ?, ?, ?, ?, ?)', [email, hashedPassword, usuario, tipo, criado_por_id, ativo]);
         logger.Success(`Usuário registrado com email: ${email}`);
 
+        // fetch(`/api/auditoria`)
+
         res.status(201).json({ message: 'Usuário registrado com sucesso.' });
     } catch (error) {
         logger.Error('Erro ao registrar usuário:', error.message);

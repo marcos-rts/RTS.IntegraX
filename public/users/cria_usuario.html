@@ -180,7 +180,7 @@
                     return;
                 }
 
-                const response = await fetch("http://localhost:3000/api/autenticacao/logout", {
+                const response = await fetch("/api/autenticacao/logout", {
                     method: "POST", // ou DELETE, se quiser mais semântico
                     headers: {
                         "Content-Type": "application/json",
@@ -218,7 +218,7 @@
 
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch("http://localhost:3000/api/autenticacao/register", {
+                const response = await fetch("/api/autenticacao/register", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

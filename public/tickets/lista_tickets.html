@@ -132,7 +132,7 @@
             try {
                 const token = localStorage.getItem("token");
 
-                const response = await fetch('http://localhost:3000/api/tickets', {
+                const response = await fetch('/api/tickets', {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }
@@ -200,7 +200,7 @@
                     return;
                 }
 
-                const response = await fetch("http://localhost:3000/api/autenticacao/logout", {
+                const response = await fetch("/api/autenticacao/logout", {
                     method: "POST", // ou DELETE, se quiser mais semântico
                     headers: {
                         "Content-Type": "application/json",

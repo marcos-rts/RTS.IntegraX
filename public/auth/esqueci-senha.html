@@ -64,7 +64,7 @@
                 const mensagem = document.getElementById("mensagem");
 
                 try {
-                    const resposta = await fetch("http://localhost:3000/api/autenticacao/reset_senha_admin", {
+                    const resposta = await fetch("/api/autenticacao/reset_senha_admin", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

@@ -161,7 +161,7 @@
           return;
         }
 
-        const response = await fetch("http://localhost:3000/api/autenticacao/logout", {
+        const response = await fetch("/api/autenticacao/logout", {
           method: "POST", // ou DELETE, se quiser mais semântico
           headers: {
             "Content-Type": "application/json",
@@ -187,7 +187,7 @@
       const tbody = document.getElementById("tabelaUsuarios");
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:3000/api/autenticacao/users", {
+        const response = await fetch("/api/autenticacao/users", {
           headers: {
             Authorization: `Bearer ${token}`
           }

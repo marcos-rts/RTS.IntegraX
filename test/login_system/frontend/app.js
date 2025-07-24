@@ -1,4 +1,4 @@
-const apiBase = 'http://localhost:3000/api';
+const apiBase = '/api';
 const cors = require('cors');
 app.use(cors());
 

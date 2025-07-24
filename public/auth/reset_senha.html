@@ -58,7 +58,7 @@
         const mensagem = document.getElementById("mensagem");
 
         try {
-          const resposta = await fetch("http://localhost:3000/api/autenticacao/recuperar", {
+          const resposta = await fetch("/api/autenticacao/recuperar", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
