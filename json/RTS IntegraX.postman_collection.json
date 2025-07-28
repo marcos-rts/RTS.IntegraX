@@ -7,13 +7,134 @@
 	},
 	"item": [
 		{
-			"name": "Login",
+			"name": "Tickets",
+			"item": [
+				{
+					"name": "Lista Tickets v0.1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBleGVtcGxvLmNvbSIsImlhdCI6MTc1MzcyMjM3NSwiZXhwIjoxNzUzNzI5NTc1fQ.s3SkjKyN4ZlI59EMDZSIZyBtdfJsoH-py-hiEh9FK0M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/tickets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Outros",
+			"item": [
+				{
+					"name": "Lista Status v0.1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBleGVtcGxvLmNvbSIsImlhdCI6MTc1MzcyMDMzNSwiZXhwIjoxNzUzNzI3NTM1fQ.PHQxerUmO0OGepIP5_4FGAiXGpe7T9OGJ62Qlvz_Nbs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/status?tipoBanco=",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"status"
+							],
+							"query": [
+								{
+									"key": "tipoBanco",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Lista Grupos v0.1",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBleGVtcGxvLmNvbSIsImlhdCI6MTc1MzcyMDMzNSwiZXhwIjoxNzUzNzI3NTM1fQ.PHQxerUmO0OGepIP5_4FGAiXGpe7T9OGJ62Qlvz_Nbs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/grupo?tipoBanco=TK",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"grupo"
+							],
+							"query": [
+								{
+									"key": "tipoBanco",
+									"value": "TK"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Integrações",
+			"item": [
+				{
+					"name": "GitHub",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "Login v0.2",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"marcos@example.com\",\r\n  \"password\": \"senha123\"\r\n}\r\n",
+					"raw": "{\r\n  \"email\": \"admin@exemplo.com\",\r\n  \"password\": \"admin123\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -37,17 +158,15 @@
 			"response": []
 		},
 		{
-			"name": "Registro",
+			"name": "Registro - v0.2",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"marcos@example.com\",\r\n  \"password\": \"senha123\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
+					"mode": "graphql",
+					"graphql": {
+						"query": "",
+						"variables": ""
 					}
 				},
 				"url": {
@@ -67,8 +186,18 @@
 			"response": []
 		},
 		{
-			"name": "Listagem de Usuarios",
+			"name": "Listagem de Usuarios v0.2",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJhZG1pbkBleGVtcGxvLmNvbSIsImlhdCI6MTc1MzcyMjM3NSwiZXhwIjoxNzUzNzI5NTc1fQ.s3SkjKyN4ZlI59EMDZSIZyBtdfJsoH-py-hiEh9FK0M",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -90,6 +219,16 @@
 		{
 			"name": "Validação de Token",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJyZWlzLm1hcmNvczQzQGdtYWlsLmNvbSIsImlhdCI6MTc1MzM2MzgzNCwiZXhwIjoxNzUzMzcxMDM0fQ.ieCMGi29ayw6vv3-net-RqNLQ2JSPuFqSosSui3rme0",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": []
 			},
