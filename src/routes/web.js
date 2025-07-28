@@ -31,5 +31,8 @@ router.get('/cadastrar_usuario', (req, res) => {
 router.get('/lista_tickets', (req, res) => {
     res.sendFile(path.join(publicPath, 'tickets', 'lista_tickets.html'));
 });
+router.get('/novo_tickets', (req, res) => {
+    res.sendFile(path.join(publicPath, 'tickets', 'novo_tickets.html'));
+})
 
 module.exports = router;
