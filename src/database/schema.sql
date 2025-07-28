@@ -316,8 +316,8 @@ DO
 
 -- CRIAÇÃO DE VIEWS
 CREATE VIEW vw_status_simples AS
-SELECT Status.nome as "id_nome",
-Status.id as "id_status",
+SELECT Status.nome as "status_nome",
+Status.id as "status_id",
 Banco.nome as "nome_Banco",
 Tabela.nome as "nome_tabela"
 FROM DEV_RTS_IntegraX.RTS_status Status
