@@ -158,7 +158,7 @@
             ]);
             */
             const [statusResp] = await Promise.all([
-                fetch("/api/rts/status?tipoBanco=TK", {
+                fetch("/api/status?tipoBanco=TK", {
                     method: "GET",
                     headers: { 
                         Authorization: `Bearer ${token}`,
