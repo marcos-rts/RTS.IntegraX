@@ -11,16 +11,35 @@ exports.getTickets = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, prioridade, status_id, grupo_id, criado_por_id } = req.body;
+
+    // Validação básica (pode expandir depois com lib tipo Joi ou express-validator)
+    if (!title || !description || !prioridade || !status_id || !grupo_id) {
+      return res.status(400).json({
+        error: 'Campos obrigatórios faltando',
+        details: { title, description, prioridade, status_id, grupo_id }
+      });
+    }
+
+    // Inserção no banco de dados
     const [result] = await db.execute(
-      'INSERT INTO TK_tickets (title, description) VALUES (?, ?)',
-      [title, description]
+      `INSERT INTO TK_tickets (title, description, prioridade, status_id, grupo_id, criado_por_id)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [title, description, prioridade, status_id, grupo_id, criado_por_id]
     );
-    res.json({ id: result.insertId, title, description });
+
+    res.status(201).json({
+      message: 'Ticket criado com sucesso!',
+      id: result.insertId,
+      data: { title, description, prioridade, status_id, grupo_id }
+    });
+
   } catch (err) {
+    console.error("Erro ao criar ticket:", err); // log pro console local
     res.status(500).json({ error: 'Erro ao criar ticket', details: err.message });
   }
 };
+
 
 exports.updateTicket = async (req, res) => {
   try {

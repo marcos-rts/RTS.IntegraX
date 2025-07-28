@@ -79,7 +79,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="/painel"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a href="/tickets"><i class="bi bi-ticket"></i> Tickets</a>
+        <a href="/lista_tickets"><i class="bi bi-ticket"></i> Tickets</a>
         <a href="#"><i class="bi bi-folder2-open"></i> Documentos</a>
         <a href="#"><i class="bi bi-tools"></i> Manutenção</a>
         <a href="/controle_usuarios"><i class="bi bi-people"></i> Usuários</a>
@@ -200,6 +200,7 @@
                 prioridade: document.getElementById("prioridade").value,
                 status_id: document.getElementById("status").value,
                 grupo_id: document.getElementById("grupo").value,
+                criado_por_id: localStorage.getItem("usuario_id") // ID do usuário que está criando o ticket
             };
 
             const res = await fetch("/api/tickets", {
