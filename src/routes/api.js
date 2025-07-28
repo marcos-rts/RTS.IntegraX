@@ -11,6 +11,10 @@ const logger = new Logger();
 const rotasAutenticacao = require('../modules/auth/auth.route');
 router.use('/autenticacao', rotasAutenticacao);
 
+// ⚙️ Grupo e Status
+const rotasGrupoStatus = require('./rts.grupo_status');
+router.use('/rts', rotasGrupoStatus);
+
 // ⚙️ Módulo Tickets
 try {
     const setupTicketsModule = require('../modules/services/controle_tickets/tickets.module');
