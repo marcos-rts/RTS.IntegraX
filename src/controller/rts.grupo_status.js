@@ -23,7 +23,25 @@ const status = async (req, res) => {
     }
 };
 
+const grupo = async (req, res) => {
+    const { tipoBanco } = req.query;
+    try {
+        const [rows] = await db.execute(
+            'SELECT * FROM vw_grupo_simples WHERE Banco_nome = ?',
+            [tipoBanco]
+        );
+        if (rows.length === 0) {
+            return res.status(404).json({ message: 'Nenhum grupo encontrado' });
+        }
+        res.status(200).json(rows);
+    } catch (error) {
+        logger.error('Error fetching grupo:', error);
+        fileLogger.error('Error fetching grupo:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
 
 module.exports = {
-    status
+    status, grupo
 };

@@ -13,8 +13,9 @@ const rotasAutenticacao = require('../modules/auth/auth.route');
 router.use('/autenticacao', rotasAutenticacao);
 
 // ⚙️ Grupo e Status
-const {status} = require('../controller/rts.grupo_status');
+const {status, grupo} = require('../controller/rts.grupo_status');
 router.get('/status', authMiddleware, status);
+router.get('/grupo', authMiddleware, grupo);
 
 // ⚙️ Módulo Tickets
 try {

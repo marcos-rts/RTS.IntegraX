@@ -157,18 +157,25 @@
                 fetch("/api/grupos", { headers: { Authorization: `Bearer ${token}` } }),
             ]);
             */
-            const [statusResp] = await Promise.all([
+            const [statusResp, gruposResp] = await Promise.all([
                 fetch("/api/status?tipoBanco=TK", {
                     method: "GET",
-                    headers: { 
+                    headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }),
+                fetch("/api/grupo?tipoBanco=TK", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }),
+
                 // fetch("/api/grupos", { headers: { Authorization: `Bearer ${token}` } }),
             ]);
 
             const status = await statusResp.json();
-            // const grupos = await gruposResp.json();
+            const grupos = await gruposResp.json();
 
             const statusSelect = document.getElementById("status");
             const grupoSelect = document.getElementById("grupo");
@@ -178,7 +185,7 @@
             });
 
             grupos.forEach(g => {
-                grupoSelect.innerHTML += `<option value="${g.id}">${g.nome}</option>`;
+                grupoSelect.innerHTML += `<option value="${g.Grupo_id}">${g.Grupo_nome}</option>`;
             });
         }
 
