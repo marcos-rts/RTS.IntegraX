@@ -305,7 +305,7 @@ CREATE TABLE GH_integracao (
   id INT AUTO_INCREMENT PRIMARY KEY,
   ticket_id INT,
   tipo ENUM('issue', 'pull_request', 'commit'),
-  github_id BIGINT, -- ID real do GitHub
+  github_id BIGINT UNIQUE, -- ID real do GitHub
   titulo VARCHAR(255),
   url VARCHAR(500),
   status ENUM('open', 'closed', 'merged', 'draft') DEFAULT 'open',
@@ -330,6 +330,16 @@ CREATE TABLE JWT_blacklist (
     token TEXT NOT NULL,
     expira_em DATETIME NOT NULL
 );
+
+CREATE TABLE CRON_coleta (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ultima_execucao DATETIME,
+  proxima_execucao DATETIME NOT NULL,
+  status ENUM('Sucesso', 'Falha') DEFAULT 'Sucesso',
+  observacao TEXT,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 -- CRIAÇÂO DE EVENTOS
 -- Evento para limpar a blacklist de JWTs expirados diariamente
