@@ -1,5 +1,5 @@
 const axios = require('axios');
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 const GITHUB_API = 'https://api.github.com';
 
@@ -12,6 +12,8 @@ const api = axios.create({
 });
 
 async function getIssues(state = 'all') {
+    console.log('Token carregado:', process.env.GITHUB_TOKEN);
+
     const { data } = await api.get(`/repos/${process.env.GITHUB_OWNER}/${process.env.GITHUB_REPO}/issues`, {
         params: { state, per_page: 100 },
     });

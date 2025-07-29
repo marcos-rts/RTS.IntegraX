@@ -1,5 +1,6 @@
 const db = require('../../src/config/database');
 const { getIssues } = require('./github');
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 async function syncIssues() {
   try {
@@ -34,7 +35,7 @@ async function syncIssues() {
   } catch (err) {
     console.error('Erro na sincronização:', err.message);
   } finally {
-    db.end();
+    // db.end();
   }
 }
 
