@@ -3,6 +3,7 @@ const path = require('path'); // Não esquece esse também, tá usando path sem 
 const dotenv = require('dotenv');
 const Logger = require('./src/modules/utils/Console_Logger');
 const FileLogger = require('./src/modules/utils/FileLogger');
+require('./src/cron/githubIssueCron'); // Importa o cron para iniciar a sincronização
 
 dotenv.config();
 
