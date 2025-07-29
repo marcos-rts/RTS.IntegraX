@@ -301,6 +301,31 @@ CREATE TABLE FX_transacao (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+CREATE TABLE GH_integracao (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ticket_id INT,
+  tipo ENUM('issue', 'pull_request', 'commit'),
+  github_id BIGINT, -- ID real do GitHub
+  titulo VARCHAR(255),
+  url VARCHAR(500),
+  status ENUM('open', 'closed', 'merged', 'draft') DEFAULT 'open',
+  branch_origem VARCHAR(255),
+  branch_destino VARCHAR(255),
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (ticket_id) REFERENCES TK_tickets(id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE GH_ticket_vinculo (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ticket_id INT NOT NULL,
+  integracao_id INT NOT NULL,
+  FOREIGN KEY (ticket_id) REFERENCES TK_tickets(id) ON DELETE CASCADE,
+  FOREIGN KEY (integracao_id) REFERENCES GH_integracao(id) ON DELETE CASCADE
+);
+
+
 CREATE TABLE JWT_blacklist (
     token TEXT NOT NULL,
     expira_em DATETIME NOT NULL
