@@ -165,6 +165,7 @@ CREATE TABLE TK_tickets (
   prioridade ENUM('Baixa', 'Média', 'Alta', 'Urgente') DEFAULT 'Média',
   solicitante_id INT,
   grupo_id INT,
+  url_github VARCHAR(255),
   excluido BOOLEAN DEFAULT FALSE,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
