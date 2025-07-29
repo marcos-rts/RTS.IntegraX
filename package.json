@@ -87,7 +87,8 @@
   },
   "scripts": {
     "test": "nodemon app.js",
-    "start": "node app.js "
+    "start": "node app.js ",
+    "github": "nodemon test/integration/index.js"
   },
   "repository": {
     "type": "git",

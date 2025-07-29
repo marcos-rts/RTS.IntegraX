@@ -1,5 +1,5 @@
 const axios = require('axios');
-require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
+require('dotenv').config();
 
 const GITHUB_API = 'https://api.github.com';
 
