@@ -1,4 +1,3 @@
-// src/modules/githubSync.js
 require('dotenv').config();
 const axios = require('axios');
 const db = require('../../config/database');
@@ -30,15 +29,15 @@ function extrairOwnerERepo(repoUrl) {
 }
 
 /**
- * Busca todas as issues de um repositório no GitHub.
+ * Busca todas as issues e PRs de um repositório.
  */
-async function buscarIssuesPorRepositorio(repoUrl) {
+async function buscarIssuesEPRs(repoUrl) {
     const identificadores = extrairOwnerERepo(repoUrl);
     if (!identificadores) return [];
 
     const { owner, repo } = identificadores;
     let page = 1;
-    const issues = [];
+    const resultados = [];
 
     try {
         while (true) {
@@ -52,20 +51,32 @@ async function buscarIssuesPorRepositorio(repoUrl) {
             });
 
             if (res.data.length === 0) break;
-            issues.push(...res.data);
+
+            // Classifica entre issue e PR
+            for (const item of res.data) {
+                const tipo = item.pull_request ? 'pull_request' : 'issue';
+                resultados.push({
+                    tipo,
+                    github_id: item.id,
+                    titulo: item.title,
+                    url: item.html_url,
+                    status: item.state
+                });
+            }
+
             page++;
         }
     } catch (error) {
-        console.error(`❌ Erro ao buscar issues de ${owner}/${repo}:`, error.response?.data || error.message);
+        console.error(`❌ Erro ao buscar dados de ${owner}/${repo}:`, error.response?.data || error.message);
     }
 
-    return issues;
+    return resultados;
 }
 
 /**
- * Sincroniza issues do GitHub com o banco de dados local.
+ * Sincroniza issues e PRs do GitHub com o banco de dados local.
  */
-async function sincronizarIssues() {
+async function sincronizarIssuesEPRs() {
     try {
         const [grupoProjeto] = await db.execute(
             "SELECT id FROM RTS_grupo WHERE nome = 'Projeto' AND excluido = 0 LIMIT 1"
@@ -86,21 +97,28 @@ async function sincronizarIssues() {
         );
 
         for (const ticket of tickets) {
-            const issues = await buscarIssuesPorRepositorio(ticket.url_github);
+            const dados = await buscarIssuesEPRs(ticket.url_github);
 
-            for (const issue of issues) {
+            for (const entrada of dados) {
                 await db.execute(
                     `INSERT INTO GH_integracao (ticket_id, tipo, github_id, titulo, url, status)
-                     VALUES (?, 'issue', ?, ?, ?, ?)
+                     VALUES (?, ?, ?, ?, ?, ?)
                      ON DUPLICATE KEY UPDATE 
                         titulo = VALUES(titulo),
                         status = VALUES(status)`,
-                    [ticket.id, issue.id, issue.title, issue.html_url, issue.state]
+                    [
+                        ticket.id,
+                        entrada.tipo,
+                        entrada.github_id,
+                        entrada.titulo,
+                        entrada.url,
+                        entrada.status
+                    ]
                 );
             }
         }
 
-        // Atualiza tabela de execução do cron
+        // Atualiza a tabela de execução do cron
         const agora = new Date();
         const proxima = new Date(agora.getTime() + 60000); // 1 minuto depois
 
@@ -111,10 +129,9 @@ async function sincronizarIssues() {
         );
 
         console.log(`✅ Sincronização concluída com sucesso em ${agora.toLocaleString()}`);
-
     } catch (error) {
         console.error("❌ Erro na sincronização:", error.message || error);
     }
 }
 
-module.exports = sincronizarIssues;
+module.exports = sincronizarIssuesEPRs;
