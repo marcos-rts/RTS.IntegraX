@@ -9,7 +9,7 @@ router.get('/', ticketController.getTickets);
 router.post('/', ticketController.createTicket);
 router.put('/:id', ticketController.updateTicket);
 router.delete('/:id', ticketController.deleteTicket);
-router.get('/tickets/:id', ticketController.getTicketById);
+router.get('/:id', ticketController.getTicketById);
 
 
 module.exports = router;
