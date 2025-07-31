@@ -43,13 +43,14 @@ exports.createTicket = async (req, res) => {
 exports.getTicketById = async (req, res) => {
   try {
     const { id } = req.params;
+    // console.log("Recebido ID:", req.params.id);
 
     if (!id) {
       return res.status(400).json({ error: 'ID do ticket é obrigatório' });
     }
 
     const [results] = await db.execute(
-      'SELECT * FROM TK_tickets WHERE id = ?',
+      'SELECT * FROM vw_tickets_simples WHERE id = ?',
       [id]
     );
 
@@ -62,6 +63,7 @@ exports.getTicketById = async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar ticket específico', details: err.message });
   }
 };
+
 
 
 
