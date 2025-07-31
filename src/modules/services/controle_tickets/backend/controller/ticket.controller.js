@@ -40,6 +40,30 @@ exports.createTicket = async (req, res) => {
   }
 };
 
+exports.getTicketById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: 'ID do ticket é obrigatório' });
+    }
+
+    const [results] = await db.execute(
+      'SELECT * FROM TK_tickets WHERE id = ?',
+      [id]
+    );
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'Ticket não encontrado' });
+    }
+
+    res.json(results[0]); // Retorna só o item (não o array)
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao buscar ticket específico', details: err.message });
+  }
+};
+
+
 
 exports.updateTicket = async (req, res) => {
   try {
