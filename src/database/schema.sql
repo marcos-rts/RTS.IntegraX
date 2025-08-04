@@ -351,6 +351,30 @@ DO
     DELETE FROM JWT_blacklist WHERE expira_em < NOW();
 
 -- CRIAÇÃO DE VIEWS
+CREATE VIEW vw_tickets_completo AS
+SELECT 
+Tickets.id as id_ticket,
+Tickets.title as title_ticket,
+Tickets.description as description_ticket,
+Status.nome as status,
+Status.cor as cor_Status,
+Tickets.prioridade as prioriedade_ticket,
+Grupo.nome as Grupo,
+Grupo.cor as cor_Grupo,
+Tickets.solicitante_id as id_pessoa,
+Pessoa.nome_exibicao as nome_pessoa,
+Tickets.url_github as url_repositorio,
+GH.github_id,
+GH.tipo as tipo_github,
+GH.titulo as titulo_github,
+GH.status as status_github,
+GH.url as url_github
+FROM TK_tickets Tickets 
+LEFT JOIN GH_integracao GH ON GH.ticket_id = Tickets.id
+LEFT JOIN RTS_status Status ON Status.id = Tickets.status_id
+LEFT JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id
+LEFT JOIN RTS_pessoa Pessoa ON Pessoa.id = Tickets.solicitante_id
+
 CREATE VIEW vw_tickets_simples AS
 SELECT 
   Tickets.id as "ID",
