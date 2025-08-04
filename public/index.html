@@ -145,6 +145,7 @@
         <a href="/esqueci-senha">Esqueceu a senha?</a>
       </p>
     </div>
+    <div id="mensagem" class="alert alert-danger text-center" style="display: none;"></div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Entrar</button>
     <p class="mt-5 mb-3 text-muted text-center">&copy; 2024-2025</p>
   </form>
@@ -171,27 +172,35 @@
           );
 
           const dados = await resposta.json();
+          const mensagemDiv = document.getElementById("mensagem");
 
           if (resposta.ok && dados.success) {
-            document.getElementById(
-              "mensagem"
-            ).textContent = Bem - vindo, ${ dados.usuario.usuario } !;
-            // Exemplo: salvar token no localStorage
+            mensagemDiv.classList.remove("alert-danger");
+            mensagemDiv.classList.add("alert-success");
+            mensagemDiv.textContent = `Bem-vindo, ${dados.usuario.usuario}!`;
+            mensagemDiv.style.display = "block";
+
+            // Salva no localStorage
             localStorage.setItem("token", dados.token);
             localStorage.setItem("usuario_nome", dados.usuario.usuario);
             localStorage.setItem("usuario_id", dados.usuario.id);
             localStorage.setItem("usuario_email", dados.usuario.email);
             localStorage.setItem("usuario_tipo", dados.usuario.tipo);
-            // Redirecionar para o painel, por exemplo
+
+            // Redireciona
             window.location.href = "/painel";
           } else {
-            document.getElementById("mensagem").textContent =
-              "Email ou senha inválidos.";
+            mensagemDiv.classList.remove("alert-success");
+            mensagemDiv.classList.add("alert-danger");
+            mensagemDiv.textContent = "Email ou senha inválidos.";
+            mensagemDiv.style.display = "block";
           }
         } catch (erro) {
           console.error("Erro na requisição:", erro);
-          document.getElementById("mensagem").textContent =
-            "Erro ao conectar com o servidor.";
+          mensagemDiv.classList.remove("alert-success");
+          mensagemDiv.classList.add("alert-danger");
+          mensagemDiv.textContent = "Erro ao conectar com o servidor.";
+          mensagemDiv.style.display = "block";
         }
       });
   </script>
