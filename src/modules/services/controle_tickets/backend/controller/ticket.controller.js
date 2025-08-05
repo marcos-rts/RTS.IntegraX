@@ -43,26 +43,68 @@ exports.createTicket = async (req, res) => {
 exports.getTicketById = async (req, res) => {
   try {
     const { id } = req.params;
-    // console.log("Recebido ID:", req.params.id);
 
     if (!id) {
       return res.status(400).json({ error: 'ID do ticket é obrigatório' });
     }
 
-    const [results] = await db.execute(
-      'SELECT * FROM vw_tickets_simples WHERE id = ?',
+    const [rows] = await db.execute(
+      'SELECT * FROM vw_tickets_completo WHERE id_ticket = ?',
       [id]
     );
 
-    if (results.length === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: 'Ticket não encontrado' });
     }
 
-    res.json(results[0]); // Retorna só o item (não o array)
+    // Montar o objeto principal do ticket com base na primeira linha
+    const {
+      id_ticket,
+      title_ticket,
+      description_ticket,
+      status,
+      cor_Status,
+      prioriedade_ticket,
+      Grupo,
+      cor_Grupo,
+      id_pessoa,
+      nome_pessoa,
+      url_repositorio,
+    } = rows[0];
+
+    // Mapear todas as integrações do GitHub
+    const github_itens = rows
+      .filter(r => r.github_id !== null) // descarta nulls (se o ticket não tiver vinculação com GitHub)
+      .map(r => ({
+        github_id: r.github_id,
+        tipo: r.tipo_github,
+        titulo: r.titulo_github,
+        status: r.status_github,
+        url: r.url_github,
+      }));
+
+    // Retornar um objeto bem estruturado
+    const ticketCompleto = {
+      id_ticket,
+      title_ticket,
+      description_ticket,
+      status,
+      cor_Status,
+      prioriedade_ticket,
+      Grupo,
+      cor_Grupo,
+      id_pessoa,
+      nome_pessoa,
+      url_repositorio,
+      github_itens, // Aqui vai como array
+    };
+
+    res.json(ticketCompleto);
   } catch (err) {
     res.status(500).json({ error: 'Erro ao buscar ticket específico', details: err.message });
   }
 };
+
 
 
 

@@ -351,29 +351,61 @@ DO
     DELETE FROM JWT_blacklist WHERE expira_em < NOW();
 
 -- CRIAÇÃO DE VIEWS
-CREATE VIEW vw_status_simples AS
-SELECT Status.nome as "status_nome",
-Status.id as "status_id",
-Banco.nome as "nome_Banco",
-Tabela.nome as "nome_tabela"
-FROM DEV_RTS_IntegraX.RTS_status Status
-left join DEV_RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
-left join DEV_RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
+CREATE VIEW vw_tickets_completo AS
+SELECT 
+Tickets.id as id_ticket,
+Tickets.title as title_ticket,
+Tickets.description as description_ticket,
+Status.nome as status,
+Status.cor as cor_Status,
+Tickets.prioridade as prioriedade_ticket,
+Grupo.nome as Grupo,
+Grupo.cor as cor_Grupo,
+Tickets.solicitante_id as id_pessoa,
+Pessoa.nome_exibicao as nome_pessoa,
+Tickets.url_github as url_repositorio,
+GH.github_id,
+GH.tipo as tipo_github,
+GH.titulo as titulo_github,
+GH.status as status_github,
+GH.url as url_github
+FROM TK_tickets Tickets 
+LEFT JOIN GH_integracao GH ON GH.ticket_id = Tickets.id
+LEFT JOIN RTS_status Status ON Status.id = Tickets.status_id
+LEFT JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id
+LEFT JOIN RTS_pessoa Pessoa ON Pessoa.id = Tickets.solicitante_id
 
 CREATE VIEW vw_tickets_simples AS
 SELECT 
-Tickets.id as "ID",
-Tickets.title as "Titulo",
-Status.nome as "Status",
-Status.cor as "Cor_Status",
-Grupo.nome as "Grupo",
-Grupo.cor as "Cor_Grupo",
-Tickets.prioridade as "Prioriedade",
-Tickets.description as "Descricao"
+  Tickets.id as "ID",
+  Tickets.title as "Titulo",
+  Status.nome as "Status",
+  Status.cor as "Cor_Status",
+  Grupo.nome as "Grupo",
+  Grupo.cor as "Cor_Grupo",
+  Tickets.prioridade as "Prioriedade",
+  Tickets.description as "Descricao"
 FROM TK_tickets Tickets
-JOIN RTS_status Status ON Status.id = Tickets.status_id
-JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id;
+  JOIN RTS_status Status ON Status.id = Tickets.status_id
+  JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id;
 
+CREATE VIEW vw_status_simples AS
+SELECT
+  Status.nome AS id_nome,
+  Status.id AS id_status,
+  Banco.nome AS nome_Banco,
+  Tabela.nome AS nome_tabela
+FROM RTS_IntegraX.RTS_status Status
+  LEFT JOIN RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
+  LEFT JOIN RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
+
+CREATE VIEW vw_grupo_simples AS
+SELECT
+  Grupo.id AS Grupo_id,
+  Grupo.nome AS Grupo_nome,
+  Banco.nome AS Banco_nome
+FROM RTS_IntegraX.RTS_grupo Grupo
+  LEFT JOIN RTS_IntegraX.RTS_tipoBanco Banco on Grupo.tipoBanco_id = Banco.id;
 
 
 -- INSEREÇÃO DE DADOS INICIAIS
