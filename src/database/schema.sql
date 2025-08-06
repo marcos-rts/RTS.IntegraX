@@ -106,17 +106,35 @@ CREATE TABLE RTS_pessoa (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+CREATE TABLE RTS_empresa (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(255) NOT NULL,
+  nome_fantasia VARCHAR(255),
+  cnpj VARCHAR(18),
+  tipo_empresa ENUM('Pública', 'Privada', 'Mista', 'MEI', 'Outros') DEFAULT 'Privada',
+  setor_atividade VARCHAR(255),
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+
 CREATE TABLE RTS_pessoa_vinculo (
   id INT AUTO_INCREMENT PRIMARY KEY,
   pessoa_id INT NOT NULL,
+  empresa_id INT NOT NULL,
   tipo_vinculo ENUM('Empregado', 'Terceirizado', 'Estagiário', 'Prestador', 'Outro') NOT NULL,
-  empresa VARCHAR(255),
   cargo VARCHAR(255),
   data_inicio DATE,
   data_fim DATE,
   observacao TEXT,
-  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
+  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id),
+  FOREIGN KEY (empresa_id) REFERENCES RTS_empresa(id)
 );
+
 
 CREATE TABLE RTS_pessoa_contato (
   id INT AUTO_INCREMENT PRIMARY KEY,
