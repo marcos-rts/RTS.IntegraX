@@ -27,6 +27,10 @@ router.get('/cadastrar_usuario', (req, res) => {
     res.sendFile(path.join(publicPath, 'users', 'cria_usuario.html'));
 });
 
+router.get('/pessoas', (req, res) => {
+    res.sendFile(path.join(publicPath, 'users', 'pessoas.html'));
+});
+
 // 🎟️ Tickets
 router.get('/lista_tickets', (req, res) => {
     res.sendFile(path.join(publicPath, 'tickets', 'lista_tickets.html'));

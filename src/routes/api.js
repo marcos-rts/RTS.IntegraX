@@ -17,6 +17,10 @@ const {status, grupo} = require('../controller/rts.grupo_status');
 router.get('/status', authMiddleware, status);
 router.get('/grupo', authMiddleware, grupo);
 
+// ⚙️ Pessoas
+const rotasPessoas = require('../modules/people/people.route');
+router.use('/people', rotasPessoas);
+
 // ⚙️ Módulo Tickets
 try {
     const setupTicketsModule = require('../modules/services/controle_tickets/tickets.module');
