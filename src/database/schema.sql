@@ -106,6 +106,56 @@ CREATE TABLE RTS_pessoa (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+CREATE TABLE RTS_pessoa_vinculo (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pessoa_id INT NOT NULL,
+  tipo_vinculo ENUM('Empregado', 'Terceirizado', 'Estagiário', 'Prestador', 'Outro') NOT NULL,
+  empresa VARCHAR(255),
+  cargo VARCHAR(255),
+  data_inicio DATE,
+  data_fim DATE,
+  observacao TEXT,
+  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
+);
+
+CREATE TABLE RTS_pessoa_contato (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pessoa_id INT NOT NULL,
+  tipo ENUM('Telefone', 'Celular', 'Email', 'WhatsApp', 'Outro') NOT NULL,
+  valor VARCHAR(255) NOT NULL,
+  observacao TEXT,
+  preferencial BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
+);
+
+CREATE TABLE RTS_pessoa_endereco (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pessoa_id INT NOT NULL,
+  tipo ENUM('Residencial', 'Comercial', 'Outro') DEFAULT 'Residencial',
+  cep VARCHAR(15),
+  logradouro VARCHAR(255),
+  numero VARCHAR(50),
+  complemento VARCHAR(255),
+  bairro VARCHAR(100),
+  cidade VARCHAR(100),
+  estado VARCHAR(100),
+  pais VARCHAR(100) DEFAULT 'Brasil',
+  observacao TEXT,
+  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
+);
+
+CREATE TABLE RTS_pessoa_documento (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  pessoa_id INT NOT NULL,
+  tipo ENUM('CPF', 'RG', 'CNH', 'Passaporte', 'Outro') NOT NULL,
+  numero VARCHAR(100) NOT NULL,
+  emissor VARCHAR(100),
+  data_emissao DATE,
+  validade DATE,
+  observacao TEXT,
+  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
+);
+
 -- Tabela: RTS_grupo
 CREATE TABLE RTS_grupo (
   id INT AUTO_INCREMENT PRIMARY KEY,
