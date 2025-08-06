@@ -131,6 +131,12 @@ CREATE TABLE RTS_pessoa_vinculo (
   data_inicio DATE,
   data_fim DATE,
   observacao TEXT,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id),
   FOREIGN KEY (empresa_id) REFERENCES RTS_empresa(id)
 );
@@ -143,6 +149,12 @@ CREATE TABLE RTS_pessoa_contato (
   valor VARCHAR(255) NOT NULL,
   observacao TEXT,
   preferencial BOOLEAN DEFAULT FALSE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
 );
 
@@ -159,6 +171,12 @@ CREATE TABLE RTS_pessoa_endereco (
   estado VARCHAR(100),
   pais VARCHAR(100) DEFAULT 'Brasil',
   observacao TEXT,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
 );
 
@@ -171,6 +189,12 @@ CREATE TABLE RTS_pessoa_documento (
   data_emissao DATE,
   validade DATE,
   observacao TEXT,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
 );
 
