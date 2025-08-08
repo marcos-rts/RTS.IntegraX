@@ -333,6 +333,20 @@ CREATE TABLE
   );
 
 CREATE TABLE
+  TK_ticket_vinculo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL, -- ticket principal
+    ticket_relacionado_id INT NOT NULL, -- ticket relacionado
+    tipo_relacao ENUM ('Filho', 'Duplicada', 'Relacionado') NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    FOREIGN KEY (ticket_id) REFERENCES TK_tickets (id) ON DELETE CASCADE,
+    FOREIGN KEY (ticket_relacionado_id) REFERENCES TK_tickets (id) ON DELETE CASCADE,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    UNIQUE KEY unique_vinculo (ticket_id, ticket_relacionado_id, tipo_relacao)
+  );
+
+CREATE TABLE
   FX_carteira (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255),
