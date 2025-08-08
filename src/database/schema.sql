@@ -37,6 +37,21 @@ CREATE TABLE RTS_usuario (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+CREATE TABLE RTS_marcador (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  descricao TEXT,
+  cor VARCHAR(10) DEFAULT '#FFFFFF',
+  excluido BOOLEAN DEFAULT FALSE,
+  ativo BOOLEAN DEFAULT TRUE,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  atualizado_por_id INT,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
 -- Tabela: RTS_tipoBanco
 CREATE TABLE RTS_tipoBanco (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -249,6 +264,8 @@ CREATE TABLE CT_itens (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+-- INICIO TABELA MODULO DE TICKETS
+-- Tabela: TK_tickets
 CREATE TABLE TK_tickets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255),
@@ -272,6 +289,18 @@ CREATE TABLE TK_tickets (
   FOREIGN KEY (solicitante_id) REFERENCES RTS_pessoa(id),
   FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
+);
+
+CREATE TABLE TK_ticket_marcador (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ticket_id INT NOT NULL,
+  marcador_id INT NOT NULL,
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  criado_por_id INT,
+  FOREIGN KEY (ticket_id) REFERENCES TK_tickets(id) ON DELETE CASCADE,
+  FOREIGN KEY (marcador_id) REFERENCES RTS_marcador(id) ON DELETE CASCADE,
+  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
+  UNIQUE KEY unique_ticket_marcador (ticket_id, marcador_id)
 );
 
 CREATE TABLE FX_carteira( 
