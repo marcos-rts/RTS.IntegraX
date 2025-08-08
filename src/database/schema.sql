@@ -264,6 +264,8 @@ CREATE TABLE CT_itens (
   FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
 );
 
+-- INICIO TABELA MODULO DE TICKETS
+-- Tabela: TK_tickets
 CREATE TABLE TK_tickets (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(255),
