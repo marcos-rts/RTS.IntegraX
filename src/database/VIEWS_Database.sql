@@ -82,3 +82,22 @@ SELECT
 FROM
     RTS_pessoa pessoa
     LEFT JOIN RTS_usuario usuario ON usuario.id = pessoa.usuario_id
+
+-- CRIAÇÃO DE VIEWS PARA PESSOAS EMPRESA
+CREATE VIEW
+    vw_pessoa_empresa AS
+SELECT
+    pessoa.id as pessoa_id,
+    pessoa.nome as pessoa_nome,
+    pessoa.nome_exibicao as pessoa_apelido,
+    usuario.id as usuario_id,
+    usuario.usuario as usuario_nome,
+    usuario.email as usuario_email,
+    usuario.tipo as usuario_tipo,
+    empresa.nome_fantasia as empresa_nome,
+    vinculo.cargo as vinculo_cargo
+FROM
+    RTS_pessoa pessoa
+    LEFT JOIN RTS_usuario usuario ON usuario.id = pessoa.usuario_id
+    LEFT JOIN RTS_pessoa_vinculo vinculo ON vinculo.pessoa_id = pessoa.id
+    LEFT JOIN RTS_empresa empresa ON empresa.id = vinculo.empresa_id
