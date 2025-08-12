@@ -10,7 +10,7 @@ const logger = new Logger();
 
 const pessoa = async (req, res) => {
     try {
-        const [rows] = await db.execute('SELECT * FROM vw_pessoa_simples');
+        const [rows] = await db.execute('SELECT * FROM vw_pessoa_empresa');
         if (rows.length === 0) {
             // res.json(rows);
             return res.status(404).json({ message: 'Nenhuma pessoa encontrada.' });
