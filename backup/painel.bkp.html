@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sistema Modular - Painel</title>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #f1f3f4;
+    }
+
+    .sidebar {
+      height: 100vh;
+      background: linear-gradient(180deg, #212529, #343a40);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      padding-top: 60px;
+    }
+
+    .sidebar a {
+      color: #adb5bd;
+      text-decoration: none;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: #495057;
+      color: white;
+    }
+
+    .sidebar i {
+      margin-right: 10px;
+    }
+
+    .content {
+      margin-left: 250px;
+      padding: 2rem;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      transition: 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 250px;
+      right: 0;
+      height: 60px;
+      background-color: #ffffff;
+      border-bottom: 1px solid #dee2e6;
+      z-index: 1000;
+      padding: 0 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar h5 {
+      margin: 0;
+    }
+
+    .card-title i {
+      font-size: 1.5rem;
+      color: #0d6efd;
+    }
+
+    .username-btn {
+      font-size: 0.9rem;
+    }
+  </style>
+
+  <script>
+    // Função para verificar validade do token
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      // Token não existe, redireciona para login
+      window.location.href = "/";
+    } else {
+      const payload = parseJwt(token);
+      const now = Math.floor(Date.now() / 1000);
+
+      if (!payload || payload.exp < now) {
+        // Token expirado
+        localStorage.removeItem('token');
+        window.location.href = "/";
+      }
+
+      // Caso queira: 
+      console.log("Token válido. Bem-vindo!");
+    }
+  </script>
+
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="/painel"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    <a href="/lista_tickets"><i class="bi bi-ticket"></i> Tickets</a>
+    <a href="#"><i class="bi bi-folder2-open"></i> Documentos</a>
+    <a href="#"><i class="bi bi-tools"></i> Manutenção</a>
+    <a href="/controle_usuarios"><i class="bi bi-people"></i> Usuários</a>
+    <a href="#"><i class="bi bi-gear"></i> Configurações</a>
+    <a href="#"><i class="bi bi-bar-chart-line"></i> Relatórios</a>
+  </div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <h5>Sistema Modular</h5>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary username-btn">
+        <i class="bi bi-person-circle"></i> Carregando...
+      </button>
+      <button onclick="logout()" class="btn btn-outline-danger btn-sm">
+        Sair
+      </button>
+    </div>
+  </div>
+
+  <!-- Conteúdo Principal -->
+  <div class="content mt-5">
+    <h3 class="mb-4">Bem-vindo, Marcos 👋</h3>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title">
+              <i class="bi bi-folder2-open"></i> Documentos
+            </h5>
+            <p class="card-text">Gerencie arquivos e registros internos.</p>
+            <a href="#" class="btn btn-outline-primary">Acessar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title"><i class="bi bi-tools"></i> Manutenção</h5>
+            <p class="card-text">Controle ordens de serviço e SLA.</p>
+            <a href="#" class="btn btn-outline-primary">Acessar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body text-center">
+            <h5 class="card-title"><i class="bi bi-people"></i> Usuários</h5>
+            <p class="card-text">Controle de permissões e acessos.</p>
+            <a href="/controle_usuarios" class="btn btn-outline-primary">Acessar</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outros módulos aqui... -->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/"; // ou login.html, se estiver separado
+        return;
+      }
+
+      const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
+
+      const btnUsuario = document.querySelector(".username-btn");
+      const saudacao = document.querySelector("h3");
+
+      if (btnUsuario) {
+        btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
+      }
+
+      if (saudacao) {
+        saudacao.textContent = `Bem-vindo, ${nomeUsuario} 👋`;
+      }
+    });
+
+    async function logout() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          // Já está deslogado
+          window.location.href = "/";
+          return;
+        }
+
+        const response = await fetch("/api/autenticacao/logout", {
+          method: "POST", // ou DELETE, se quiser mais semântico
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          localStorage.clear();
+          window.location.href = "/"; // Redireciona para a home após logout
+        } else {
+          const result = await response.json();
+          console.error("Erro no logout:", result.message);
+          alert("Erro ao sair: " + result.message);
+        }
+      } catch (err) {
+        console.error("Erro ao tentar logout:", err);
+        alert("Erro inesperado ao sair.");
+      }
+    }
+  </script>
+</body>
+
+</html>

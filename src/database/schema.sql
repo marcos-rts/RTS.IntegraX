@@ -8,569 +8,505 @@
 -- Ligar o event_scheduler manualmente, mesmo que já esteja ON
 -- Não causa erro, apenas reatribui
 -- SET GLOBAL event_scheduler = ON;
-
 DROP DATABASE IF EXISTS DEV_RTS_IntegraX;
+
 CREATE DATABASE DEV_RTS_IntegraX;
+
 USE DEV_RTS_IntegraX;
 
-
 -- Tabela: RTS_usuario
-CREATE TABLE RTS_usuario (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario VARCHAR(255),
-  senha_hash VARCHAR(255),
-  email VARCHAR(255),
-  tipo ENUM('Admin', 'Comum'),
-  celular_2fa VARCHAR(255),
-  data_login TIMESTAMP NULL,
-  data_logout TIMESTAMP NULL,
-  token VARCHAR(255),
-  data_token TIMESTAMP NULL,
-  is_api BOOLEAN DEFAULT FALSE,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  RTS_usuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario VARCHAR(255),
+    senha_hash VARCHAR(255),
+    email VARCHAR(255),
+    tipo ENUM ('Admin', 'Comum'),
+    celular_2fa VARCHAR(255),
+    data_login TIMESTAMP NULL,
+    data_logout TIMESTAMP NULL,
+    token VARCHAR(255),
+    data_token TIMESTAMP NULL,
+    is_api BOOLEAN DEFAULT FALSE,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
+
+CREATE TABLE
+  RTS_marcador (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    cor VARCHAR(10) DEFAULT '#FFFFFF',
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
 -- Tabela: RTS_tipoBanco
-CREATE TABLE RTS_tipoBanco (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  descricao TEXT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  RTS_tipoBanco (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
-CREATE TABLE RTS_tabela (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  descricao TEXT,
-  tipoBanco_id INT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id),
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  RTS_tabela (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    tipoBanco_id INT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco (id),
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
 -- Tabela: RTS_status
-CREATE TABLE RTS_status (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  descricao TEXT,
-  -- tipo ENUM('CT', 'RTS', 'FX', 'TK'),
-  tipoBanco_id INT,
-  tabela_id INT,
-  cor VARCHAR(10) DEFAULT '#FFFFFF',
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id),
-  FOREIGN KEY (tabela_id) REFERENCES RTS_tabela(id)
-);
+CREATE TABLE
+  RTS_status (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    -- tipo ENUM('CT', 'RTS', 'FX', 'TK'),
+    tipoBanco_id INT,
+    tabela_id INT,
+    cor VARCHAR(10) DEFAULT '#FFFFFF',
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco (id),
+    FOREIGN KEY (tabela_id) REFERENCES RTS_tabela (id)
+  );
 
 -- Tabela: RTS_pessoa
-CREATE TABLE RTS_pessoa (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  nome_exibicao VARCHAR(255),
-  usuario_id INT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (usuario_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  RTS_pessoa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    nome_exibicao VARCHAR(255),
+    usuario_id INT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (usuario_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
-CREATE TABLE RTS_empresa (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  nome_fantasia VARCHAR(255),
-  cnpj VARCHAR(18),
-  tipo_empresa ENUM('Pública', 'Privada', 'Mista', 'MEI', 'Outros') DEFAULT 'Privada',
-  setor_atividade VARCHAR(255),
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  RTS_empresa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    nome_fantasia VARCHAR(255),
+    cnpj VARCHAR(18),
+    tipo_empresa ENUM ('Pública', 'Privada', 'Mista', 'MEI', 'Outros') DEFAULT 'Privada',
+    setor_atividade VARCHAR(255),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
+CREATE TABLE
+  RTS_pessoa_vinculo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pessoa_id INT NOT NULL,
+    empresa_id INT NOT NULL,
+    tipo_vinculo ENUM (
+      'Empregado',
+      'Terceirizado',
+      'Estagiário',
+      'Prestador',
+      'Outro'
+    ) NOT NULL,
+    cargo VARCHAR(255),
+    data_inicio DATE,
+    data_fim DATE,
+    observacao TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa (id),
+    FOREIGN KEY (empresa_id) REFERENCES RTS_empresa (id)
+  );
 
-CREATE TABLE RTS_pessoa_vinculo (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  pessoa_id INT NOT NULL,
-  empresa_id INT NOT NULL,
-  tipo_vinculo ENUM('Empregado', 'Terceirizado', 'Estagiário', 'Prestador', 'Outro') NOT NULL,
-  cargo VARCHAR(255),
-  data_inicio DATE,
-  data_fim DATE,
-  observacao TEXT,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id),
-  FOREIGN KEY (empresa_id) REFERENCES RTS_empresa(id)
-);
+CREATE TABLE
+  RTS_pessoa_contato (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pessoa_id INT NOT NULL,
+    tipo ENUM (
+      'Telefone',
+      'Celular',
+      'Email',
+      'WhatsApp',
+      'Outro'
+    ) NOT NULL,
+    valor VARCHAR(255) NOT NULL,
+    observacao TEXT,
+    preferencial BOOLEAN DEFAULT FALSE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa (id)
+  );
 
+CREATE TABLE
+  RTS_pessoa_endereco (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pessoa_id INT NOT NULL,
+    tipo ENUM ('Residencial', 'Comercial', 'Outro') DEFAULT 'Residencial',
+    cep VARCHAR(15),
+    logradouro VARCHAR(255),
+    numero VARCHAR(50),
+    complemento VARCHAR(255),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    estado VARCHAR(100),
+    pais VARCHAR(100) DEFAULT 'Brasil',
+    observacao TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa (id)
+  );
 
-CREATE TABLE RTS_pessoa_contato (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  pessoa_id INT NOT NULL,
-  tipo ENUM('Telefone', 'Celular', 'Email', 'WhatsApp', 'Outro') NOT NULL,
-  valor VARCHAR(255) NOT NULL,
-  observacao TEXT,
-  preferencial BOOLEAN DEFAULT FALSE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
-);
-
-CREATE TABLE RTS_pessoa_endereco (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  pessoa_id INT NOT NULL,
-  tipo ENUM('Residencial', 'Comercial', 'Outro') DEFAULT 'Residencial',
-  cep VARCHAR(15),
-  logradouro VARCHAR(255),
-  numero VARCHAR(50),
-  complemento VARCHAR(255),
-  bairro VARCHAR(100),
-  cidade VARCHAR(100),
-  estado VARCHAR(100),
-  pais VARCHAR(100) DEFAULT 'Brasil',
-  observacao TEXT,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
-);
-
-CREATE TABLE RTS_pessoa_documento (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  pessoa_id INT NOT NULL,
-  tipo ENUM('CPF', 'RG', 'CNH', 'Passaporte', 'Outro') NOT NULL,
-  numero VARCHAR(100) NOT NULL,
-  emissor VARCHAR(100),
-  data_emissao DATE,
-  validade DATE,
-  observacao TEXT,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
-);
+CREATE TABLE
+  RTS_pessoa_documento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pessoa_id INT NOT NULL,
+    tipo ENUM ('CPF', 'RG', 'CNH', 'Passaporte', 'Outro') NOT NULL,
+    numero VARCHAR(100) NOT NULL,
+    emissor VARCHAR(100),
+    data_emissao DATE,
+    validade DATE,
+    observacao TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa (id)
+  );
 
 -- Tabela: RTS_grupo
-CREATE TABLE RTS_grupo (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  descricao TEXT,
-  exemplo TEXT,
-  cor VARCHAR(10) DEFAULT '#FFFFFF',
-  tipoBanco_id INT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco(id),
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  RTS_grupo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    exemplo TEXT,
+    cor VARCHAR(10) DEFAULT '#FFFFFF',
+    tipoBanco_id INT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (tipoBanco_id) REFERENCES RTS_tipoBanco (id),
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
 -- Tabela: RTS_auditoria
-CREATE TABLE RTS_auditoria (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  tabela VARCHAR(255),
-  id_registro INT,
-  acao ENUM('CRIAR', 'EDITAR', 'EXCLUIR', 'ATIVAR', 'INATIVAR'),
-  antes TEXT,
-  depos TEXT,
-  feito_por_id INT,
-  feito_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (feito_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  RTS_auditoria (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tabela VARCHAR(255),
+    id_registro INT,
+    acao ENUM (
+      'CRIAR',
+      'EDITAR',
+      'EXCLUIR',
+      'ATIVAR',
+      'INATIVAR'
+    ),
+    antes TEXT,
+    depos TEXT,
+    feito_por_id INT,
+    feito_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (feito_por_id) REFERENCES RTS_usuario (id)
+  );
 
 -- Tabela: CT_itens
-CREATE TABLE CT_itens (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  descricao TEXT,
-  status_id INT NULL,
-  quantidade INT NOT NULL DEFAULT 1,
-  observacao TEXT,
-  excluido BOOLEAN DEFAULT FALSE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  CT_itens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    status_id INT NULL,
+    quantidade INT NOT NULL DEFAULT 1,
+    observacao TEXT,
+    excluido BOOLEAN DEFAULT FALSE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (status_id) REFERENCES RTS_status (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
-CREATE TABLE TK_tickets (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255),
-  description TEXT,
-  status_id INT,
-  prioridade ENUM('Baixa', 'Média', 'Alta', 'Urgente') DEFAULT 'Média',
-  solicitante_id INT,
-  grupo_id INT,
-  url_github VARCHAR(255),
-  data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  data_encerramento TIMESTAMP,
-  excluido BOOLEAN DEFAULT FALSE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (grupo_id) REFERENCES RTS_grupo(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (solicitante_id) REFERENCES RTS_pessoa(id),
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+-- INICIO TABELA MODULO DE TICKETS
+-- Tabela: TK_tickets
+CREATE TABLE
+  TK_tickets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    status_id INT,
+    prioridade ENUM ('Baixa', 'Média', 'Alta', 'Urgente') DEFAULT 'Média',
+    solicitante_id INT,
+    grupo_id INT,
+    url_github VARCHAR(255),
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_encerramento TIMESTAMP,
+    excluido BOOLEAN DEFAULT FALSE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (status_id) REFERENCES RTS_status (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (grupo_id) REFERENCES RTS_grupo (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (solicitante_id) REFERENCES RTS_pessoa (id),
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
-CREATE TABLE FX_carteira( 
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  descricao TEXT,
-  responsavel_id INT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (responsavel_id) REFERENCES RTS_pessoa(id),
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  TK_ticket_marcador (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    marcador_id INT NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    FOREIGN KEY (ticket_id) REFERENCES TK_tickets (id) ON DELETE CASCADE,
+    FOREIGN KEY (marcador_id) REFERENCES RTS_marcador (id) ON DELETE CASCADE,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    UNIQUE KEY unique_ticket_marcador (ticket_id, marcador_id)
+  );
+
+CREATE TABLE
+  TK_ticket_vinculo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL, -- ticket principal
+    ticket_relacionado_id INT NOT NULL, -- ticket relacionado
+    tipo_relacao ENUM ('Filho', 'Duplicada', 'Relacionado') NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    FOREIGN KEY (ticket_id) REFERENCES TK_tickets (id) ON DELETE CASCADE,
+    FOREIGN KEY (ticket_relacionado_id) REFERENCES TK_tickets (id) ON DELETE CASCADE,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    UNIQUE KEY unique_vinculo (ticket_id, ticket_relacionado_id, tipo_relacao)
+  );
+
+CREATE TABLE
+  FX_carteira (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    responsavel_id INT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (responsavel_id) REFERENCES RTS_pessoa (id),
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
 -- Tabela: FX_conta
-CREATE TABLE FX_conta (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  carteira_id INT, -- FK para FX_carteira
-  nome VARCHAR(255),
-  valor DECIMAL(10,2) DEFAULT 0.0,
-  descricao TEXT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  tipo ENUM('Credito', 'Debito') DEFAULT 'Debito',
-  status_id INT,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (carteira_id) REFERENCES FX_carteira(id),
-  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  FX_conta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    carteira_id INT, -- FK para FX_carteira
+    nome VARCHAR(255),
+    valor DECIMAL(10, 2) DEFAULT 0.0,
+    descricao TEXT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    tipo ENUM ('Credito', 'Debito') DEFAULT 'Debito',
+    status_id INT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (carteira_id) REFERENCES FX_carteira (id),
+    FOREIGN KEY (status_id) REFERENCES RTS_status (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
-CREATE TABLE FX_subconta (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  conta_id INT NOT NULL, -- vínculo com FX_conta
-  nome VARCHAR(255),
-  valor DECIMAL(10,2) DEFAULT 0.0,
-  tipo ENUM('Cofrinho', 'Investimento', 'Reserva', 'Outros') DEFAULT 'Cofrinho',
-  descricao TEXT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (conta_id) REFERENCES FX_conta(id)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
-
+CREATE TABLE
+  FX_subconta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    conta_id INT NOT NULL, -- vínculo com FX_conta
+    nome VARCHAR(255),
+    valor DECIMAL(10, 2) DEFAULT 0.0,
+    tipo ENUM ('Cofrinho', 'Investimento', 'Reserva', 'Outros') DEFAULT 'Cofrinho',
+    descricao TEXT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (conta_id) REFERENCES FX_conta (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
 -- Tabela: FX_categoria
-CREATE TABLE FX_categoria (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  descricao TEXT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  FX_categoria (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    descricao TEXT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
 -- Tabela: FX_subcategoria
-CREATE TABLE FX_subcategoria (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nome VARCHAR(255),
-  categoria_id INT,
-  descricao TEXT,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (categoria_id) REFERENCES FX_categoria(id),
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  FX_subcategoria (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255),
+    categoria_id INT,
+    descricao TEXT,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (categoria_id) REFERENCES FX_categoria (id),
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
-CREATE TABLE FX_transacao (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  valor DECIMAL(10,2) NOT NULL,
-  tipo ENUM('Entrada', 'Saída', 'Transferência') NOT NULL DEFAULT 'Saída',
-  informacao TEXT,
-  conta_id INT NOT NULL, -- vínculo com FX_conta
-  conta_2_id INT NULL, -- opcional, pode ser NULL se não for movimentação segmentada
-  subcategoria_id INT NULL, -- vínculo com FX_subcategoria
-  pessoa_id INT NULL, -- vínculo com RTS_pessoa (quem esta associado)
-  observacao TEXT,
-  status_id INT, -- vínculo com RTS_status
-  data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  excluido BOOLEAN DEFAULT FALSE,
-  ativo BOOLEAN DEFAULT TRUE,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  criado_por_id INT,
-  atualizado_por_id INT,
-  FOREIGN KEY (conta_id) REFERENCES FX_conta(id)
-    ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (conta_2_id) REFERENCES FX_conta(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (subcategoria_id) REFERENCES FX_subcategoria(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (status_id) REFERENCES RTS_status(id)
-    ON DELETE SET NULL ON UPDATE CASCADE,
-  FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario(id),
-  FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario(id)
-);
+CREATE TABLE
+  FX_transacao (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    valor DECIMAL(10, 2) NOT NULL,
+    tipo ENUM ('Entrada', 'Saída', 'Transferência') NOT NULL DEFAULT 'Saída',
+    informacao TEXT,
+    conta_id INT NOT NULL, -- vínculo com FX_conta
+    conta_2_id INT NULL, -- opcional, pode ser NULL se não for movimentação segmentada
+    subcategoria_id INT NULL, -- vínculo com FX_subcategoria
+    pessoa_id INT NULL, -- vínculo com RTS_pessoa (quem esta associado)
+    observacao TEXT,
+    status_id INT, -- vínculo com RTS_status
+    data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    excluido BOOLEAN DEFAULT FALSE,
+    ativo BOOLEAN DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    criado_por_id INT,
+    atualizado_por_id INT,
+    FOREIGN KEY (conta_id) REFERENCES FX_conta (id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (conta_2_id) REFERENCES FX_conta (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (subcategoria_id) REFERENCES FX_subcategoria (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (pessoa_id) REFERENCES RTS_pessoa (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (status_id) REFERENCES RTS_status (id) ON DELETE SET NULL ON UPDATE CASCADE,
+    FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
+    FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
+  );
 
-CREATE TABLE GH_integracao (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  ticket_id INT,
-  tipo ENUM('issue', 'pull_request', 'commit'),
-  github_id BIGINT UNIQUE, -- ID real do GitHub
-  titulo VARCHAR(255),
-  url VARCHAR(500),
-  status ENUM('open', 'closed', 'merged', 'draft') DEFAULT 'open',
-  branch_origem VARCHAR(255),
-  branch_destino VARCHAR(255),
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (ticket_id) REFERENCES TK_tickets(id)
-    ON DELETE CASCADE
-);
+CREATE TABLE
+  GH_integracao (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT,
+    tipo ENUM ('issue', 'pull_request', 'commit'),
+    github_id BIGINT UNIQUE, -- ID real do GitHub
+    titulo VARCHAR(255),
+    url VARCHAR(500),
+    status ENUM ('open', 'closed', 'merged', 'draft') DEFAULT 'open',
+    branch_origem VARCHAR(255),
+    branch_destino VARCHAR(255),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (ticket_id) REFERENCES TK_tickets (id) ON DELETE CASCADE
+  );
 
-CREATE TABLE GH_ticket_vinculo (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  ticket_id INT NOT NULL,
-  integracao_id INT NOT NULL,
-  FOREIGN KEY (ticket_id) REFERENCES TK_tickets(id) ON DELETE CASCADE,
-  FOREIGN KEY (integracao_id) REFERENCES GH_integracao(id) ON DELETE CASCADE
-);
+CREATE TABLE
+  GH_ticket_vinculo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id INT NOT NULL,
+    integracao_id INT NOT NULL,
+    FOREIGN KEY (ticket_id) REFERENCES TK_tickets (id) ON DELETE CASCADE,
+    FOREIGN KEY (integracao_id) REFERENCES GH_integracao (id) ON DELETE CASCADE
+  );
 
+CREATE TABLE
+  JWT_blacklist (token TEXT NOT NULL, expira_em DATETIME NOT NULL);
 
-CREATE TABLE JWT_blacklist (
-    token TEXT NOT NULL,
-    expira_em DATETIME NOT NULL
-);
-
-CREATE TABLE CRON_coleta (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  ultima_execucao DATETIME,
-  proxima_execucao DATETIME NOT NULL,
-  status ENUM('Sucesso', 'Falha') DEFAULT 'Sucesso',
-  observacao TEXT,
-  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
+CREATE TABLE
+  CRON_coleta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ultima_execucao DATETIME,
+    proxima_execucao DATETIME NOT NULL,
+    status ENUM ('Sucesso', 'Falha') DEFAULT 'Sucesso',
+    observacao TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
 
 -- CRIAÇÂO DE EVENTOS
 -- Evento para limpar a blacklist de JWTs expirados diariamente
-CREATE EVENT limpeza_jwt_blacklist
-ON SCHEDULE EVERY 1 DAY
-STARTS CURRENT_TIMESTAMP
-DO
-    DELETE FROM JWT_blacklist WHERE expira_em < NOW();
-
--- CRIAÇÃO DE VIEWS
-CREATE VIEW vw_tickets_completo AS
-SELECT 
-Tickets.id as id_ticket,
-Tickets.title as title_ticket,
-Tickets.description as description_ticket,
-Status.nome as status,
-Status.cor as cor_Status,
-Tickets.prioridade as prioriedade_ticket,
-Grupo.nome as Grupo,
-Grupo.cor as cor_Grupo,
-Tickets.solicitante_id as id_pessoa,
-Pessoa.nome_exibicao as nome_pessoa,
-Tickets.url_github as url_repositorio,
-GH.github_id,
-GH.tipo as tipo_github,
-GH.titulo as titulo_github,
-GH.status as status_github,
-GH.url as url_github
-FROM TK_tickets Tickets 
-LEFT JOIN GH_integracao GH ON GH.ticket_id = Tickets.id
-LEFT JOIN RTS_status Status ON Status.id = Tickets.status_id
-LEFT JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id
-LEFT JOIN RTS_pessoa Pessoa ON Pessoa.id = Tickets.solicitante_id
-
-CREATE VIEW vw_tickets_simples AS
-SELECT 
-  Tickets.id as "ID",
-  Tickets.title as "Titulo",
-  Status.nome as "Status",
-  Status.cor as "Cor_Status",
-  Grupo.nome as "Grupo",
-  Grupo.cor as "Cor_Grupo",
-  Tickets.prioridade as "Prioriedade",
-  Tickets.description as "Descricao"
-FROM TK_tickets Tickets
-  JOIN RTS_status Status ON Status.id = Tickets.status_id
-  JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id;
-
-CREATE VIEW vw_status_simples AS
-SELECT
-  Status.nome AS id_nome,
-  Status.id AS id_status,
-  Banco.nome AS nome_Banco,
-  Tabela.nome AS nome_tabela
-FROM RTS_IntegraX.RTS_status Status
-  LEFT JOIN RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
-  LEFT JOIN RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
-
-CREATE VIEW vw_grupo_simples AS
-SELECT
-  Grupo.id AS Grupo_id,
-  Grupo.nome AS Grupo_nome,
-  Banco.nome AS Banco_nome
-FROM RTS_IntegraX.RTS_grupo Grupo
-  LEFT JOIN RTS_IntegraX.RTS_tipoBanco Banco on Grupo.tipoBanco_id = Banco.id;
-
-
--- INSEREÇÃO DE DADOS INICIAIS
-
--- Inserção de usuário admin
--- A senha 'admin' foi convertida para hash usando bcrypt
-INSERT INTO RTS_usuario (
-  usuario,
-  senha_hash,
-  email,
-  tipo,
-  ativo,
-  excluido,
-  is_api
-) VALUES (
-  'admin',
-  '$2b$10$YGPW9xXQeOFpl7CN/W8hQuiIHG3qcIiPLhtKLIYwTfVvQI8j9yGJy', -- hash da senha admin123
-  'admin@exemplo.com',
-  'Admin',
-  TRUE,
-  FALSE,
-  FALSE
-);
-
--- Inserção de tipos de banco
-INSERT INTO RTS_tipoBanco (nome, descricao, ativo, excluido, criado_por_id) VALUES
-('RTS', 'Core do sistema', TRUE, FALSE, 1), -- ID: 1
-('CT', 'Controle de Itens', TRUE, FALSE, 1), -- ID: 2
-('FX', 'Finanças e Contabilidade', TRUE, FALSE, 1), -- ID: 3
-('TK', 'Tickets de Suporte', TRUE, FALSE, 1); -- ID: 4
-
--- Inserção de tabela RTS_tabela
-INSERT INTO RTS_tabela (nome, descricao, tipoBanco_id, ativo, excluido, criado_por_id) VALUES
-('FX_conta', 'Tabela com informações das contas digitais', 3, TRUE, FALSE, 1),
-('FX_transacao', 'Tabela com informações das transações financeiras', 3, TRUE, FALSE, 1);
-
--- Inserção de status para Controle de Itens (CT)
-INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, criado_por_id) VALUES
-('Disponível', 'Status disponível', 2, '#D4EDDA', TRUE, FALSE, 1),
-('Em uso', 'Status em uso', 2, '#CCE5FF', TRUE, FALSE, 1),
-('Manutenção', 'Status Manutenção', 2, '#FFF3CD', TRUE, FALSE, 1),
-('Descartado', 'Status descartado', 2, '#F8D7DA', TRUE, FALSE, 1);
-
--- Inserção de status para Tickets (TK)
-INSERT INTO RTS_status (nome, descricao, tipoBanco_id, cor, ativo, excluido, criado_por_id) VALUES
-('Aberto', 'Ticket aberto', 4, '#D4EDDA', TRUE, FALSE, 1),
-('Em andamento', 'Ticket em andamento', 4, '#CCE5FF', TRUE, FALSE, 1),
-('Fechado', 'Ticket fechado', 4, '#FFF3CD', TRUE, FALSE, 1),
-('Cancelado', 'Ticket cancelado', 4, '#F8D7DA', TRUE, FALSE, 1);
-
--- Inserção de status para conta digitais (FX)
-INSERT INTO RTS_status (nome, descricao, tipoBanco_id, tabela_id, cor, ativo, excluido, criado_por_id) VALUES
-('Em Uso', 'Banco usado no dia a dia', 3, 1, '#D4EDDA', TRUE, FALSE, 1),
-('Poupança', 'Banco usado para poupança', 3, 1, '#CCE5FF', TRUE, FALSE, 1),
-('Investimentos', 'Banco usado para investimentos', 3, 1, '#FFF3CD', TRUE, FALSE, 1),
-('Verificando', 'Banco em verificação', 3, 1, '#F8D7DA', TRUE, FALSE, 1),
-('Congelado', 'Banco congelado', 3, 1, '#F8D7DA', TRUE, FALSE, 1);
-
--- Inserção de status para Finanças (FX)
-INSERT INTO RTS_status (nome, descricao, tipoBanco_id, tabela_id, cor, ativo, excluido, criado_por_id) VALUES
-('Pendente', 'Transação pendente', 3, 2, '#D4EDDA', TRUE, FALSE, 1),
-('Confirmado', 'Transação confirmada', 3, 2, '#F8D7DA', TRUE, FALSE, 1),
-('Cancelado', 'Transação cancelada', 3, 2, '#CCE5FF', TRUE, FALSE, 1);
-
--- Inserção de Grupos (TK)
-INSERT INTO RTS_grupo (nome, descricao, exemplo, cor, tipoBanco_id, ativo, excluido, criado_por_id) VALUES
-('Incidente/Bug', 'Algo que quebrou, precisa correção imediata.', '"Erro 500 na tela de login", "Sistema não salva dados"', '#FF0000', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Requisição', 'Pedido de serviço novo, mas não é bug nem melhoria.', '"Criar novo usuário", "Instalar ferramenta X"', '#d4c600ff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Melhoria', 'Algo que já existe mas pode ser otimizado.', '"Aumentar performance da API", "Melhorar layout de tela"', '#00eb89ff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Projeto', 'Demanda maior, com entregas em fases ou várias tarefas relacionadas.', '"Implantar nova API", "Refatoração geral do módulo Y"', '#690931ff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Tarefa Interna', 'Tarefas administrativas ou rotinas operacionais.', '"Backup semanal", "Organizar documentação"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Demanda Externa', 'Algo vindo de cliente, fornecedor ou outro time.', '"Solicitação do time financeiro", "Cliente pediu ajuste"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Teste', 'Atividades de QA, homologações e validações.', '"Testar novo deploy", "Homologar nova versão do app"', '#ffffffff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1),
-('Planejamento', 'Ticket criado para registrar ações de análise, arquitetura, decisões.', '"Definir arquitetura do projeto Z", "Criar roadmap 2025"', '#efff5fff', (SELECT id FROM RTS_tipoBanco WHERE nome = 'TK'), TRUE, FALSE, 1);
+CREATE EVENT limpeza_jwt_blacklist ON SCHEDULE EVERY 1 DAY STARTS CURRENT_TIMESTAMP DO
+DELETE FROM JWT_blacklist
+WHERE
+  expira_em < NOW ();

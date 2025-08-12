@@ -11,21 +11,21 @@ exports.getTickets = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
   try {
-    const { title, description, prioridade, status_id, grupo_id, criado_por_id } = req.body;
+    const { title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id } = req.body;
 
     // Validação básica (pode expandir depois com lib tipo Joi ou express-validator)
-    if (!title || !description || !prioridade || !status_id || !grupo_id) {
+    if (!title || !description || !prioridade || !status_id || !grupo_id || !solicitante_id || !url_github || !criado_por_id) {
       return res.status(400).json({
         error: 'Campos obrigatórios faltando',
-        details: { title, description, prioridade, status_id, grupo_id }
+        details: { title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }
       });
     }
 
     // Inserção no banco de dados
     const [result] = await db.execute(
-      `INSERT INTO TK_tickets (title, description, prioridade, status_id, grupo_id, criado_por_id)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [title, description, prioridade, status_id, grupo_id, criado_por_id]
+      `INSERT INTO TK_tickets (title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id]
     );
 
     res.status(201).json({
