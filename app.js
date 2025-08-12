@@ -22,6 +22,10 @@ const webRoutes = require('./src/routes/web');
 app.use('/api', apiRoutes);
 app.use('/', webRoutes);
 
+// Serve arquivos estáticos da pasta "public"
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // 🔥 Inicializar o servidor
 app.listen(process.env.PORT, () => {
   logger.System(`Servidor rodando na porta: ${process.env.PORT}`);
