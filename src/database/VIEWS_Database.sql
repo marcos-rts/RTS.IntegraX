@@ -26,8 +26,9 @@ FROM
     LEFT JOIN GH_integracao GH ON GH.ticket_id = Tickets.id
     LEFT JOIN RTS_status Status ON Status.id = Tickets.status_id
     LEFT JOIN RTS_grupo Grupo ON Grupo.id = Tickets.grupo_id
-    LEFT JOIN RTS_pessoa Pessoa ON Pessoa.id = Tickets.solicitante_id
-    -- CRIAÇÃO DE VIEWS PARA TICKETS SIMPLES
+    LEFT JOIN RTS_pessoa Pessoa ON Pessoa.id = Tickets.solicitante_id;
+
+-- CRIAÇÃO DE VIEWS PARA TICKETS SIMPLES
 CREATE VIEW
     vw_tickets_simples AS
 SELECT
@@ -81,7 +82,7 @@ SELECT
     usuario.tipo as usuario_tipo
 FROM
     RTS_pessoa pessoa
-    LEFT JOIN RTS_usuario usuario ON usuario.id = pessoa.usuario_id
+    LEFT JOIN RTS_usuario usuario ON usuario.id = pessoa.usuario_id;
 
 -- CRIAÇÃO DE VIEWS PARA PESSOAS EMPRESA
 CREATE VIEW
