@@ -18,7 +18,7 @@ exports.adicionarAuditoria = async (req, res) => {
 
         res.status(201).json({ message: 'Auditoria registrada com sucesso' });
     } catch (error) {
-        logger.error('Erro ao registrar auditoria:', error);
+        logger.Error('Erro ao registrar auditoria:', error);
         fileLogger.log({ error: error.message, tabela, id_registro, acao });
         res.status(500).json({ error: 'Erro ao registrar auditoria' });
     }
@@ -68,7 +68,7 @@ exports.listarAuditorias = async (req, res) => {
         const [rows] = await db.execute(sql, params);
         res.json(rows);
     } catch (error) {
-        console.error('Erro ao listar auditorias:', error);
+        Logger.Error('Erro ao listar auditorias:', error);
         res.status(500).json({ error: 'Erro ao listar auditorias' });
     }
 };
