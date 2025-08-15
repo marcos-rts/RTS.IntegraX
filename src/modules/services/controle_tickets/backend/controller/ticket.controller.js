@@ -16,10 +16,10 @@ exports.createTicket = async (req, res) => {
     const { title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id } = req.body;
 
     // Validação básica (pode expandir depois com lib tipo Joi ou express-validator)
-    if (!title || !description || !prioridade || !status_id || !grupo_id || !solicitante_id || !url_github || !criado_por_id) {
+    if (!title || !description || !prioridade || !status_id || !grupo_id || !criado_por_id) {
       return res.status(400).json({
         error: 'Campos obrigatórios faltando',
-        details: { title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }
+        details: { title, description, prioridade, status_id, grupo_id, criado_por_id }
       });
     }
 
@@ -27,7 +27,7 @@ exports.createTicket = async (req, res) => {
     const [result] = await db.execute(
       `INSERT INTO TK_tickets (title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id]
+      [title, description, prioridade, status_id, grupo_id, solicitante_id || null, url_github || null, criado_por_id]
     );
 
     await auditoriaController.adicionarAuditoriaInterna({
@@ -49,8 +49,8 @@ exports.createTicket = async (req, res) => {
     await auditoriaController.adicionarAuditoriaInterna({
       tabela: "TK_tickets",
       acao: "CRIAR",
-      depois: JSON.stringify({ title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }),
-      feito_por_id: criado_por_id,
+      depois: JSON.stringify(req.body),
+      feito_por_id: req.body.criado_por_id,
       endpoint: "/api/tickets",
       status_code: 500
     })
