@@ -1,4 +1,6 @@
 const db = require('./../../../../../config/database');
+const auditoriaController = require('../../../../../controller/audit');
+
 
 exports.getTickets = async (req, res) => {
   try {
@@ -28,6 +30,15 @@ exports.createTicket = async (req, res) => {
       [title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id]
     );
 
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      acao: "CRIAR",
+      depois: JSON.stringify({ title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }),
+      feito_por_id: criado_por_id,
+      endpoint: "/api/tickets",
+      status_code: 201
+    })
+
     res.status(201).json({
       message: 'Ticket criado com sucesso!',
       id: result.insertId,
@@ -35,6 +46,14 @@ exports.createTicket = async (req, res) => {
     });
 
   } catch (err) {
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      acao: "CRIAR",
+      depois: JSON.stringify({ title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }),
+      feito_por_id: criado_por_id,
+      endpoint: "/api/tickets",
+      status_code: 500
+    })
     console.error("Erro ao criar ticket:", err); // log pro console local
     res.status(500).json({ error: 'Erro ao criar ticket', details: err.message });
   }
