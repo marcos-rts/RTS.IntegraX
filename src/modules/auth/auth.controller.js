@@ -7,6 +7,9 @@ const bcrypt = require('bcrypt');
 // Importa o Logger personalizado
 const Logger = require('../utils/Console_Logger');
 const logger = new Logger();
+const auditoriaController = require('../../controller/audit');
+const status = require('statuses');
+
 
 const login = async (req, res) => {
     const { email, password } = req.body;
@@ -103,10 +106,26 @@ const register = async (req, res) => {
         await db.execute('INSERT INTO RTS_usuario (email, senha_hash, usuario, tipo, criado_por_id, ativo) VALUES (?, ?, ?, ?, ?, ?)', [email, hashedPassword, usuario, tipo, criado_por_id, ativo]);
         logger.Success(`Usuário registrado com email: ${email}`);
 
-        // fetch(`/api/auditoria`)
+        // Auditoria
+        await auditoriaController.adicionarAuditoriaInterna({
+            tabela: "RTS_usuario",
+            acao: "CRIAR",
+            depois: JSON.stringify({ email, usuario, tipo, ativo }),
+            feito_por_id: criado_por_id,
+            endpoint: "/api/autenticacao/register",
+            status_code: 201
+        })
 
         res.status(201).json({ message: 'Usuário registrado com sucesso.' });
     } catch (error) {
+        await auditoriaController.adicionarAuditoriaInterna({
+            tabela: "RTS_usuario",
+            acao: "CRIAR",
+            depois: JSON.stringify({ email, usuario, tipo, ativo }),
+            feito_por_id: criado_por_id,
+            endpoint: "/api/autenticacao/register",
+            status_code: 500
+        })
         logger.Error('Erro ao registrar usuário:', error.message);
         return res.status(500).json({ message: 'Erro ao registrar usuário.' });
 

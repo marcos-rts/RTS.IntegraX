@@ -21,6 +21,10 @@ router.get('/grupo', authMiddleware, grupo);
 const rotasPessoas = require('../modules/people/people.route');
 router.use('/people', rotasPessoas);
 
+// Auditoria 
+const rotasAuditoria = require('./audit');
+router.use('/auditoria', rotasAuditoria);
+
 // ⚙️ Módulo Tickets
 try {
     const setupTicketsModule = require('../modules/services/controle_tickets/tickets.module');
