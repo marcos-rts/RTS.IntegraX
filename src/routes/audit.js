@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const {adicionarAuditoria} = require('../controller/audit');
 const authMiddleware = require('../modules/auth/auth.middleware');
+const auditoriaController = require('../controller/audit');
 
-router.post('/auditoria', authMiddleware, adicionarAuditoria);
+router.post('/', auditoriaController.adicionarAuditoria);
+router.get('/', auditoriaController.listarAuditorias);
 
 module.exports = router;
