@@ -9,14 +9,14 @@ const fileLogger = new FileLogger('../../logs/app.log', '../../logs/app.json');
 exports.adicionarAuditoria = async (req, res) => {
     let tabela, id_registro, acao; // declara fora do try
     try {
-        ({ tabela, id_registro, acao, antes, depois, feito_por_id } = req.body);
+        ({ tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint } = req.body);
 
         if (!tabela || !id_registro || !acao || !feito_por_id) {
             return res.status(400).json({ error: 'Dados incompletos' });
         }
 
-        const sql = `INSERT INTO RTS_auditoria (tabela, id_registro, acao, antes, depois, feito_por_id) VALUES (?, ?, ?, ?, ?, ?)`;
-        await db.execute(sql, [tabela, id_registro, acao, antes || null, depois || null, feito_por_id]);
+        const sql = `INSERT INTO RTS_auditoria (tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        await db.execute(sql, [tabela, id_registro, acao, antes || null, depois || null, feito_por_id, status_code || null, endpoint || null]);
 
         res.status(201).json({ message: 'Auditoria registrada com sucesso' });
 

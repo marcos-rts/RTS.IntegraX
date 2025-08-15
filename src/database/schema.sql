@@ -269,6 +269,8 @@ CREATE TABLE
     ),
     antes TEXT,
     depois TEXT,
+    endpoint VARCHAR(255),
+    status_code INT,
     feito_por_id INT,
     feito_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (feito_por_id) REFERENCES RTS_usuario (id)
