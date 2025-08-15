@@ -77,6 +77,20 @@ exports.listarAuditorias = async (req, res) => {
     }
 };
 
-// module.exports = {
-//     adicionarAuditoria
-// };
+exports.adicionarAuditoriaInterna = async (dados) => {
+    try {
+        const { tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint } = dados;
+
+        if (!tabela || !acao || !feito_por_id) {
+            throw new Error('Dados incompletos para auditoria');
+        }
+
+        const sql = `INSERT INTO RTS_auditoria (tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        await db.execute(sql, [tabela, id_registro || null, acao, antes || null, depois || null, feito_por_id, status_code || null, endpoint || null]);
+
+        logger.Success(`Auditoria registrada para ${tabela}`);
+    } catch (error) {
+        logger.Error('Erro ao registrar auditoria:', error);
+        throw error; // Propaga o erro para quem chamou
+    }
+};
