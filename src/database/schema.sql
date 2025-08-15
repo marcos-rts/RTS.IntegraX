@@ -321,6 +321,7 @@ CREATE TABLE
     FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
   );
 
+-- Tabela: TK_ticket_marcador
 CREATE TABLE
   TK_ticket_marcador (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -334,6 +335,7 @@ CREATE TABLE
     UNIQUE KEY unique_ticket_marcador (ticket_id, marcador_id)
   );
 
+-- Tabela: TK_ticket_vinculo
 CREATE TABLE
   TK_ticket_vinculo (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -347,7 +349,7 @@ CREATE TABLE
     FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
     UNIQUE KEY unique_vinculo (ticket_id, ticket_relacionado_id, tipo_relacao)
   );
--- Fim Tabela Modulo de Tickets
+-- FIM TABELA MODULO DE TICKETS
 
 CREATE TABLE
   FX_carteira (
