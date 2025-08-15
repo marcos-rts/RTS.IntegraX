@@ -7,22 +7,26 @@ const logger = new Logger();
 const fileLogger = new FileLogger('../../logs/app.log', '../../logs/app.json');
 
 exports.adicionarAuditoria = async (req, res) => {
+    let tabela, id_registro, acao; // declara fora do try
     try {
-        const { tabela, id_registro, acao, antes, depois, feito_por_id } = req.body;
+        ({ tabela, id_registro, acao, antes, depois, feito_por_id } = req.body);
+
         if (!tabela || !id_registro || !acao || !feito_por_id) {
             return res.status(400).json({ error: 'Dados incompletos' });
         }
 
-        const sql = `INSERT INTO RTS_Auditoria (tabela, id_registro, acao, antes, depois, feito_por_id) VALUES (?, ?, ?, ?, ?, ?)`;
+        const sql = `INSERT INTO RTS_auditoria (tabela, id_registro, acao, antes, depois, feito_por_id) VALUES (?, ?, ?, ?, ?, ?)`;
         await db.execute(sql, [tabela, id_registro, acao, antes || null, depois || null, feito_por_id]);
 
         res.status(201).json({ message: 'Auditoria registrada com sucesso' });
+
     } catch (error) {
         logger.Error('Erro ao registrar auditoria:', error);
         fileLogger.log({ error: error.message, tabela, id_registro, acao });
         res.status(500).json({ error: 'Erro ao registrar auditoria' });
     }
-}
+};
+
 
 // Listar auditorias (com filtros opcionais)
 exports.listarAuditorias = async (req, res) => {
