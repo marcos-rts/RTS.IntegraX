@@ -303,6 +303,7 @@ CREATE TABLE
     status_id INT,
     prioridade ENUM ('Baixa', 'Média', 'Alta', 'Urgente') DEFAULT 'Média',
     solicitante_id INT,
+    responsavel_id INT,
     grupo_id INT,
     url_github VARCHAR(255),
     data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -315,6 +316,7 @@ CREATE TABLE
     FOREIGN KEY (status_id) REFERENCES RTS_status (id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (grupo_id) REFERENCES RTS_grupo (id) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (solicitante_id) REFERENCES RTS_pessoa (id),
+    FOREIGN KEY (responsavel_id) REFERENCES RTS_usuario (id),
     FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
     FOREIGN KEY (atualizado_por_id) REFERENCES RTS_usuario (id)
   );
@@ -345,6 +347,7 @@ CREATE TABLE
     FOREIGN KEY (criado_por_id) REFERENCES RTS_usuario (id),
     UNIQUE KEY unique_vinculo (ticket_id, ticket_relacionado_id, tipo_relacao)
   );
+-- Fim Tabela Modulo de Tickets
 
 CREATE TABLE
   FX_carteira (
