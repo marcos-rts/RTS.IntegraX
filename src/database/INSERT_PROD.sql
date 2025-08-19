@@ -145,7 +145,7 @@ VALUES
         'Aberto',
         'Ticket aberto',
         4,
-        '#D4EDDA',
+        '#009122ff',
         TRUE,
         FALSE,
         1
@@ -154,7 +154,7 @@ VALUES
         'Em andamento',
         'Ticket em andamento',
         4,
-        '#CCE5FF',
+        '#0e6cd1ff',
         TRUE,
         FALSE,
         1
@@ -163,7 +163,7 @@ VALUES
         'Fechado',
         'Ticket fechado',
         4,
-        '#FFF3CD',
+        '#000000ff',
         TRUE,
         FALSE,
         1
@@ -172,7 +172,7 @@ VALUES
         'Cancelado',
         'Ticket cancelado',
         4,
-        '#F8D7DA',
+        '#420006ff',
         TRUE,
         FALSE,
         1
@@ -371,7 +371,7 @@ VALUES
         'Tarefa Interna',
         'Tarefas administrativas ou rotinas operacionais.',
         '"Backup semanal", "Organizar documentação"',
-        '#ffffffff',
+        '#00c1f1ff',
         (
             SELECT
                 id
@@ -388,7 +388,7 @@ VALUES
         'Demanda Externa',
         'Algo vindo de cliente, fornecedor ou outro time.',
         '"Solicitação do time financeiro", "Cliente pediu ajuste"',
-        '#ffffffff',
+        '#ef3fffff',
         (
             SELECT
                 id
@@ -405,7 +405,7 @@ VALUES
         'Teste',
         'Atividades de QA, homologações e validações.',
         '"Testar novo deploy", "Homologar nova versão do app"',
-        '#ffffffff',
+        '#000000ff',
         (
             SELECT
                 id
