@@ -9,62 +9,128 @@
 </head>
 
 <body class="bg-light">
-
-    <div class="container mt-5">
-        <h3 class="mb-4">✏️ Editar Ticket</h3>
-        <form id="formEditar">
-            <div class="mb-3">
-                <label for="title" class="form-label">Título</label>
-                <input type="text" id="title" name="title" class="form-control" required>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/painel">RTS IntegraX</a>
+            <!-- Botão de menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Fim do botão de menu -->
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+                aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu Opções</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle username-btn" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Carregando...
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="/controle_usuarios"> <i
+                                            class="bi bi-person-gear"></i> Controle de Usuarios</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="logout()">Sair</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/painel"><i
+                                    class="bi bi-speedometer2"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/lista_tickets"><i class="bi bi-ticket"></i> Tickets</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pessoas"><i class="bi bi-people"></i> Pessoas</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </form>
+                </div>
             </div>
+        </div>
+    </nav>
+    <main class="container mt-5 pt-3">
+        <div class="p-4 bg-light rounded shadow-sm">
+            <div class="content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="mb-0">✏️ Editar Ticket</h3>
+                    <a href="/lista_tickets" class="btn btn-secondary">
+                        <i class="bi bi-arrow-return-left"></i> Voltar
+                    </a>
+                </div>
 
-            <div class="mb-3">
-                <label for="description" class="form-label">Descrição</label>
-                <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+                <div id="alerta"></div>
+
+                <form id="formEditar" class="bg-white p-4 rounded shadow-sm">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Título</label>
+                        <input type="text" id="title" name="title" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descrição</label>
+                        <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="prioridade" class="form-label">Prioridade</label>
+                        <select id="prioridade" name="prioridade" class="form-select" required>
+                            <option value="Baixa">Baixa</option>
+                            <option value="Média">Média</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Urgente">Urgente</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" required></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="grupo" class="form-label">Grupo</label>
+                        <select class="form-select" id="grupo" required></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="solicitante" class="form-label">Solicitante</label>
+                        <select class="form-select" id="solicitante"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="url_repositorio" class="form-label">URL do Repositório</label>
+                        <input type="url" id="url_repositorio" name="url_repositorio" class="form-control">
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Salvar Alterações
+                    </button>
+                </form>
             </div>
-
-            <div class="mb-3">
-                <label for="prioridade" class="form-label">Prioridade</label>
-                <select id="prioridade" name="prioridade" class="form-select" required>
-                    <option value="Baixa">Baixa</option>
-                    <option value="Média">Média</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Crítica">Crítica</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="status_id" class="form-label">Status</label>
-                <input type="number" id="status_id" name="status_id" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="grupo_id" class="form-label">Grupo</label>
-                <input type="number" id="grupo_id" name="grupo_id" class="form-control" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="solicitante_id" class="form-label">Solicitante</label>
-                <input type="number" id="solicitante_id" name="solicitante_id" class="form-control">
-            </div>
-
-            <div class="mb-3">
-                <label for="url_repositorio" class="form-label">URL do Repositório</label>
-                <input type="url" id="url_repositorio" name="url_repositorio" class="form-control">
-            </div>
-
-            <button type="submit" class="btn btn-success"><i class="bi bi-save"></i> Salvar Alterações</button>
-            <a href="/lista_tickets" class="btn btn-secondary"><i class="bi bi-arrow-return-left"></i> Voltar</a>
-        </form>
-
-        <div id="alerta" class="alert mt-3 d-none"></div>
-    </div>
+        </div>
+    </main>
 
     <script>
         const ticketId = window.location.pathname.match(/\/ticket_editar\/(\d+)/)[1];
         const token = localStorage.getItem("token");
 
         document.addEventListener("DOMContentLoaded", async () => {
+            await carregarSelects();
+
             // Carregar dados atuais do ticket
             const res = await fetch(`/api/tickets/${ticketId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
@@ -74,11 +140,39 @@
             document.getElementById("title").value = ticket.title_ticket;
             document.getElementById("description").value = ticket.description_ticket;
             document.getElementById("prioridade").value = ticket.prioriedade_ticket;
-            document.getElementById("status_id").value = ticket.status_id || "";
-            document.getElementById("grupo_id").value = ticket.grupo_id || "";
-            document.getElementById("solicitante_id").value = ticket.id_pessoa || "";
+            document.getElementById("status").value = ticket.status_id || "";
+            document.getElementById("grupo").value = ticket.grupo_id || "";
+            document.getElementById("solicitante").value = ticket.id_pessoa || "";
             document.getElementById("url_repositorio").value = ticket.url_repositorio || "";
         });
+
+        async function carregarSelects() {
+            const [statusResp, gruposResp, peopleResp] = await Promise.all([
+                fetch("/api/status?tipoBanco=TK", { headers: { Authorization: `Bearer ${token}` } }),
+                fetch("/api/grupo?tipoBanco=TK", { headers: { Authorization: `Bearer ${token}` } }),
+                fetch("/api/people", { headers: { Authorization: `Bearer ${token}` } }),
+            ]);
+
+            const status = await statusResp.json();
+            const grupos = await gruposResp.json();
+            const people = await peopleResp.json();
+
+            const statusSelect = document.getElementById("status");
+            const grupoSelect = document.getElementById("grupo");
+            const solicitanteSelect = document.getElementById("solicitante");
+
+            status.forEach(s => {
+                statusSelect.innerHTML += `<option value="${s.id_status}">${s.id_nome}</option>`;
+            });
+
+            grupos.forEach(g => {
+                grupoSelect.innerHTML += `<option value="${g.Grupo_id}">${g.Grupo_nome}</option>`;
+            });
+
+            people.forEach(p => {
+                solicitanteSelect.innerHTML += `<option value="${p.pessoa_id}">${p.pessoa_nome}</option>`;
+            });
+        }
 
         document.getElementById("formEditar").addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -86,9 +180,9 @@
                 title: document.getElementById("title").value,
                 description: document.getElementById("description").value,
                 prioridade: document.getElementById("prioridade").value,
-                status_id: document.getElementById("status_id").value,
-                grupo_id: document.getElementById("grupo_id").value,
-                solicitante_id: document.getElementById("solicitante_id").value,
+                status_id: document.getElementById("status").value,
+                grupo_id: document.getElementById("grupo").value,
+                solicitante_id: document.getElementById("solicitante").value,
                 url_repositorio: document.getElementById("url_repositorio").value,
                 atualizado_por_id: localStorage.getItem("usuario_id")
             };
@@ -106,13 +200,11 @@
             const alerta = document.getElementById("alerta");
 
             if (res.ok) {
-                alerta.className = "alert alert-success";
-                alerta.textContent = result.message;
-                alerta.classList.remove("d-none");
+                alerta.className = "alert alert-success mt-3";
+                alerta.textContent = result.message || "Ticket atualizado com sucesso!";
             } else {
-                alerta.className = "alert alert-danger";
+                alerta.className = "alert alert-danger mt-3";
                 alerta.textContent = result.error || "Erro ao atualizar ticket.";
-                alerta.classList.remove("d-none");
             }
         });
     </script>
