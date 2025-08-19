@@ -105,7 +105,7 @@
         <div class="p-4 bg-light rounded shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="mb-0">Visualização de Tickets</h3>
-                <a  href="/novo_tickets" class="btn btn-success">
+                <a href="/novo_tickets" class="btn btn-success">
                     <i class="bi bi-plus-circle"></i> Novo Ticket
                 </a>
             </div>
@@ -184,14 +184,18 @@
                 const card = document.createElement("div");
                 card.className = "col-md-6";
                 card.innerHTML = `
-                <div class="card card-ticket border-0 shadow-sm" style="--status-color: ${ticket.Cor_Status}">
+                <div class="card card-ticket border-0 shadow-sm position-relative" style="--status-color: ${ticket.Cor_Status}">
                     <div class="card-body">
-                        <h5 class="card-title">
+                        <!-- Botão Editar -->
+                        <a href="/ticket_editar/${ticket.ID}" class="btn btn-outline-secondary btn-sm rounded-circle shadow-sm position-absolute top-0 end-0 m-2" title="Editar Ticket">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <h5 class="card-title mt-2">
                             <a href="/ticket_detalhes/${ticket.ID}" class="text-decoration-none text-dark">
                                 ${ticket.Titulo}
                             </a>
                         </h5>
-                        <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
                             <span class="badge bg-light text-dark">
                                 Prioridade: ${ticket.Prioriedade ?? 'Não definida'}
                             </span>
