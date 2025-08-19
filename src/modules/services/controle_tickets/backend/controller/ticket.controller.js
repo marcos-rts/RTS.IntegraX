@@ -124,23 +124,44 @@ exports.getTicketById = async (req, res) => {
   }
 };
 
-
-
-
-
 exports.updateTicket = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
-    await db.execute(
-      'UPDATE TK_tickets SET title = ?, description = ? WHERE id = ?',
-      [title, description, id]
+    const { title, description, prioridade, status_id, grupo_id, solicitante_id, url_repositorio, atualizado_por_id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID do ticket é obrigatório" });
+    }
+
+    // Atualização
+    const [result] = await db.execute(
+      `UPDATE TK_tickets 
+       SET title = ?, description = ?, prioridade = ?, status_id = ?, grupo_id = ?, solicitante_id = ?, url_repositorio = ?, atualizado_em = NOW(), atualizado_por_id = ?
+       WHERE id_ticket = ?`,
+      [title, description, prioridade, status_id, grupo_id, solicitante_id || null, url_repositorio || null, atualizado_por_id || null, id]
     );
-    res.json({ id, title, description });
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Ticket não encontrado" });
+    }
+
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      acao: "EDITAR",
+      antes: null, // se quiser, dá pra buscar antes
+      depois: JSON.stringify(req.body),
+      feito_por_id: atualizado_por_id,
+      endpoint: `/api/tickets/${id}`,
+      status_code: 200
+    });
+
+    res.json({ message: "Ticket atualizado com sucesso!", id });
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao atualizar ticket', details: err.message });
+    console.error("Erro ao atualizar ticket:", err);
+    res.status(500).json({ error: "Erro ao atualizar ticket", details: err.message });
   }
 };
+
 
 exports.deleteTicket = async (req, res) => {
   try {
