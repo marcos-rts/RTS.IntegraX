@@ -124,6 +124,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="data_criacao" class="form-label">Data de Abertura</label>
+                        <input type="date" class="form-control" id="data_criacao" name="data_criacao">
+                    </div>
+
+                    <div class="mb-3">
                         <label for="prioridade" class="form-label">Prioridade</label>
                         <select class="form-select" id="prioridade" required>
                             <option value="Baixa">Baixa</option>
@@ -233,6 +238,7 @@
             const ticket = {
                 title: document.getElementById("titulo").value,
                 description: document.getElementById("descricao").value,
+                data_criacao: document.getElementById("data_criacao").value || new Date().toISOString().split('T')[0], // Padrão para hoje
                 prioridade: document.getElementById("prioridade").value,
                 status_id: document.getElementById("status").value,
                 grupo_id: document.getElementById("grupo").value,

@@ -13,7 +13,7 @@ exports.getTickets = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
   try {
-    const { title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id } = req.body;
+    const { title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id } = req.body;
 
     // Validação básica (pode expandir depois com lib tipo Joi ou express-validator)
     if (!title || !description || !prioridade || !status_id || !grupo_id || !criado_por_id) {
@@ -25,15 +25,15 @@ exports.createTicket = async (req, res) => {
 
     // Inserção no banco de dados
     const [result] = await db.execute(
-      `INSERT INTO TK_tickets (title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, prioridade, status_id, grupo_id, solicitante_id || null, url_github || null, criado_por_id]
+      `INSERT INTO TK_tickets (title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id || null, url_github || null, criado_por_id]
     );
 
     await auditoriaController.adicionarAuditoriaInterna({
       tabela: "TK_tickets",
       acao: "CRIAR",
-      depois: JSON.stringify({ title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }),
+      depois: JSON.stringify({ title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }),
       feito_por_id: criado_por_id,
       endpoint: "/api/tickets",
       status_code: 201
