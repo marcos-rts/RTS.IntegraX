@@ -81,6 +81,9 @@ exports.getTicketById = async (req, res) => {
       id_ticket,
       title_ticket,
       description_ticket,
+      data_criacao_ticket,
+      data_atualizacao_ticket,
+      data_encerramento_ticket,
       status,
       cor_Status,
       prioriedade_ticket,
@@ -90,6 +93,27 @@ exports.getTicketById = async (req, res) => {
       nome_pessoa,
       url_repositorio,
     } = rows[0];
+
+    // Funções auxiliares para formatar
+    const formatDate = (date) => {
+      if (!date) return '-';
+      return new Date(date).toLocaleDateString('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    };
+
+    const formatDateTime = (date) => {
+      if (!date) return '-';
+      return new Date(date).toLocaleString('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
 
     // Mapear todas as integrações do GitHub
     const github_itens = rows
@@ -107,6 +131,9 @@ exports.getTicketById = async (req, res) => {
       id_ticket,
       title_ticket,
       description_ticket,
+      data_criacao_ticket: formatDate(data_criacao_ticket),        // só data
+      data_atualizacao_ticket: formatDateTime(data_atualizacao_ticket), // data + hora
+      data_encerramento_ticket: formatDate(data_encerramento_ticket),  // só data
       status,
       cor_Status,
       prioriedade_ticket,
