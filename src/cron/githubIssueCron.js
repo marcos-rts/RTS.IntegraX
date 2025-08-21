@@ -21,13 +21,22 @@ async function executarComRegistro() {
        VALUES (?, ?)`,
       [agora, proxima]
     );
+    logger.Debug(`[githubIssueCron.js]
+      Sincronização registrada na tabela CRON_coleta
+      {
+        agora: ${agora},
+        proxima: ${proxima}
+      }`
+    );
 
     // logger.Success(`✅ Sincronização registrada`);
     logger.Info(`📅 Próxima execução em ${proxima.toLocaleString()}`);
+    logger.Trace(`[githubIssueCron.js] - Finalizando sincronização do GitHub...`);
   } catch (err) {
     logger.Error(' Erro na sincronização:', err.message || err);
+    logger.Trace(`[githubIssueCron.js] - Finalizando sincronização do GitHub...`);
   }
 }
 
 // agenda para rodar a cada minuto
-cron.schedule('* * * * *', executarComRegistro);
+cron.schedule('0 * * * *', executarComRegistro);
