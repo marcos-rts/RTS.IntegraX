@@ -109,6 +109,29 @@
                     <i class="bi bi-plus-circle"></i> Novo Ticket
                 </a>
             </div>
+
+            <!-- Filtros -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <select id="filtro-prioridade" class="form-select">
+                        <option value="">Todas Prioridades</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Média">Média</option>
+                        <option value="Baixa">Baixa</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select id="filtro-status" class="form-select">
+                        <option value="">Todos Status</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <select id="filtro-grupo" class="form-select">
+                        <option value="">Todos Grupos</option>
+                    </select>
+                </div>
+            </div>
+
             <div>
                 <div class="row g-4" id="ticket-container">
                     <!-- Tickets serão inseridos aqui -->
@@ -118,8 +141,10 @@
     </main>
 
 
+
     <script src="../bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
     <script>
+
         function parseJwt(token) {
             try {
                 const base64Url = token.split('.')[1];
@@ -151,6 +176,28 @@
             return token;
         }
 
+        let todosTickets = []; // guarda todos os tickets carregados
+
+        function aplicarFiltros() {
+            const prioridade = document.getElementById("filtro-prioridade").value;
+            const status = document.getElementById("filtro-status").value;
+            const grupo = document.getElementById("filtro-grupo").value;
+
+            let filtrados = todosTickets;
+
+            if (prioridade) {
+                filtrados = filtrados.filter(t => t.Prioriedade === prioridade);
+            }
+            if (status) {
+                filtrados = filtrados.filter(t => t.Status === status);
+            }
+            if (grupo) {
+                filtrados = filtrados.filter(t => t.Grupo === grupo);
+            }
+
+            renderTickets(filtrados);
+        }
+
         async function fetchTickets() {
             const token = validarToken();
             if (!token) return;
@@ -162,13 +209,44 @@
 
                 if (!response.ok) throw new Error("Não autorizado ou erro no servidor");
 
-                const tickets = await response.json();
-                renderTickets(tickets);
+                todosTickets = await response.json();
+
+                // Preencher selects dinamicamente com os valores existentes
+                preencherFiltros(todosTickets);
+
+                renderTickets(todosTickets);
             } catch (error) {
                 console.error("Erro ao buscar tickets:", error);
                 document.getElementById("ticket-container").innerHTML =
                     `<p class="text-danger">Erro ao carregar tickets.</p>`;
             }
+        }
+
+        function preencherFiltros(tickets) {
+            const statusSet = [...new Set(tickets.map(t => t.Status))];
+            const grupoSet = [...new Set(tickets.map(t => t.Grupo))];
+
+            const statusSelect = document.getElementById("filtro-status");
+            const grupoSelect = document.getElementById("filtro-grupo");
+
+            statusSet.forEach(s => {
+                const opt = document.createElement("option");
+                opt.value = s;
+                opt.textContent = s;
+                statusSelect.appendChild(opt);
+            });
+
+            grupoSet.forEach(g => {
+                const opt = document.createElement("option");
+                opt.value = g;
+                opt.textContent = g;
+                grupoSelect.appendChild(opt);
+            });
+
+            // quando mudar qualquer filtro, reaplicar
+            statusSelect.addEventListener("change", aplicarFiltros);
+            grupoSelect.addEventListener("change", aplicarFiltros);
+            document.getElementById("filtro-prioridade").addEventListener("change", aplicarFiltros);
         }
 
         function renderTickets(tickets) {
