@@ -1,13 +1,16 @@
 // src/cron/githubIssueCron.js
 const cron = require('node-cron');
-const sincronizarIssues = require('../modules/GitHub/githubSync');
+const sincronizarIssuesEPRs = require('../modules/GitHub/githubSync');
+const Logger = require('./../modules/utils/Console_Logger');
+
+const logger = new Logger();
 
 cron.schedule('* * * * *', async () => {
-  console.log(`[${new Date().toISOString()}] Rodando sincronização do GitHub...`);
+  logger.Info(`Rodando sincronização do GitHub...`);
   try {
-    await sincronizarIssues();
-    console.log('✅ Sincronização concluída.');
+    await sincronizarIssuesEPRs();
+    // logger.Success('✅ Sincronização concluída.');
   } catch (err) {
-    console.error('❌ Erro na sincronização:', err.message);
+    logger.Error('❌ Erro na sincronização:', err.message);
   }
 });

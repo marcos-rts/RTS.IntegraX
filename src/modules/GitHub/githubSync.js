@@ -1,10 +1,14 @@
 require('dotenv').config();
 const axios = require('axios');
 const db = require('../../config/database');
+const Logger = require('../utils/Console_Logger');
+
+const logger = new Logger();
 
 // Token do GitHub
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 if (!GITHUB_TOKEN) {
+    logger.Error("❌ GITHUB_TOKEN não definido no arquivo .env");
     throw new Error("❌ GITHUB_TOKEN não definido no arquivo .env");
 }
 
@@ -20,11 +24,12 @@ function extrairOwnerERepo(repoUrl) {
     const regex = /github\.com\/([\w-]+)\/([\w.-]+)(?:\.git)?$/i;
     const match = repoUrl?.match?.(regex);
     if (!match) {
-        console.warn(`⚠️ URL inválida: "${repoUrl}"`);
+        logger.Warning(`⚠️ URL inválida: "${repoUrl}"`);
         return null;
     }
 
     const [, owner, repo] = match;
+    // logger.Debug(`Extraído owner: "${owner}", repo: "${repo}" da URL: "${repoUrl}"`);
     return { owner, repo };
 }
 
@@ -67,7 +72,7 @@ async function buscarIssuesEPRs(repoUrl) {
             page++;
         }
     } catch (error) {
-        console.error(`❌ Erro ao buscar dados de ${owner}/${repo}:`, error.response?.data || error.message);
+        logger.Error(`❌ Erro ao buscar dados de ${owner}/${repo}:`, error.response?.data || error.message);
     }
 
     return resultados;
@@ -83,7 +88,7 @@ async function sincronizarIssuesEPRs() {
         );
 
         if (!grupoProjeto.length) {
-            console.warn("⚠️ Grupo 'Projeto' não encontrado.");
+            logger.Warning("⚠️ Grupo 'Projeto' não encontrado.");
             return;
         }
 
@@ -128,9 +133,10 @@ async function sincronizarIssuesEPRs() {
             [agora, proxima]
         );
 
-        console.log(`✅ Sincronização concluída com sucesso em ${agora.toLocaleString()}`);
+        logger.Success(` Sincronização concluída `);
+        logger.Info(` Proxima execução em ${proxima.toLocaleString()}`);
     } catch (error) {
-        console.error("❌ Erro na sincronização:", error.message || error);
+        logger.Error(" Erro na sincronização:", error.message || error);
     }
 }
 
