@@ -43,4 +43,12 @@ router.get('/ticket_detalhes/:id', (req, res) => {
   res.sendFile(path.join(publicPath, 'tickets', 'ticket_detalhes.html'));
 });
 
+router.get('/ticket_detalhes/:id', (req, res) => {
+  res.sendFile(path.join(publicPath, 'tickets', 'ticket_detalhes.html'));
+});
+
+router.get('/ticket_editar/:id', (req, res) => {
+  res.sendFile(path.join(publicPath, 'tickets', 'ticket_editar.html'));
+});
+
 module.exports = router;

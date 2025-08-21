@@ -1,5 +1,5 @@
 {
-  "watch": ["src", "public", "app.js"],
+  "watch": ["src", "public", "app.js", ".env"],
   "ignore": [
     "node_modules",
     "logs",
