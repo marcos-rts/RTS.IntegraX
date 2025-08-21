@@ -160,11 +160,23 @@ exports.updateTicket = async (req, res) => {
       return res.status(400).json({ error: "ID do ticket é obrigatório" });
     }
 
-    // Atualização
+    // 1. Buscar o registro ANTES da atualização
+    const [rows] = await db.execute(
+      "SELECT * FROM vw_tickets_completo WHERE id_ticket = ?",
+      [id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Ticket não encontrado" });
+    }
+
+    const antes = rows[0]; // Estado antes da edição
+
+    // 2. Atualização
     const [result] = await db.execute(
       `UPDATE TK_tickets 
-       SET title = ?, description = ?, prioridade = ?, status_id = ?, grupo_id = ?, solicitante_id = ?, url_repositorio = ?, atualizado_em = NOW(), atualizado_por_id = ?
-       WHERE id_ticket = ?`,
+       SET title = ?, description = ?, prioridade = ?, status_id = ?, grupo_id = ?, solicitante_id = ?, url_github = ?, atualizado_em = NOW(), atualizado_por_id = ?
+       WHERE id = ?`,
       [title, description, prioridade, status_id, grupo_id, solicitante_id || null, url_repositorio || null, atualizado_por_id || null, id]
     );
 
@@ -172,10 +184,12 @@ exports.updateTicket = async (req, res) => {
       return res.status(404).json({ error: "Ticket não encontrado" });
     }
 
+    // 3. Registrar auditoria (ANTES e DEPOIS)
     await auditoriaController.adicionarAuditoriaInterna({
       tabela: "TK_tickets",
+      id_registro: id,
       acao: "EDITAR",
-      antes: null, // se quiser, dá pra buscar antes
+      antes: JSON.stringify(antes),
       depois: JSON.stringify(req.body),
       feito_por_id: atualizado_por_id,
       endpoint: `/api/tickets/${id}`,
@@ -184,10 +198,31 @@ exports.updateTicket = async (req, res) => {
 
     res.json({ message: "Ticket atualizado com sucesso!", id });
   } catch (err) {
+    // ⚠️ Tentativa de salvar "antes" mesmo em erro
+    let antes = null;
+    try {
+      const [rows] = await db.execute("SELECT * FROM vw_tickets_completo WHERE id_ticket = ?", [req.params.id]);
+      if (rows.length > 0) antes = rows[0];
+    } catch (e) {
+      // se der erro até no select, ignora
+    }
+
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      id_registro: req.params.id,
+      acao: "EDITAR",
+      antes: JSON.stringify(antes),
+      depois: JSON.stringify(req.body),
+      feito_por_id: req.body.atualizado_por_id,
+      endpoint: `/api/tickets/${req.params.id}`,
+      status_code: 500
+    });
+
     console.error("Erro ao atualizar ticket:", err);
     res.status(500).json({ error: "Erro ao atualizar ticket", details: err.message });
   }
 };
+
 
 
 exports.deleteTicket = async (req, res) => {

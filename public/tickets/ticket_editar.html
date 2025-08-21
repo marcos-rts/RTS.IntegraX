@@ -6,6 +6,41 @@
     <title>Editar Ticket</title>
     <link href="../bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script>
+        // Função para verificar validade do token
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            // Token não existe, redireciona para login
+            window.location.href = "/";
+        } else {
+            const payload = parseJwt(token);
+            const now = Math.floor(Date.now() / 1000);
+
+            if (!payload || payload.exp < now) {
+                // Token expirado
+                localStorage.removeItem('token');
+                window.location.href = "/";
+            }
+
+            // Caso queira: 
+            console.log("Token válido. Bem-vindo!");
+        }
+    </script>
 </head>
 
 <body class="bg-light">
@@ -124,9 +159,39 @@
         </div>
     </main>
 
+    <script src="../bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const ticketId = window.location.pathname.match(/\/ticket_editar\/(\d+)/)[1];
-        const token = localStorage.getItem("token");
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+                    '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                ).join(''));
+                return JSON.parse(jsonPayload);
+            } catch {
+                return null;
+            }
+        }
+
+        function validarToken() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert("Sessão expirada ou inexistente. Faça login novamente.");
+                window.location.href = "/";
+                return null;
+            }
+            const payload = parseJwt(token);
+            const now = Math.floor(Date.now() / 1000);
+            if (!payload || payload.exp < now) {
+                alert("Sessão expirada. Faça login novamente.");
+                localStorage.clear();
+                window.location.href = "/";
+                return null;
+            }
+            return token;
+        }
 
         document.addEventListener("DOMContentLoaded", async () => {
             await carregarSelects();
@@ -184,7 +249,7 @@
                 grupo_id: document.getElementById("grupo").value,
                 solicitante_id: document.getElementById("solicitante").value,
                 url_repositorio: document.getElementById("url_repositorio").value,
-                atualizado_por_id: localStorage.getItem("usuario_id")
+                atualizado_por_id: localStorage.getItem("usuario_id") // ID do usuário que está criando o ticket
             };
 
             const res = await fetch(`/api/tickets/${ticketId}`, {
@@ -206,6 +271,43 @@
                 alerta.className = "alert alert-danger mt-3";
                 alerta.textContent = result.error || "Erro ao atualizar ticket.";
             }
+        });
+        async function logout() {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    // Já está deslogado
+                    window.location.href = "/";
+                    return;
+                }
+
+                const response = await fetch("/api/autenticacao/logout", {
+                    method: "POST", // ou DELETE, se quiser mais semântico
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    localStorage.clear();
+                    window.location.href = "/"; // Redireciona para a home após logout
+                } else {
+                    const result = await response.json();
+                    console.error("Erro no logout:", result.message);
+                    alert("Erro ao sair: " + result.message);
+                }
+            } catch (err) {
+                console.error("Erro ao tentar logout:", err);
+                alert("Erro inesperado ao sair.");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
+            const btnUsuario = document.querySelector(".username-btn");
+            if (btnUsuario) btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
+            fetchTickets();
         });
     </script>
 </body>
