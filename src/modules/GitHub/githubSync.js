@@ -123,18 +123,7 @@ async function sincronizarIssuesEPRs() {
             }
         }
 
-        // Atualiza a tabela de execução do cron
-        const agora = new Date();
-        const proxima = new Date(agora.getTime() + 60000); // 1 minuto depois
-
-        await db.execute(
-            `INSERT INTO CRON_coleta (ultima_execucao, proxima_execucao)
-             VALUES (?, ?)`,
-            [agora, proxima]
-        );
-
-        logger.Success(` Sincronização concluída `);
-        logger.Info(` Proxima execução em ${proxima.toLocaleString()}`);
+        logger.Success(` Sincronização concluída`);
     } catch (error) {
         logger.Error(" Erro na sincronização:", error.message || error);
     }
