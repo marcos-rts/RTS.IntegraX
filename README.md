@@ -51,16 +51,16 @@ O servidor ficará disponível em `http://localhost:3000`.
 - **TK (Tickets):** Registro de chamados internos. *(Em desenvolvimento)*
 - **Auditoria:** Log completo de ações no sistema.
     
-<!-- 
+
 ## 🤝 Contribuição
 
 Sinta-se livre para abrir **Issues** ou enviar **Pull Requests**.  
-Antes de contribuir, confira as orientações no arquivo [CONTRIBUTING.md](https://chatgpt.com/c/CONTRIBUTING.md).
+Antes de contribuir, confira as orientações no arquivo [CONTRIBUTING.md](https://github.com/marcos-rts/RTS.IntegraX/blob/main/CONTRIBUTING.md).
 
 ## 📜 Changelog
 
-As alterações são registradas no arquivo [CHANGELOG.md](https://chatgpt.com/c/CHANGELOG.md).
+As alterações são registradas no arquivo [CHANGELOG.md](https://github.com/marcos-rts/RTS.IntegraX/blob/main/CHANGELOG.md).
 
 ## 📄 Licença
 
-Distribuído sob a licença MIT. Veja o arquivo [LICENSE](https://chatgpt.com/c/LICENSE) para mais informações. -->
+Distribuído sob a licença MIT. Veja o arquivo [LICENSE](https://github.com/marcos-rts/RTS.IntegraX/blob/main/LICENSE) para mais informações.
