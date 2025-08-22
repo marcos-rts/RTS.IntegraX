@@ -1,21 +1,66 @@
 # RTS.IntegraX
 
-Bem-vindo ao repositório do **RTS.IntegraX**!
+Um sistema modular para gestão e integração de processos internos.  
+O projeto nasceu para organizar fluxos como **controle de itens, finanças, tickets e auditoria**, mas pode crescer para abranger outros módulos conforme a necessidade.
 
-Este projeto tem como objetivo facilitar a integração de sistemas e otimizar processos de comunicação entre diferentes plataformas.
+## 🚀 Tecnologias
 
-## Índice
+- **Backend:** Node.js + Express  
+- **Banco de Dados:** MySQL  
+- **Frontend:** Bootstrap (HTML/CSS/JS)  
+<!-- - **Monitoramento:** Grafana / Zabbix   -->
 
-- [Sobre](#sobre)
-- [Instalação](#instalação)
-- [Uso](#uso)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
+## 📦 Estrutura do Projeto
 
-## Sobre
+- `src/` → Código principal (controllers, rotas, modelos)  
+- `public/` → Arquivos estáticos e frontend (Bootstrap)  
+- `docs/` → Documentação auxiliar  
+- `test/` → Testes  
 
-Descreva aqui o propósito do projeto, principais funcionalidades e tecnologias utilizadas.
+## ⚙️ Como Rodar Localmente
 
-## Changelog
+```bash
+# Clonar repositório
+git clone https://github.com/marcos-rts/RTS.IntegraX.git
 
-Confira as alterações e atualizações do projeto no [CHANGELOG.md](CHANGELOG.md).
+cd RTS.IntegraX
+
+# Instalar dependências
+npm install
+```
+
+# Configurar variáveis de ambiente (.env)
+```.env
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=sua_senha
+DB_NAME=DEV_RTS_IntegraX
+```
+
+# Rodar servidor
+```bash
+npm start
+```
+
+O servidor ficará disponível em `http://localhost:3000`.
+
+## 🗂️ Módulos Atuais
+
+- **CT (Controle de Itens):** Gestão de entrada e saída. *(Em desenvolvimento)*
+- **FX (Financeiro):** Controle de transações. *(Não iniciado)*
+- **TK (Tickets):** Registro de chamados internos. *(Em desenvolvimento)*
+- **Auditoria:** Log completo de ações no sistema.
+    
+<!-- 
+## 🤝 Contribuição
+
+Sinta-se livre para abrir **Issues** ou enviar **Pull Requests**.  
+Antes de contribuir, confira as orientações no arquivo [CONTRIBUTING.md](https://chatgpt.com/c/CONTRIBUTING.md).
+
+## 📜 Changelog
+
+As alterações são registradas no arquivo [CHANGELOG.md](https://chatgpt.com/c/CHANGELOG.md).
+
+## 📄 Licença
+
+Distribuído sob a licença MIT. Veja o arquivo [LICENSE](https://chatgpt.com/c/LICENSE) para mais informações. -->
