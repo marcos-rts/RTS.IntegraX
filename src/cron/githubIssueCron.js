@@ -14,7 +14,7 @@ async function executarComRegistro() {
 
     // Atualiza a tabela CRON_coleta
     const agora = new Date();
-    const proxima = new Date(agora.getTime() + 60000);
+    const proxima = new Date(agora.getTime() + 60 * 60 * 1000);
 
     await db.execute(
       `INSERT INTO CRON_coleta (ultima_execucao, proxima_execucao)
