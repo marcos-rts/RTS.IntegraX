@@ -265,7 +265,8 @@ CREATE TABLE
       'EDITAR',
       'EXCLUIR',
       'ATIVAR',
-      'INATIVAR'
+      'INATIVAR',
+      'SINCRONIZAR'
     ),
     antes TEXT,
     depois TEXT,

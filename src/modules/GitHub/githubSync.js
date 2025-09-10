@@ -2,6 +2,8 @@ require('dotenv').config();
 const axios = require('axios');
 const db = require('../../config/database');
 const Logger = require('../utils/Console_Logger');
+const auditoriaController = require('../../controller/audit')
+
 
 const logger = new Logger();
 
@@ -120,6 +122,21 @@ async function sincronizarIssuesEPRs() {
                         entrada.status
                     ]
                 );
+                await auditoriaController.adicionarAuditoriaInterna({
+                    tabela: "GH_integracao",
+                    acao: "SINCRONIZAR",
+                    depois: {
+                        ticket_id: ticket.id,
+                        tipo: entrada.tipo,
+                        github_id: entrada.github_id,
+                        titulo: entrada.titulo,
+                        url: entrada.url,
+                        status: entrada.status
+                    },
+                    feito_por_id: null,
+                    endpoint: "/sync/github",
+                    status_code: 200
+                });
             }
         }
 
