@@ -45,6 +45,6 @@ router.get('/ticket_detalhes/:id', (req, res) => {
 
 // 💵 Finanx
 router.get('/finanxIndex', (req, res) => {
-    res.sendFile(path.join(publicPath, 'finanx', 'index.html'));
+    res.sendFile(path.join(publicPath, 'finanx', 'painel.html'));
 });
 module.exports = router;
