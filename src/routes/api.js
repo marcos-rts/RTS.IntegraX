@@ -57,6 +57,16 @@ try {
     logger.Error('Módulo de Tickets não pôde ser carregado:', error.message);
 }
 
+// ⚙️ Finanx
+try {
+    const setupFinanxModule = require('../modules/services/Finanx/finanx.module');
+    setupFinanxModule(router); // importante: o módulo precisa aceitar o `router`
+    logger.System('Módulo de Finanx carregado com sucesso.');
+} catch (error) {
+    logger.Error('Módulo de Finanx não pôde ser carregado:', error.message);
+}
+
+
 // ⚙️ (Outros módulos podem ir aqui também)
 
 module.exports = router;
