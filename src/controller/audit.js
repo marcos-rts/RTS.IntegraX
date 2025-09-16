@@ -1,48 +1,96 @@
-const Logger = require('../utils/Console_Logger');
-const logger = new Logger();
-const FileLogger = require('../utils/FileLogger');
 const db = require('../config/database'); // ajuste o caminho conforme necessário
-const fileLogger = new FileLogger('../../logs/audit.log', '../../logs/audit.json');
 
-async function adicionarAuditoria({
-    tabela,
-    id_registro,
-    acao,
-    antes,
-    depois,
-    feito_por_id
-}) {
+const Logger = require('../modules/utils/Console_Logger');
+const FileLogger = require('../modules/utils/FileLogger');
+
+const logger = new Logger();
+const fileLogger = new FileLogger('../../logs/app.log', '../../logs/app.json');
+
+exports.adicionarAuditoria = async (req, res) => {
+    let tabela, id_registro, acao; // declara fora do try
     try {
-        const sql = `
-            INSERT INTO RTS_auditoria 
-                (tabela, id_registro, acao, antes, depois, feito_por_id)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `;
-        const params = [
-            tabela,
-            id_registro,
-            acao,
-            JSON.stringify(antes),
-            JSON.stringify(depois),
-            feito_por_id
-        ];
-        await db.query(sql, params);
-        logger.info(`Auditoria registrada: ${acao} em ${tabela} (ID: ${id_registro}) por usuário ${feito_por_id}`);
-        fileLogger.log({
-            tabela,
-            id_registro,
-            acao,
-            antes,
-            depois,
-            feito_por_id,
-            feito_em: new Date()
-        });
-    } catch (error) {
-        logger.error('Erro ao registrar auditoria:', error);
-        fileLogger.log({ error: error.message, tabela, id_registro, acao });
-    }
-}
+        ({ tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint } = req.body);
 
-module.exports = {
-    adicionarAuditoria
+        if (!tabela || !id_registro || !acao || !feito_por_id) {
+            return res.status(400).json({ error: 'Dados incompletos' });
+        }
+
+        const sql = `INSERT INTO RTS_auditoria (tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        await db.execute(sql, [tabela, id_registro, acao, antes || null, depois || null, feito_por_id, status_code || null, endpoint || null]);
+
+        res.status(201).json({ message: 'Auditoria registrada com sucesso' });
+
+    } catch (error) {
+        logger.Error('Erro ao registrar auditoria:', error);
+        fileLogger.log({ error: error.message, tabela, id_registro, acao });
+        res.status(500).json({ error: 'Erro ao registrar auditoria' });
+    }
+};
+
+
+// Listar auditorias (com filtros opcionais)
+exports.listarAuditorias = async (req, res) => {
+    try {
+        const { tabela, id_registro, acao, feito_por_id, limit, offset } = req.query;
+
+        let sql = `
+      SELECT a.*, u.usuario AS feito_por
+      FROM RTS_auditoria a
+      LEFT JOIN RTS_usuario u ON u.id = a.feito_por_id
+      WHERE 1=1
+    `;
+        const params = [];
+
+        if (tabela) {
+            sql += ` AND a.tabela = ?`;
+            params.push(tabela);
+        }
+        if (id_registro) {
+            sql += ` AND a.id_registro = ?`;
+            params.push(id_registro);
+        }
+        if (acao) {
+            sql += ` AND a.acao = ?`;
+            params.push(acao);
+        }
+        if (feito_por_id) {
+            sql += ` AND a.feito_por_id = ?`;
+            params.push(feito_por_id);
+        }
+
+        sql += ` ORDER BY a.feito_em DESC`;
+
+        if (limit) {
+            sql += ` LIMIT ?`;
+            params.push(parseInt(limit));
+        }
+        if (offset) {
+            sql += ` OFFSET ?`;
+            params.push(parseInt(offset));
+        }
+
+        const [rows] = await db.execute(sql, params);
+        res.json(rows);
+    } catch (error) {
+        Logger.Error('Erro ao listar auditorias:', error);
+        res.status(500).json({ error: 'Erro ao listar auditorias' });
+    }
+};
+
+exports.adicionarAuditoriaInterna = async (dados) => {
+    try {
+        const { tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint } = dados;
+
+        if (!tabela || !acao || !feito_por_id) {
+            throw new Error('Dados incompletos para auditoria');
+        }
+
+        const sql = `INSERT INTO RTS_auditoria (tabela, id_registro, acao, antes, depois, feito_por_id, status_code, endpoint) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        await db.execute(sql, [tabela, id_registro || null, acao, antes || null, depois || null, feito_por_id, status_code || null, endpoint || null]);
+
+        logger.Success(`Auditoria registrada para ${tabela}`);
+    } catch (error) {
+        logger.Error('Erro ao registrar auditoria:', error);
+        throw error; // Propaga o erro para quem chamou
+    }
 };

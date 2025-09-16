@@ -1,4 +1,6 @@
 const db = require('./../../../../../config/database');
+const auditoriaController = require('../../../../../controller/audit');
+
 
 exports.getTickets = async (req, res) => {
   try {
@@ -11,22 +13,31 @@ exports.getTickets = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
   try {
-    const { title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id } = req.body;
+    const { title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id } = req.body;
 
     // Validação básica (pode expandir depois com lib tipo Joi ou express-validator)
-    if (!title || !description || !prioridade || !status_id || !grupo_id || !solicitante_id || !url_github || !criado_por_id) {
+    if (!title || !description || !prioridade || !status_id || !grupo_id || !criado_por_id) {
       return res.status(400).json({
         error: 'Campos obrigatórios faltando',
-        details: { title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }
+        details: { title, description, prioridade, status_id, grupo_id, criado_por_id }
       });
     }
 
     // Inserção no banco de dados
     const [result] = await db.execute(
-      `INSERT INTO TK_tickets (title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title, description, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id]
+      `INSERT INTO TK_tickets (title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id || null, url_github || null, criado_por_id]
     );
+
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      acao: "CRIAR",
+      depois: JSON.stringify({ title, description, data_criacao, prioridade, status_id, grupo_id, solicitante_id, url_github, criado_por_id }),
+      feito_por_id: criado_por_id,
+      endpoint: "/api/tickets",
+      status_code: 201
+    })
 
     res.status(201).json({
       message: 'Ticket criado com sucesso!',
@@ -35,6 +46,14 @@ exports.createTicket = async (req, res) => {
     });
 
   } catch (err) {
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      acao: "CRIAR",
+      depois: JSON.stringify(req.body),
+      feito_por_id: req.body.criado_por_id,
+      endpoint: "/api/tickets",
+      status_code: 500
+    })
     console.error("Erro ao criar ticket:", err); // log pro console local
     res.status(500).json({ error: 'Erro ao criar ticket', details: err.message });
   }
@@ -62,6 +81,9 @@ exports.getTicketById = async (req, res) => {
       id_ticket,
       title_ticket,
       description_ticket,
+      data_criacao_ticket,
+      data_atualizacao_ticket,
+      data_encerramento_ticket,
       status,
       cor_Status,
       prioriedade_ticket,
@@ -71,6 +93,27 @@ exports.getTicketById = async (req, res) => {
       nome_pessoa,
       url_repositorio,
     } = rows[0];
+
+    // Funções auxiliares para formatar
+    const formatDate = (date) => {
+      if (!date) return '-';
+      return new Date(date).toLocaleDateString('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    };
+
+    const formatDateTime = (date) => {
+      if (!date) return '-';
+      return new Date(date).toLocaleString('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    };
 
     // Mapear todas as integrações do GitHub
     const github_itens = rows
@@ -88,6 +131,9 @@ exports.getTicketById = async (req, res) => {
       id_ticket,
       title_ticket,
       description_ticket,
+      data_criacao_ticket: formatDate(data_criacao_ticket),        // só data
+      data_atualizacao_ticket: formatDateTime(data_atualizacao_ticket), // data + hora
+      data_encerramento_ticket: formatDate(data_encerramento_ticket),  // só data
       status,
       cor_Status,
       prioriedade_ticket,
@@ -105,23 +151,79 @@ exports.getTicketById = async (req, res) => {
   }
 };
 
-
-
-
-
 exports.updateTicket = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description } = req.body;
-    await db.execute(
-      'UPDATE TK_tickets SET title = ?, description = ? WHERE id = ?',
-      [title, description, id]
+    const { title, description, prioridade, status_id, grupo_id, solicitante_id, url_repositorio, atualizado_por_id } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ error: "ID do ticket é obrigatório" });
+    }
+
+    // 1. Buscar o registro ANTES da atualização
+    const [rows] = await db.execute(
+      "SELECT * FROM vw_tickets_completo WHERE id_ticket = ?",
+      [id]
     );
-    res.json({ id, title, description });
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Ticket não encontrado" });
+    }
+
+    const antes = rows[0]; // Estado antes da edição
+
+    // 2. Atualização
+    const [result] = await db.execute(
+      `UPDATE TK_tickets 
+       SET title = ?, description = ?, prioridade = ?, status_id = ?, grupo_id = ?, solicitante_id = ?, url_github = ?, atualizado_em = NOW(), atualizado_por_id = ?
+       WHERE id = ?`,
+      [title, description, prioridade, status_id, grupo_id, solicitante_id || null, url_repositorio || null, atualizado_por_id || null, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Ticket não encontrado" });
+    }
+
+    // 3. Registrar auditoria (ANTES e DEPOIS)
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      id_registro: id,
+      acao: "EDITAR",
+      antes: JSON.stringify(antes),
+      depois: JSON.stringify(req.body),
+      feito_por_id: atualizado_por_id,
+      endpoint: `/api/tickets/${id}`,
+      status_code: 200
+    });
+
+    res.json({ message: "Ticket atualizado com sucesso!", id });
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao atualizar ticket', details: err.message });
+    // ⚠️ Tentativa de salvar "antes" mesmo em erro
+    let antes = null;
+    try {
+      const [rows] = await db.execute("SELECT * FROM vw_tickets_completo WHERE id_ticket = ?", [req.params.id]);
+      if (rows.length > 0) antes = rows[0];
+    } catch (e) {
+      // se der erro até no select, ignora
+    }
+
+    await auditoriaController.adicionarAuditoriaInterna({
+      tabela: "TK_tickets",
+      id_registro: req.params.id,
+      acao: "EDITAR",
+      antes: JSON.stringify(antes),
+      depois: JSON.stringify(req.body),
+      feito_por_id: req.body.atualizado_por_id,
+      endpoint: `/api/tickets/${req.params.id}`,
+      status_code: 500
+    });
+
+    console.error("Erro ao atualizar ticket:", err);
+    res.status(500).json({ error: "Erro ao atualizar ticket", details: err.message });
   }
 };
+
+
 
 exports.deleteTicket = async (req, res) => {
   try {

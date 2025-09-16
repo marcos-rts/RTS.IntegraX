@@ -1,10 +1,16 @@
 require('dotenv').config();
 const axios = require('axios');
 const db = require('../../config/database');
+const Logger = require('../utils/Console_Logger');
+const auditoriaController = require('../../controller/audit')
+
+
+const logger = new Logger();
 
 // Token do GitHub
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 if (!GITHUB_TOKEN) {
+    logger.Error("❌ GITHUB_TOKEN não definido no arquivo .env");
     throw new Error("❌ GITHUB_TOKEN não definido no arquivo .env");
 }
 
@@ -20,11 +26,12 @@ function extrairOwnerERepo(repoUrl) {
     const regex = /github\.com\/([\w-]+)\/([\w.-]+)(?:\.git)?$/i;
     const match = repoUrl?.match?.(regex);
     if (!match) {
-        console.warn(`⚠️ URL inválida: "${repoUrl}"`);
+        logger.Warning(`⚠️ URL inválida: "${repoUrl}"`);
         return null;
     }
 
     const [, owner, repo] = match;
+    // logger.Debug(`Extraído owner: "${owner}", repo: "${repo}" da URL: "${repoUrl}"`);
     return { owner, repo };
 }
 
@@ -67,7 +74,7 @@ async function buscarIssuesEPRs(repoUrl) {
             page++;
         }
     } catch (error) {
-        console.error(`❌ Erro ao buscar dados de ${owner}/${repo}:`, error.response?.data || error.message);
+        logger.Error(`❌ Erro ao buscar dados de ${owner}/${repo}:`, error.response?.data || error.message);
     }
 
     return resultados;
@@ -83,7 +90,7 @@ async function sincronizarIssuesEPRs() {
         );
 
         if (!grupoProjeto.length) {
-            console.warn("⚠️ Grupo 'Projeto' não encontrado.");
+            logger.Warning("⚠️ Grupo 'Projeto' não encontrado.");
             return;
         }
 
@@ -115,22 +122,27 @@ async function sincronizarIssuesEPRs() {
                         entrada.status
                     ]
                 );
+                await auditoriaController.adicionarAuditoriaInterna({
+                    tabela: "GH_integracao",
+                    acao: "SINCRONIZAR",
+                    depois: {
+                        ticket_id: ticket.id,
+                        tipo: entrada.tipo,
+                        github_id: entrada.github_id,
+                        titulo: entrada.titulo,
+                        url: entrada.url,
+                        status: entrada.status
+                    },
+                    feito_por_id: null,
+                    endpoint: "/sync/github",
+                    status_code: 200
+                });
             }
         }
 
-        // Atualiza a tabela de execução do cron
-        const agora = new Date();
-        const proxima = new Date(agora.getTime() + 60000); // 1 minuto depois
-
-        await db.execute(
-            `INSERT INTO CRON_coleta (ultima_execucao, proxima_execucao)
-             VALUES (?, ?)`,
-            [agora, proxima]
-        );
-
-        console.log(`✅ Sincronização concluída com sucesso em ${agora.toLocaleString()}`);
+        logger.Success(` Sincronização concluída`);
     } catch (error) {
-        console.error("❌ Erro na sincronização:", error.message || error);
+        logger.Error(" Erro na sincronização:", error.message || error);
     }
 }
 

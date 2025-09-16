@@ -28,6 +28,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 🔥 Inicializar o servidor
 app.listen(process.env.PORT, () => {
-  logger.System(`Servidor rodando na porta: ${process.env.PORT}`);
+  // logger.System(`Servidor rodando na porta: ${process.env.PORT}`);
+  logger.System(`🚀 Servidor rodando em: http://localhost:${process.env.PORT}`);
+  logger.Info(`📁 Diretório: ${__dirname}`);
+  logger.Info(`🌐 Frontend: http://localhost:${process.env.PORT}`);
+  logger.Info(`🔌 API: http://localhost:${process.env.PORT}/api`);
+  // logger.Info(`📊 Teste banco: http://localhost:${process.env.PORT}/db-test`);
+  // logger.Info(`💚 Health check: http://localhost:${process.env.PORT}/health`);
   fileLogger.log(`Servidor rodando na porta: ${process.env.PORT}`);
 })

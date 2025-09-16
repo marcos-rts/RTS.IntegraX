@@ -122,6 +122,12 @@
                             <li class="list-group-item"><strong>Grupo:</strong> <span id="ticket-grupo"></span></li>
                             <li class="list-group-item"><strong>Responsável:</strong> <span
                                     id="ticket-responsavel"></span></li>
+                            <li class="list-group-item"><strong>Data de Criação:</strong> <span
+                                    id="ticket-data_criacao">Carregando...</span></li>
+                            <li class="list-group-item"><strong>Data de Atualização:</strong> <span
+                                    id="ticket-data_atualizacao">Carregando...</span></li>
+                            <li class="list-group-item"><strong>Data de Encerramento:</strong> <span
+                                    id="ticket-data_encerramento">Carregando...</span></li>
                             <li class="list-group-item"><strong>URL do Repositório:</strong> <a
                                     id="ticket-url_repositorio" href="#" target="_blank">Abrir</a></li>
                         </ul>
@@ -200,6 +206,10 @@
             document.getElementById("ticket-status").textContent = ticket.status || "-";
             document.getElementById("ticket-grupo").textContent = ticket.Grupo || "-";
             document.getElementById("ticket-responsavel").textContent = ticket.nome_pessoa || "-";
+            document.getElementById("ticket-data_criacao").textContent = ticket.data_criacao_ticket || "-";
+            document.getElementById("ticket-data_atualizacao").textContent = ticket.data_atualizacao_ticket || "-";
+            document.getElementById("ticket-data_encerramento").textContent = ticket.data_encerramento_ticket || "-";
+
 
             const link = document.getElementById("ticket-url_repositorio");
             if (ticket.url_repositorio) {
