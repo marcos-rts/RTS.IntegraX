@@ -1,4 +1,5 @@
 const db = require('./../../../../../config/database');
+const auditoriaController = require('../../../../../controller/audit');
 
 // Criar transação
 exports.createTransacao = async (req, res) => {
@@ -16,8 +17,26 @@ exports.createTransacao = async (req, res) => {
             [valor, tipo, informacao, conta_id, conta_2_id, subcategoria_id, pessoa_id, observacao, status_id, criado_por_id]
         );
 
+        await auditoriaController.adicionarAuditoriaInterna({
+            tabela: "FX_transacao",
+            id_registro: result.insertId,
+            acao: "CRIAR",
+            depois: JSON.stringify({ valor, tipo, informacao, conta_id, conta_2_id, subcategoria_id, pessoa_id, observacao, status_id, criado_por_id }),
+            feito_por_id: criado_por_id,
+            endpoint: "/api/finanx/transacoes",
+            status_code: 201
+        })
+
         res.status(201).json({ id: result.insertId, message: "Transação criada com sucesso" });
     } catch (err) {
+        await auditoriaController.adicionarAuditoriaInterna({
+            tabela: "FX_transacao",
+            acao: "CRIAR",
+            depois: JSON.stringify(req.body),
+            feito_por_id: req.body.criado_por_id,
+            endpoint: "/api/finanx/transacoes",
+            status_code: 500
+        })
         console.error("Erro ao criar transação:", err);
         res.status(500).json({ error: "Erro ao criar transação" });
     }
