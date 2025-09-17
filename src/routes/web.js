@@ -31,6 +31,10 @@ router.get('/pessoas', (req, res) => {
     res.sendFile(path.join(publicPath, 'users', 'pessoas.html'));
 });
 
+router.get('/nova_pessoa', (req, res) => {
+    res.sendFile(path.join(publicPath, 'users', 'nova_pessoa.html'));
+});
+
 // 🎟️ Tickets
 router.get('/lista_tickets', (req, res) => {
     res.sendFile(path.join(publicPath, 'tickets', 'lista_tickets.html'));

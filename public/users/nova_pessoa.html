@@ -82,14 +82,14 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/painel"><i
-                                    class="bi bi-speedometer2"></i> Home</a>
+                            <a class="nav-link " href="/painel"><i class="bi bi-speedometer2"></i> Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/lista_tickets"><i class="bi bi-ticket"></i> Tickets</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/pessoas"><i class="bi bi-people"></i> Pessoas</a>
+                            <a class="nav-link active" aria-current="page" href="/pessoas"><i class="bi bi-people"></i>
+                                Pessoas</a>
                         </li>
                     </ul>
                     <form class="d-flex mt-3" role="search">
@@ -103,33 +103,24 @@
 
     <main class="container mt-5 pt-5">
         <div class="p-4 bg-light rounded shadow-sm">
-            <!-- Aqui vai o conteúdo central de cada módulo -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="mb-0">Lista de Pessoas</h3>
-                <a href="/nova_pessoa" class="btn btn-primary">
-                    <i class="bi bi-person-plus-fill"></i> Nova Pessoa
-                </a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover table-bordered align-middle">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Apelido</th>
-                            <th>Empresa</th>
-                            <th>Cargo</th>
-                            <th>Usuário</th>
-                            <th>Email</th>
-                            <th>tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelaUsuarios">
-                        <tr>
-                            <td colspan="6" class="text-center">Carregando usuários...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <h3 class="mb-4 text-center">Cadastro de Nova Pessoa</h3>
+            <div class="form-container">
+                <form id="formNovaPessoa">
+                    <div class="mb-3">
+                        <label for="nomePessoa" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="nomePessoa" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nomeExibicao" class="form-label">Nome de Exibição</label>
+                        <input type="text" class="form-control" id="nomeExibicao" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-circle"></i> Criar Pessoa
+                    </button>
+                    <a href="/pessoas" class="btn btn-secondary ms-2">Cancelar</a>
+                </form>
             </div>
         </div>
     </main>
@@ -137,7 +128,6 @@
 
     <script src="bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
     <script>
-
         document.addEventListener("DOMContentLoaded", () => {
             const token = localStorage.getItem("token");
             if (!token) {
@@ -148,13 +138,11 @@
             const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
 
             const btnUsuario = document.querySelector(".username-btn");
-            // const saudacao = document.querySelector("h3");
 
             if (btnUsuario) {
                 btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
             }
 
-            carregarUsuarios();
         });
 
         async function logout() {
@@ -188,45 +176,35 @@
             }
         }
 
-        async function carregarUsuarios() {
-            const tbody = document.getElementById("tabelaUsuarios");
+        document.getElementById("formNovaPessoa").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const novaPessoa = {
+                nome: document.getElementById("nomePessoa").value,
+                nome_exibicao: document.getElementById("nomeExibicao").value,
+                criado_por_id: localStorage.getItem("usuario_id")
+            };
+
             try {
                 const token = localStorage.getItem("token");
-                const response = await fetch("/api/people/", {
+                const response = await fetch("/api/people/createPessoa", {
+                    method: "POST",
                     headers: {
+                        "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`
-                    }
+                    },
+                    body: JSON.stringify(novaPessoa)
                 });
 
-                if (!response.ok) throw new Error("Erro ao carregar os usuários.");
+                if (!response.ok) throw new Error("Erro ao criar pessoa");
 
-                const usuarios = await response.json();
-                console.log(usuarios);
-                if (!usuarios.length) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center">Nenhum usuário encontrado.</td></tr>`;
-                    return;
-                }
-
-                tbody.innerHTML = "";
-                usuarios.forEach((usuario) => {
-                    tbody.innerHTML += `
-              <tr>
-                <td>${usuario.pessoa_id}</td>
-                <td>${usuario.pessoa_nome}</td>
-                <td>${usuario.pessoa_apelido}</td>
-                <td>${usuario.empresa_nome}</td>
-                <td>${usuario.vinculo_cargo}</td>
-                <td>${usuario.usuario_nome}</td>
-                <td>${usuario.usuario_email}</td>
-                <td>${usuario.usuario_tipo}</td>
-              </tr>
-            `;
-                });
+                alert("Pessoa criada com sucesso!");
+                window.location.href = "/pessoas";
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Erro ao carregar dados.</td></tr>`;
                 console.error(err);
+                alert("Erro ao criar pessoa.");
             }
-        }
+        });
     </script>
 </body>
 
