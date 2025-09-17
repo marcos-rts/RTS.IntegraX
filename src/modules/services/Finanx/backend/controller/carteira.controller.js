@@ -24,11 +24,11 @@ exports.listarCarteiras = async (req, res) => {
 // Criar carteira
 exports.criarCarteira = async (req, res) => {
     try {
-        const { nome, descricao } = req.body;
+        const { nome, descricao, responsavel_id, criado_por_id } = req.body;
 
         // Pegando o ID da pessoa logada
-        const responsavel_id = req.user.pessoa_id;
-        const criado_por_id = req.user.id;
+        // const responsavel_id = req.user.pessoa_id;
+        // const criado_por_id = req.user.id;
 
         if (!nome || nome.trim() === "") {
             return res.status(400).send("O nome da carteira é obrigatório.");
