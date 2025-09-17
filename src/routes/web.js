@@ -68,6 +68,10 @@ router.get('/carteiras', (req, res) => {
     res.sendFile(path.join(publicPath, 'finanx', 'carteiras.html'));
 });
 
+router.get('/nova_carteira', (req, res) => {
+    res.sendFile(path.join(publicPath, 'finanx', 'novaCarteira.html'));
+});
+
 
 
 module.exports = router;
