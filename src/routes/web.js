@@ -60,4 +60,9 @@ router.get('/transacao', (req, res) => {
     res.sendFile(path.join(publicPath, 'finanx', 'novatransacao.html'));
 });
 
+router.get('/nova_conta', (req, res) => {
+    res.sendFile(path.join(publicPath, 'finanx', 'novaConta.html'));
+});
+
+
 module.exports = router;
