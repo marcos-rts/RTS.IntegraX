@@ -56,4 +56,8 @@ router.get('/finanxIndex', (req, res) => {
     res.sendFile(path.join(publicPath, 'finanx', 'painel.html'));
 });
 
+router.get('/transacao', (req, res) => {
+    res.sendFile(path.join(publicPath, 'finanx', 'novatransacao.html'));
+});
+
 module.exports = router;

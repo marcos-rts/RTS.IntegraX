@@ -1,0 +1,257 @@
+<!-- nova transacao -->
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <title>RTS IntegraX - Nova Transação</title>
+
+    <script>
+        // Função para verificar validade do token
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = "/";
+        } else {
+            const payload = parseJwt(token);
+            const now = Math.floor(Date.now() / 1000);
+            if (!payload || payload.exp < now) {
+                localStorage.removeItem('token');
+                window.location.href = "/";
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/painel">RTS IntegraX</a>
+            <!-- Botão de menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Fim do botão de menu -->
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+                aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu Opções</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle username-btn" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Carregando...
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="/controle_usuarios"> <i
+                                            class="bi bi-person-gear"></i> Controle de Usuarios</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="logout()">Sair</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/painel"><i class="bi bi-speedometer2"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/finanxIndex"><i
+                                    class="bi bi-cash-coin"></i> Finanx</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/carteiras"><i class="bi bi-wallet2"></i> Carteiras</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/relatorio"><i class="bi bi-bar-chart-line"></i> Relatorio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/transacao"><i class="bi bi-bag-plus-fill"></i> nova Transação</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+
+    <main class="container mt-5 pt-5">
+        <div class="p-4 bg-light rounded shadow-sm">
+            <h2 class="mb-4"><i class="bi bi-plus-circle"></i> Nova Transação</h2>
+
+            <form id="formTransacao">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="valor" class="form-label">Valor</label>
+                        <input type="number" step="0.01" class="form-control" id="valor" name="valor" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <select class="form-select" id="tipo" name="tipo" required>
+                            <option value="entrada">Entrada</option>
+                            <option value="saida">Saída</option>
+                            <option value="transferencia">Transferência</option>
+                        </select>
+                    </div>
+
+                    <!-- Conta -->
+                    <div class="col-md-6">
+                        <label for="conta_id" class="form-label">Conta</label>
+                        <div class="input-group">
+                            <select class="form-select" id="conta_id" name="conta_id" required></select>
+                            <a href="/nova_conta" class="btn btn-outline-success" title="Cadastrar nova conta">
+                                <i class="bi bi-plus-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Pessoa -->
+                    <div class="col-md-6">
+                        <label for="pessoa_id" class="form-label">Pessoa</label>
+                        <div class="input-group">
+                            <select class="form-select" id="pessoa_id" name="pessoa_id"></select>
+                            <a href="/nova_pessoa" class="btn btn-outline-success" title="Cadastrar nova pessoa">
+                                <i class="bi bi-plus-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Categoria/Subcategoria -->
+                    <div class="col-md-6">
+                        <label for="categoria_id" class="form-label">Categoria</label>
+                        <div class="input-group">
+                            <select class="form-select" id="categoria_id" name="categoria_id" required></select>
+                            <a href="/nova_categoria" class="btn btn-outline-success" title="Cadastrar nova categoria">
+                                <i class="bi bi-plus-circle"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="subcategoria_id" class="form-label">Subcategoria</label>
+                        <select class="form-select" id="subcategoria_id" name="subcategoria_id"></select>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="informacao" class="form-label">Informações</label>
+                        <textarea class="form-control" id="informacao" name="informacao" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="observacao" class="form-label">Observações</label>
+                        <textarea class="form-control" id="observacao" name="observacao" rows="2"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">Salvar</button>
+                        <a href="/finanxIndex" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("token");
+            const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
+
+            const btnUsuario = document.querySelector(".username-btn");
+            if (btnUsuario) {
+                btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
+            }
+
+            // Envio do formulário
+            const form = document.getElementById("transacaoForm");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                data.criado_por_id = localStorage.getItem("usuario_id"); // salva quem criou
+
+                try {
+                    const response = await fetch("/api/finanx/transacoes", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert("Transação criada com sucesso!");
+                        window.location.href = "/finanxIndex";
+                    } else {
+                        alert("Erro: " + (result.error || "Não foi possível salvar"));
+                    }
+                } catch (err) {
+                    console.error("Erro ao salvar transação:", err);
+                    alert("Erro inesperado ao salvar transação");
+                }
+            });
+        });
+
+        async function logout() {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    window.location.href = "/";
+                    return;
+                }
+
+                const response = await fetch("/api/autenticacao/logout", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    localStorage.clear();
+                    window.location.href = "/";
+                } else {
+                    const result = await response.json();
+                    alert("Erro ao sair: " + result.message);
+                }
+            } catch (err) {
+                alert("Erro inesperado ao sair.");
+            }
+        }
+    </script>
+</body>
+
+</html>
