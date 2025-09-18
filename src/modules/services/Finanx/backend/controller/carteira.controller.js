@@ -52,6 +52,7 @@ exports.criarCarteira = async (req, res) => {
 
         res.status(201).send({ id: result.insertId, message: "Carteira criada com sucesso." });
     } catch (err) {
+        // TODO Erro ao criar carteira - Auditoria
         await auditoriaController.adicionarAuditoriaInterna({
             tabela: "FX_carteira",
             acao: "CRIAR",
