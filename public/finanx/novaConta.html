@@ -109,6 +109,10 @@
                     <input type="text" class="form-control" id="nome" name="nome" required>
                 </div>
                 <div class="mb-3">
+                    <label for="descricao" class="form-label">Descrição</label>
+                    <input type="text" class="form-control" id="descricao" name="descricao" required>
+                </div>
+                <div class="mb-3">
                     <label for="carteira_id" class="form-label">Carteira</label>
                     <div class="input-group">
                         <select id="carteira_id" name="carteira_id" class="form-select" required></select>
@@ -117,8 +121,12 @@
                         </a>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-success">Salvar</button>
-                <a href="/nova_transacao" class="btn btn-secondary">Cancelar</a>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" required></select>
+                </div>
+                <button type="submit" class="btn btn-success" id="btnSalvar">Salvar</button>
+                <a href="/contas" class="btn btn-secondary">Cancelar</a>
             </form>
         </div>
     </main>
@@ -126,7 +134,6 @@
     <script src="bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
-
         const btnUsuario = document.querySelector(".username-btn");
         if (btnUsuario) {
             btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
@@ -136,39 +143,94 @@
             const token = localStorage.getItem("token");
             if (!token) return (window.location.href = "/");
 
+            const [statusResp] = await Promise.all([
+                fetch("/api/status?tipoBanco=FX", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+            ]);
+            const status = await statusResp.json();
+            const statusSelect = document.getElementById("status");
+
+            status.forEach(s => {
+                statusSelect.innerHTML += `<option value="${s.id_status}">${s.id_nome}</option>`;
+            });
+
+            // Carregar carteiras
             async function carregarCarteiras() {
-                const res = await fetch("/api/finanx/carteiras", {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const data = await res.json();
-                const select = document.getElementById("carteira_id");
-                data.forEach(item => {
-                    const opt = document.createElement("option");
-                    opt.value = item.id;
-                    opt.textContent = item.nome;
-                    select.appendChild(opt);
-                });
+                try {
+                    const res = await fetch("/api/finanx/carteiras", {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    if (!res.ok) throw new Error("Erro ao buscar carteiras");
+                    const data = await res.json();
+
+                    const select = document.getElementById("carteira_id");
+                    select.innerHTML = "";
+                    if (data.length === 0) {
+                        const opt = document.createElement("option");
+                        opt.textContent = "Nenhuma carteira cadastrada";
+                        opt.disabled = true;
+                        opt.selected = true;
+                        select.appendChild(opt);
+                    } else {
+                        data.forEach(item => {
+                            const opt = document.createElement("option");
+                            opt.value = item.id;
+                            opt.textContent = item.nome;
+                            select.appendChild(opt);
+                        });
+                    }
+                } catch (err) {
+                    alert(err.message);
+                }
             }
             await carregarCarteiras();
 
+            // Envio do formulário
             document.getElementById("formConta").addEventListener("submit", async (e) => {
                 e.preventDefault();
-                const body = Object.fromEntries(new FormData(e.target).entries());
+                const btnSalvar = document.getElementById("btnSalvar");
+                btnSalvar.disabled = true;
+                btnSalvar.textContent = "Salvando...";
 
-                const res = await fetch("/api/finanx/contas", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-                    body: JSON.stringify(body)
-                });
+                const token = localStorage.getItem("token");
 
-                if (res.ok) {
-                    alert("Conta cadastrada!");
-                    window.location.href = "/nova_transacao";
-                } else {
-                    alert("Erro ao salvar conta!");
+                // const body = Object.fromEntries(new FormData(e.target).entries());
+
+                const body = {
+                    nome: document.getElementById("nome").value,
+                    descricao: document.getElementById("descricao").value,
+                    carteira_id: parseInt(document.getElementById("carteira_id").value),
+                    // responsavel_id: parseInt(localStorage.getItem("pessoa_id")),
+                    criado_por_id: parseInt(localStorage.getItem("usuario_id"))
+                };
+
+                try {
+                    const res = await fetch("/api/finanx/contas", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                        body: JSON.stringify(body)
+                    });
+
+                    const result = await res.json();
+                    if (res.ok) {
+                        alert(result.message || "Conta cadastrada!");
+                        window.location.href = "/contas";
+                    } else {
+                        alert("Erro: " + (result.message || "Não foi possível salvar."));
+                    }
+                } catch (err) {
+                    alert("Erro inesperado: " + err.message);
+                } finally {
+                    btnSalvar.disabled = false;
+                    btnSalvar.textContent = "Salvar";
                 }
             });
         });
+
         async function logout() {
             try {
                 const token = localStorage.getItem("token");
