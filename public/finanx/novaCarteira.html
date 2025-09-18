@@ -133,22 +133,6 @@
                 btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
             }
 
-            // async function carregarCarteiras() {
-            //     const res = await fetch("/api/finanx/carteiras", {
-            //         headers: { Authorization: `Bearer ${token}` }
-            //     });
-            //     const data = await res.json();
-            //     const select = document.getElementById("carteira_id");
-            //     data.forEach(item => {
-            //         const opt = document.createElement("option");
-            //         opt.value = item.id;
-            //         opt.textContent = item.nome;
-            //         select.appendChild(opt);
-            //     });
-            // }
-
-            // await carregarCarteiras();
-
             document.getElementById("formCarteira").addEventListener("submit", async (e) => {
                 e.preventDefault();
 
