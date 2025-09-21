@@ -112,6 +112,19 @@
                     <label for="descricao" class="form-label">Descrição</label>
                     <input type="text" class="form-control" id="descricao" name="descricao" required>
                 </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="valor" class="form-label">Valor</label>
+                        <input type="number" class="form-control" id="valor" name="valor" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tipo" class="form-label">Tipo</label>
+                        <select class="form-select" id="tipo" name="tipo" required>
+                            <option value="Debito">Débito</option>
+                            <option value="Credito">Crédito</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="carteira_id" class="form-label">Carteira</label>
                     <div class="input-group">
@@ -204,8 +217,10 @@
                     nome: document.getElementById("nome").value,
                     descricao: document.getElementById("descricao").value,
                     carteira_id: parseInt(document.getElementById("carteira_id").value),
-                    // responsavel_id: parseInt(localStorage.getItem("pessoa_id")),
-                    criado_por_id: parseInt(localStorage.getItem("usuario_id"))
+                    criado_por_id: parseInt(localStorage.getItem("usuario_id")),
+                    valor: parseFloat(document.getElementById("valor").value),
+                    tipo: document.getElementById("tipo").value,
+                    status_id: parseInt(document.getElementById("status").value)
                 };
 
                 try {
