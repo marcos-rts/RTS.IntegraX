@@ -57,7 +57,7 @@ router.get('/finanxIndex', (req, res) => {
 });
 
 router.get('/transacao', (req, res) => {
-    res.sendFile(path.join(publicPath, 'finanx', 'novatransacao.html'));
+    res.sendFile(path.join(publicPath, 'finanx', 'novaTransacao.html'));
 });
 
 router.get('/nova_conta', (req, res) => {

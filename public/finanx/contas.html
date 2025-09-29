@@ -9,6 +9,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <title>Contas - RTS IntegraX</title>
     <script>
+<<<<<<< HEAD
+=======
+        // Função para verificar validade do token
+>>>>>>> 7855a8c6181b5b2b3a89d9bdbf0fb7f324ad5a6f
         function parseJwt(token) {
             try {
                 const base64Url = token.split('.')[1];
@@ -16,6 +20,10 @@
                 const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
                     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                 }).join(''));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7855a8c6181b5b2b3a89d9bdbf0fb7f324ad5a6f
                 return JSON.parse(jsonPayload);
             } catch (e) {
                 return null;
@@ -41,6 +49,7 @@
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="/painel">RTS IntegraX</a>
+<<<<<<< HEAD
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -58,12 +67,40 @@
                             <ul class="dropdown-menu dropdown-menu-dark">
                                 <li><a class="dropdown-item" href="/controle_usuarios"><i class="bi bi-person-gear"></i>
                                         Controle de Usuarios</a></li>
+=======
+            <!-- Botão de menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Fim do botão de menu -->
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+                aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu Opções</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle username-btn" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Carregando...
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="/controle_usuarios"> <i
+                                            class="bi bi-person-gear"></i> Controle de Usuarios</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+>>>>>>> 7855a8c6181b5b2b3a89d9bdbf0fb7f324ad5a6f
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item" href="#" onclick="logout()">Sair</a></li>
                             </ul>
                         </li>
+<<<<<<< HEAD
                         <li class="nav-item"><a class="nav-link" href="/painel"><i class="bi bi-speedometer2"></i>
                                 Home</a></li>
                         <li class="nav-item"><a class="nav-link active" href="/finanxIndex"><i
@@ -77,6 +114,29 @@
                         <li class="nav-item"><a class="nav-link" href="/transacao"><i class="bi bi-bag-plus-fill"></i>
                                 Nova Transação</a></li>
                     </ul>
+=======
+                        <li class="nav-item">
+                            <a class="nav-link" href="/painel"><i class="bi bi-speedometer2"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/finanxIndex"><i
+                                    class="bi bi-cash-coin"></i> Finanx</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/carteiras"><i class="bi bi-wallet2"></i> Carteiras</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/relatorio"><i class="bi bi-bar-chart-line"></i> Relatorio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/transacao"><i class="bi bi-bag-plus-fill"></i> nova Transação</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </form>
+>>>>>>> 7855a8c6181b5b2b3a89d9bdbf0fb7f324ad5a6f
                 </div>
             </div>
         </div>
@@ -130,6 +190,7 @@
                     data.forEach(conta => {
                         const tr = document.createElement("tr");
                         tr.innerHTML = `
+<<<<<<< HEAD
               <td>${conta.id}</td>
               <td>${conta.nome}</td>
               <td>${conta.carteira_nome || "-"}</td>
@@ -139,6 +200,25 @@
                 <button class="btn btn-sm btn-danger" onclick="excluirConta(${conta.id})"><i class="bi bi-trash"></i></button>
               </td>
             `;
+=======
+                        <td>${conta.id}</td>
+                        <td>${conta.nome}</td>
+                        <td>${conta.carteira_nome ?? "-"}</td>
+                        <td>
+                            ${conta.ativo
+                                ? '<span class="badge bg-success">Ativo</span>'
+                                : '<span class="badge bg-secondary">Inativo</span>'}
+                        </td>
+                        <td>
+                            <a href="/editar_conta?id=${conta.id}" class="btn btn-sm btn-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <button class="btn btn-sm btn-danger" onclick="excluirConta(${conta.id})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+>>>>>>> 7855a8c6181b5b2b3a89d9bdbf0fb7f324ad5a6f
                         tbody.appendChild(tr);
                     });
                 }
@@ -192,6 +272,10 @@
 
         document.addEventListener("DOMContentLoaded", carregarContas);
     </script>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7855a8c6181b5b2b3a89d9bdbf0fb7f324ad5a6f
 </body>
 
 </html>
