@@ -154,7 +154,16 @@ exports.getTicketById = async (req, res) => {
 exports.updateTicket = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, prioridade, status_id, grupo_id, solicitante_id, url_repositorio, atualizado_por_id } = req.body;
+    const {
+      title,
+      description,
+      prioridade,
+      status_id,
+      grupo_id,
+      solicitante_id,
+      url_repositorio,
+      atualizado_por_id
+    } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: "ID do ticket é obrigatório" });
@@ -170,21 +179,77 @@ exports.updateTicket = async (req, res) => {
       return res.status(404).json({ error: "Ticket não encontrado" });
     }
 
-    const antes = rows[0]; // Estado antes da edição
+    const antes = rows[0];
 
-    // 2. Atualização
-    const [result] = await db.execute(
-      `UPDATE TK_tickets 
-       SET title = ?, description = ?, prioridade = ?, status_id = ?, grupo_id = ?, solicitante_id = ?, url_github = ?, atualizado_em = NOW(), atualizado_por_id = ?
-       WHERE id = ?`,
-      [title, description, prioridade, status_id, grupo_id, solicitante_id || null, url_repositorio || null, atualizado_por_id || null, id]
-    );
+    // 2. Se o status for "Fechado" (ID 7), define a data de encerramento como agora
+    // 👉 Ajuste o número conforme o ID real do status "Fechado" no seu banco
+    const fechadoId = 7;
+    let updateQuery;
+    let params;
+
+    if (status_id == fechadoId) {
+      updateQuery = `
+        UPDATE TK_tickets 
+        SET 
+          title = ?, 
+          description = ?, 
+          prioridade = ?, 
+          status_id = ?, 
+          grupo_id = ?, 
+          solicitante_id = ?, 
+          url_github = ?, 
+          atualizado_em = NOW(), 
+          atualizado_por_id = ?, 
+          data_encerramento = NOW()
+        WHERE id = ?
+      `;
+      params = [
+        title,
+        description,
+        prioridade,
+        status_id,
+        grupo_id,
+        solicitante_id || null,
+        url_repositorio || null,
+        atualizado_por_id || null,
+        id
+      ];
+    } else {
+      updateQuery = `
+        UPDATE TK_tickets 
+        SET 
+          title = ?, 
+          description = ?, 
+          prioridade = ?, 
+          status_id = ?, 
+          grupo_id = ?, 
+          solicitante_id = ?, 
+          url_github = ?, 
+          atualizado_em = NOW(), 
+          atualizado_por_id = ?
+        WHERE id = ?
+      `;
+      params = [
+        title,
+        description,
+        prioridade,
+        status_id,
+        grupo_id,
+        solicitante_id || null,
+        url_repositorio || null,
+        atualizado_por_id || null,
+        id
+      ];
+    }
+
+    // 3. Executa a atualização
+    const [result] = await db.execute(updateQuery, params);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Ticket não encontrado" });
     }
 
-    // 3. Registrar auditoria (ANTES e DEPOIS)
+    // 4. Auditoria
     await auditoriaController.adicionarAuditoriaInterna({
       tabela: "TK_tickets",
       id_registro: id,
@@ -198,14 +263,14 @@ exports.updateTicket = async (req, res) => {
 
     res.json({ message: "Ticket atualizado com sucesso!", id });
   } catch (err) {
-    // ⚠️ Tentativa de salvar "antes" mesmo em erro
     let antes = null;
     try {
-      const [rows] = await db.execute("SELECT * FROM vw_tickets_completo WHERE id_ticket = ?", [req.params.id]);
+      const [rows] = await db.execute(
+        "SELECT * FROM vw_tickets_completo WHERE id_ticket = ?",
+        [req.params.id]
+      );
       if (rows.length > 0) antes = rows[0];
-    } catch (e) {
-      // se der erro até no select, ignora
-    }
+    } catch {}
 
     await auditoriaController.adicionarAuditoriaInterna({
       tabela: "TK_tickets",
@@ -219,9 +284,12 @@ exports.updateTicket = async (req, res) => {
     });
 
     console.error("Erro ao atualizar ticket:", err);
-    res.status(500).json({ error: "Erro ao atualizar ticket", details: err.message });
+    res
+      .status(500)
+      .json({ error: "Erro ao atualizar ticket", details: err.message });
   }
 };
+
 
 
 
