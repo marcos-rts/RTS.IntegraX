@@ -7,7 +7,24 @@
     <link href="bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
     <title>RTS IntegraX</title>
+    <style>
+        .list-view .card-ticket {
+            border-left: 5px solid var(--status-color, #ccc);
+            border-radius: 0;
+            margin-bottom: 0.75rem;
+        }
 
+        .list-view .card-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-view .card-title {
+            margin: 0;
+            font-size: 1rem;
+        }
+    </style>
     <script>
         // Função para verificar validade do token
         function parseJwt(token) {
@@ -105,37 +122,45 @@
         <div class="p-4 bg-light rounded shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h3 class="mb-0">Visualização de Tickets</h3>
-                <a href="/novo_tickets" class="btn btn-success">
-                    <i class="bi bi-plus-circle"></i> Novo Ticket
-                </a>
+                <div>
+                    <button id="btnCard" class="btn btn-outline-primary btn-sm me-2"><i class="bi bi-grid-3x3-gap"></i>
+                        Cards</button>
+                    <button id="btnList" class="btn btn-outline-secondary btn-sm"><i class="bi bi-list-ul"></i>
+                        Lista</button>
+                    <a href="/novo_tickets" class="btn btn-success ms-3"><i class="bi bi-plus-circle"></i> Novo
+                        Ticket</a>
+                </div>
             </div>
 
-            <!-- Filtros -->
-            <div class="row mb-4">
-                <div class="col-md-4">
+            <!-- Filtros + Pesquisa -->
+            <div class="row g-2 mb-4">
+                <div class="col-md-3">
                     <select id="filtro-prioridade" class="form-select">
                         <option value="">Todas Prioridades</option>
                         <option value="Alta">Alta</option>
                         <option value="Média">Média</option>
                         <option value="Baixa">Baixa</option>
+                        <option value="Urgente">Urgente</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <select id="filtro-status" class="form-select">
                         <option value="">Todos Status</option>
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <select id="filtro-grupo" class="form-select">
                         <option value="">Todos Grupos</option>
                     </select>
                 </div>
+                <div class="col-md-3">
+                    <input type="text" id="campo-pesquisa" class="form-control" placeholder="Pesquisar tickets...">
+                </div>
             </div>
 
-            <div>
-                <div class="row g-4" id="ticket-container">
-                    <!-- Tickets serão inseridos aqui -->
-                </div>
+            <!-- Tickets -->
+            <div id="ticket-container" class="row g-4">
+                <!-- Tickets vão aqui -->
             </div>
         </div>
     </main>
@@ -176,24 +201,21 @@
             return token;
         }
 
-        let todosTickets = []; // guarda todos os tickets carregados
+        let todosTickets = [];
+        let modoVisualizacao = "card"; // padrão
 
         function aplicarFiltros() {
             const prioridade = document.getElementById("filtro-prioridade").value;
             const status = document.getElementById("filtro-status").value;
             const grupo = document.getElementById("filtro-grupo").value;
+            const pesquisa = document.getElementById("campo-pesquisa").value.toLowerCase();
 
             let filtrados = todosTickets;
 
-            if (prioridade) {
-                filtrados = filtrados.filter(t => t.Prioriedade === prioridade);
-            }
-            if (status) {
-                filtrados = filtrados.filter(t => t.Status === status);
-            }
-            if (grupo) {
-                filtrados = filtrados.filter(t => t.Grupo === grupo);
-            }
+            if (prioridade) filtrados = filtrados.filter(t => t.Prioriedade === prioridade);
+            if (status) filtrados = filtrados.filter(t => t.Status === status);
+            if (grupo) filtrados = filtrados.filter(t => t.Grupo === grupo);
+            if (pesquisa) filtrados = filtrados.filter(t => t.Titulo.toLowerCase().includes(pesquisa));
 
             renderTickets(filtrados);
         }
@@ -206,26 +228,17 @@
                 const response = await fetch('/api/tickets', {
                     headers: { "Authorization": `Bearer ${token}` }
                 });
-
-                if (!response.ok) throw new Error("Não autorizado ou erro no servidor");
-
                 todosTickets = await response.json();
-
-                // Preencher selects dinamicamente com os valores existentes
                 preencherFiltros(todosTickets);
-
                 renderTickets(todosTickets);
             } catch (error) {
-                console.error("Erro ao buscar tickets:", error);
-                document.getElementById("ticket-container").innerHTML =
-                    `<p class="text-danger">Erro ao carregar tickets.</p>`;
+                document.getElementById("ticket-container").innerHTML = `<p class="text-danger">Erro ao carregar tickets.</p>`;
             }
         }
 
         function preencherFiltros(tickets) {
             const statusSet = [...new Set(tickets.map(t => t.Status))];
             const grupoSet = [...new Set(tickets.map(t => t.Grupo))];
-
             const statusSelect = document.getElementById("filtro-status");
             const grupoSelect = document.getElementById("filtro-grupo");
 
@@ -235,7 +248,6 @@
                 opt.textContent = s;
                 statusSelect.appendChild(opt);
             });
-
             grupoSet.forEach(g => {
                 const opt = document.createElement("option");
                 opt.value = g;
@@ -243,15 +255,16 @@
                 grupoSelect.appendChild(opt);
             });
 
-            // quando mudar qualquer filtro, reaplicar
             statusSelect.addEventListener("change", aplicarFiltros);
             grupoSelect.addEventListener("change", aplicarFiltros);
             document.getElementById("filtro-prioridade").addEventListener("change", aplicarFiltros);
+            document.getElementById("campo-pesquisa").addEventListener("input", aplicarFiltros);
         }
 
         function renderTickets(tickets) {
             const container = document.getElementById("ticket-container");
             container.innerHTML = "";
+            container.classList.toggle("list-view", modoVisualizacao === "list");
 
             if (!tickets.length) {
                 container.innerHTML = `<p class="text-muted">Nenhum ticket encontrado.</p>`;
@@ -259,38 +272,50 @@
             }
 
             tickets.forEach(ticket => {
-                const card = document.createElement("div");
-                card.className = "col-md-6";
-                card.innerHTML = `
-                <div class="card card-ticket border-0 shadow-sm position-relative" style="--status-color: ${ticket.Cor_Status}">
-                    <div class="card-body">
-                        <!-- Botão Editar -->
+                if (modoVisualizacao === "card") {
+                    container.innerHTML += `
+            <div class="col-md-6">
+              <div class="card card-ticket border-0 shadow-sm" style="--status-color: ${ticket.Cor_Status}">
+                <div class="card-body">
+                                            <!-- Botão Editar -->
                         <a href="/ticket_editar/${ticket.ID}" class="btn btn-outline-secondary btn-sm rounded-circle shadow-sm position-absolute top-0 end-0 m-2" title="Editar Ticket">
                             <i class="bi bi-pencil"></i>
                         </a>
-                        <h5 class="card-title mt-2">
-                            <a href="/ticket_detalhes/${ticket.ID}" class="text-decoration-none text-dark">
-                                ${ticket.Titulo}
-                            </a>
-                        </h5>
-                        <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
-                            <span class="badge bg-light text-dark">
-                                Prioridade: ${ticket.Prioriedade ?? 'Não definida'}
-                            </span>
-                            <span class="badge" style="background-color: ${ticket.Cor_Status};">
-                                ${ticket.Status}
-                            </span>
-                            <span class="badge" style="background-color: ${ticket.Cor_Grupo};">
-                                ${ticket.Grupo}
-                            </span>
-                        </div>
-                        <small class="text-muted d-block mt-2">ID: ${ticket.ID}</small>
-                    </div>
+                    
+                  <h5 class="card-title"><a href="/ticket_detalhes/${ticket.ID}" class="text-decoration-none">${ticket.Titulo}</a></h5>
+                  <div class="d-flex gap-2 mt-2">
+                    <span class="badge bg-light text-dark">Prioridade: ${ticket.Prioriedade ?? 'N/A'}</span>
+                    <span class="badge" style="background-color:${ticket.Cor_Status}">${ticket.Status}</span>
+                    <span class="badge" style="background-color:${ticket.Cor_Grupo}">${ticket.Grupo}</span>
+                  </div>
+                  <small class="text-muted">ID: ${ticket.ID}</small>
                 </div>
-            `;
-                container.appendChild(card);
+              </div>
+            </div>`;
+                } else {
+                    container.innerHTML += `
+            <div class="card card-ticket shadow-sm" style="--status-color:${ticket.Cor_Status}">
+              <div class="card-body">
+                                                            <!-- Botão Editar -->
+                        <a href="/ticket_editar/${ticket.ID}" class="btn btn-outline-secondary btn-sm rounded-circle shadow-sm position-absolute top-0 end-0 m-2" title="Editar Ticket">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                
+                <div>
+                  <h6 class="card-title"><a href="/ticket_detalhes/${ticket.ID}">${ticket.Titulo}</a></h6>
+                  <small>ID: ${ticket.ID}</small>
+                </div>
+                <div>
+                  <span class="badge bg-light text-dark">${ticket.Prioriedade ?? 'N/A'}</span>
+                  <span class="badge" style="background-color:${ticket.Cor_Status}">${ticket.Status}</span>
+                  <span class="badge" style="background-color:${ticket.Cor_Grupo}">${ticket.Grupo}</span>
+                </div>
+              </div>
+            </div>`;
+                }
             });
         }
+
 
         async function logout() {
             try {
@@ -328,6 +353,8 @@
             const btnUsuario = document.querySelector(".username-btn");
             if (btnUsuario) btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
             fetchTickets();
+            document.getElementById("btnCard").addEventListener("click", () => { modoVisualizacao = "card"; aplicarFiltros(); });
+            document.getElementById("btnList").addEventListener("click", () => { modoVisualizacao = "list"; aplicarFiltros(); });
         });
     </script>
 
