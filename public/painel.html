@@ -134,7 +134,7 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Tickets Abertos</div>
-                                <div  id="tickets-abertos" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
+                                <div id="tickets-abertos" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-ticket-perforated fa-2x text-secondary"></i>
@@ -151,7 +151,7 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     Pessoas Cadastradas</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800 stat-number">245</div>
+                                <div id="pessoas-cadastradas" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-people fa-2x text-warning"></i>
@@ -168,7 +168,7 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                     Receita do Mês</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800 stat-number">R$ 24.500</div>
+                                <div id="total-receita" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">R$ 0,00</div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-cash-coin fa-2x text-info"></i>
@@ -185,7 +185,7 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                     Pendências</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800 stat-number">8</div>
+                                <div id="total-pendencias" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-exclamation-triangle fa-2x text-danger"></i>
@@ -432,6 +432,35 @@
 
             }
         }
+        async function carregarEstatisticas() {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            try {
+                const response = await fetch('/api/estatistica', {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) throw new Error("Erro ao buscar estatísticas");
+
+                const data = await response.json();
+
+                // Atualiza os cards principais
+                document.getElementById("tickets-abertos").textContent = data.tickets.abertos ?? 0;
+                document.getElementById("pessoas-cadastradas").textContent = data.cadastros.pessoas ?? 0;
+                document.getElementById("total-receita").textContent = `R$ ${(data.financeiro.total_entrada || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+                document.getElementById("total-pendencias").textContent = data.tickets.encerrados ?? 0;
+
+                console.log("📊 Estatísticas carregadas:", data);
+
+            } catch (error) {
+                console.error("Erro ao carregar estatísticas:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", carregarEstatisticas);
     </script>
 </body>
 
