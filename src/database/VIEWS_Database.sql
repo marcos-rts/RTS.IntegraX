@@ -57,9 +57,9 @@ SELECT
     Banco.nome AS nome_Banco,
     Tabela.nome AS nome_tabela
 FROM
-    RTS_IntegraX.RTS_status Status
-    LEFT JOIN RTS_IntegraX.RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
-    LEFT JOIN RTS_IntegraX.RTS_tabela Tabela on Status.tabela_id = Tabela.id;
+    RTS_status Status
+    LEFT JOIN RTS_tipoBanco Banco on Status.tipoBanco_id = Banco.id
+    LEFT JOIN RTS_tabela Tabela on Status.tabela_id = Tabela.id;
 
 -- CRIAÇÃO DE VIEWS PARA GRUPOS
 CREATE VIEW
@@ -69,8 +69,8 @@ SELECT
     Grupo.nome AS Grupo_nome,
     Banco.nome AS Banco_nome
 FROM
-    RTS_IntegraX.RTS_grupo Grupo
-    LEFT JOIN RTS_IntegraX.RTS_tipoBanco Banco on Grupo.tipoBanco_id = Banco.id;
+    RTS_grupo Grupo
+    LEFT JOIN RTS_tipoBanco Banco on Grupo.tipoBanco_id = Banco.id;
 
 -- CRIAÇÃO DE VIEWS PARA PESSOAS SIMPLES
 CREATE VIEW
