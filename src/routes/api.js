@@ -48,6 +48,10 @@ router.use('/people', rotasPessoas);
 const rotasAuditoria = require('./audit');
 router.use('/auditoria', rotasAuditoria);
 
+// Estatísticas 
+const rotasEstatisticas = require('./estatistica');
+router.use('/estatistica', rotasEstatisticas);
+
 // ⚙️ Módulo Tickets
 try {
     const setupTicketsModule = require('../modules/services/controle_tickets/tickets.module');
