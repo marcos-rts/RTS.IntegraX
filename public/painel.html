@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="css/painel.css" rel="stylesheet">
     <title>RTS IntegraX</title>
 
     <script>
@@ -49,7 +50,9 @@
     <!-- Navbar -->
     <nav class="navbar navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/painel">RTS IntegraX</a>
+            <a class="navbar-brand" href="/painel">
+                <i class="bi bi-shield-check me-2"></i>
+                RTS IntegraX</a>
             <!-- Botão de menu -->
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
@@ -104,14 +107,212 @@
         </div>
     </nav>
 
-    <main class="container mt-5 pt-5">
-        <div class="p-4 bg-light rounded shadow-sm">
-            <h1 class="mb-4">Bem-vindo ao RTS IntegraX</h1>
-            <p>Aqui você pode navegar pelos módulos do sistema.</p>
-            <!-- Aqui vai o conteúdo central de cada módulo -->
+    <main class="container main-content">
+        <!-- Seção de boas-vindas -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card welcome-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="mb-2 fw-bold" id="welcome-title">Bem-vindo ao RTS IntegraX</h1>
+                            <p class="mb-0">Sistema integrado de gestão empresarial</p>
+                        </div>
+                        <div class="col-md-4 text-end d-none d-md-block">
+                            <i class="bi bi-graph-up-arrow display-4 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards de estatísticas -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Tickets Abertos</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 stat-number">12</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-ticket-perforated fa-2x text-secondary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Pessoas Cadastradas</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 stat-number">245</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-people fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Receita do Mês</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 stat-number">R$ 24.500</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-cash-coin fa-2x text-info"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card dashboard-card h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Pendências</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800 stat-number">8</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="bi bi-exclamation-triangle fa-2x text-danger"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Módulos do sistema -->
+        <div class="row mb-5">
+            <div class="col-12 mb-4">
+                <h3 class="mb-3">Módulos do Sistema</h3>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card dashboard-card card-tickets h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-ticket-perforated module-icon"></i>
+                        <h5 class="card-title">Tickets</h5>
+                        <p class="card-text">Gerencie solicitações, problemas e suporte técnico através do sistema de
+                            tickets.</p>
+                        <a href="/lista_tickets" class="btn btn-primary mt-2">Acessar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card dashboard-card card-pessoas h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-people module-icon"></i>
+                        <h5 class="card-title">Pessoas</h5>
+                        <p class="card-text">Controle de clientes, fornecedores e colaboradores em um só lugar.</p>
+                        <a href="/pessoas" class="btn btn-warning mt-2">Acessar</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card dashboard-card card-finanx h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-cash-coin module-icon"></i>
+                        <h5 class="card-title">FinanX</h5>
+                        <p class="card-text">Controle financeiro completo com relatórios e análise de desempenho.</p>
+                        <a href="/finanxIndex" class="btn btn-success mt-2">Acessar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações rápidas e atividades recentes -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Ações Rápidas</h6>
+                    </div>
+                    <div class="card-body quick-actions">
+                        <div class="row">
+                            <div class="col-sm-6 mb-3">
+                                <a href="/lista_tickets"
+                                    class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-plus-circle me-2"></i> Novo Ticket
+                                </a>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <a href="/pessoas"
+                                    class="btn btn-outline-success w-100 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-person-plus me-2"></i> Nova Pessoa
+                                </a>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <a href="/finanxIndex"
+                                    class="btn btn-outline-info w-100 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-receipt me-2"></i> Nova Transação
+                                </a>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <a href="/relatorios"
+                                    class="btn btn-outline-warning w-100 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-graph-up me-2"></i> Relatórios
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow h-100">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Atividades Recentes</h6>
+                    </div>
+                    <div class="card-body recent-activity" id="listaAuditoria">
+                        <div class="activity-item">
+                            <h6 class="mb-1">Carregando</h6>
+                            <p class="mb-1">Obtendo dados de auditoria</p>
+                            <small class="activity-time">Agora</small>
+                        </div>
+                        <!-- 
+                        <div class="activity-item">
+                            <h6 class="mb-1">Novo ticket criado</h6>
+                            <p class="mb-1">Problema com acesso ao sistema relatado por João Silva</p>
+                            <small class="activity-time">Há 15 minutos</small>
+                        </div>
+                        <div class="activity-item">
+                            <h6 class="mb-1">Pessoa cadastrada</h6>
+                            <p class="mb-1">Novo cliente Tech Solutions adicionado ao sistema</p>
+                            <small class="activity-time">Há 2 horas</small>
+                        </div>
+                        <div class="activity-item">
+                            <h6 class="mb-1">Transação registrada</h6>
+                            <p class="mb-1">Pagamento de R$ 1.250,00 recebido da empresa XYZ</p>
+                            <small class="activity-time">Hoje às 09:30</small>
+                        </div>
+                        <div class="activity-item">
+                            <h6 class="mb-1">Ticket resolvido</h6>
+                            <p class="mb-1">Problema de rede solucionado para Maria Santos</p>
+                            <small class="activity-time">Ontem às 16:45</small>
+                        </div> 
+                        -->
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
-
 
     <script src="bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -125,15 +326,32 @@
             const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
 
             const btnUsuario = document.querySelector(".username-btn");
-            const saudacao = document.querySelector("h3");
+            const welcomeTitle = document.getElementById("welcome-title");
 
             if (btnUsuario) {
-                btnUsuario.innerHTML = `<i class="bi bi-person-circle"></i> ${nomeUsuario}`;
+                btnUsuario.innerHTML = `<i class="bi bi-person-circle me-2"></i> ${nomeUsuario}`;
             }
 
-            if (saudacao) {
-                saudacao.textContent = `Bem-vindo, ${nomeUsuario} 👋`;
+            if (welcomeTitle) {
+                welcomeTitle.textContent = `Bem-vindo, ${nomeUsuario} 👋`;
             }
+
+            const listaAuditoria = document.getElementById("listaAuditoria");
+
+
+            carregarAuditoria();
+
+            // Simulação de dados para os cards de estatísticas
+            // Em um sistema real, você buscaria esses dados de uma API
+            setTimeout(() => {
+                // Atualizar estatísticas (simulação)
+                document.querySelectorAll('.stat-number')[0].textContent = Math.floor(Math.random() * 20) + 5;
+                document.querySelectorAll('.stat-number')[1].textContent = Math.floor(Math.random() * 100) + 200;
+                document.querySelectorAll('.stat-number')[2].textContent = 'R$ ' + (Math.floor(Math.random() * 50000) + 10000).toLocaleString('pt-BR');
+                document.querySelectorAll('.stat-number')[3].textContent = Math.floor(Math.random() * 15) + 1;
+            }, 1000);
+
+
         });
 
         async function logout() {
@@ -164,6 +382,54 @@
             } catch (err) {
                 console.error("Erro ao tentar logout:", err);
                 alert("Erro inesperado ao sair.");
+            }
+        }
+
+        // Carregar atividades recentes
+        async function carregarAuditoria() {
+            const div = document.getElementById("listaAuditoria");
+            try {
+                const token = localStorage.getItem("token");
+                const response = await fetch("/api/auditoria/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+
+                if (!response.ok) throw new Error("Erro ao carregar auditoria");
+
+                const auditoria = await response.json();
+                // console.log(auditoria);
+                // div.innerHTML = ""; // Limpa o conteúdo atual
+                // if (!auditoria.lenght) {
+                //     div.innerHTML = `<div class="activity-item">
+                //             <h6 class="mb-1">Nenhuma atividade recente</h6>
+                //             <p class="mb-1">Ainda não há registros de atividades.</p>
+                //             <small class="activity-time">NULL</small>
+                //             </div>`;
+                //     return;
+                // }
+
+                div.innerHTML = ""; // Limpa o conteúdo atual
+                auditoria.forEach((item) => {
+                    div.innerHTML += `
+                        <div class="activity-item">
+                            <h6 class="mb-1">${item.acao} - ${item.tabela}</h6>
+                            <p class="mb-1">${item.endpoint}</p>
+                            <small class="activity-time">${new Date(item.feito_em).toLocaleString('pt-BR')}</small>
+                        </div>
+                        `;
+                });
+
+            } catch (error) {
+                console.error("Erro ao carregar auditoria:", error);
+                div.innerHTML = `<div class="activity-item">
+                    <h6 class="mb-1">Erro ao carregar atividades</h6>
+                    <p class="mb-1">Não foi possível obter os dados de auditoria.</p>
+                    <small class="activity-time">NULL</small>   
+                </div>`;
+
             }
         }
     </script>
