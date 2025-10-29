@@ -134,7 +134,8 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                     Tickets Abertos</div>
-                                <div id="tickets-abertos" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
+                                <div id="tickets-abertos" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0
+                                </div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-ticket-perforated fa-2x text-secondary"></i>
@@ -151,7 +152,8 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                     Pessoas Cadastradas</div>
-                                <div id="pessoas-cadastradas" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
+                                <div id="pessoas-cadastradas"
+                                    class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-people fa-2x text-warning"></i>
@@ -168,7 +170,8 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                     Receita do Mês</div>
-                                <div id="total-receita" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">R$ 0,00</div>
+                                <div id="total-receita" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">R$
+                                    0,00</div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-cash-coin fa-2x text-info"></i>
@@ -185,7 +188,8 @@
                             <div class="col mr-2">
                                 <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                     Pendências</div>
-                                <div id="total-pendencias" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0</div>
+                                <div id="total-pendencias" class="h5 mb-0 font-weight-bold text-gray-800 stat-number">0
+                                </div>
                             </div>
                             <div class="col-auto">
                                 <i class="bi bi-exclamation-triangle fa-2x text-danger"></i>
@@ -324,12 +328,14 @@
             }
 
             const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
+            const tipoUsuario = localStorage.getItem("usuario_tipo") || "Comum";
+
 
             const btnUsuario = document.querySelector(".username-btn");
             const welcomeTitle = document.getElementById("welcome-title");
 
             if (btnUsuario) {
-                btnUsuario.innerHTML = `<i class="bi bi-person-circle me-2"></i> ${nomeUsuario}`;
+                btnUsuario.innerHTML = `<i class="bi bi-person-circle me-2"></i> ${nomeUsuario} (${tipoUsuario})`;
             }
 
             if (welcomeTitle) {
@@ -338,6 +344,12 @@
 
             const listaAuditoria = document.getElementById("listaAuditoria");
 
+            // Define link de perfil conforme tipo
+            const perfilLink = tipoUsuario === "Admin" ? "/perfil_admin" : "/perfil_usuario";
+            const menuPerfil = document.createElement("li");
+            menuPerfil.innerHTML = `<a class="dropdown-item" href="${perfilLink}">
+            <i class="bi bi-person"></i> Perfil</a>`;
+            document.querySelector(".dropdown-menu").prepend(menuPerfil);
 
             carregarAuditoria();
 
