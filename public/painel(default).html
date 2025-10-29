@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="css/painel.css" rel="stylesheet">
+    <title>RTS IntegraX</title>
+
+    <script>
+        // Função para verificar validade do token
+        function parseJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+
+                return JSON.parse(jsonPayload);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            // Token não existe, redireciona para login
+            window.location.href = "/";
+        } else {
+            const payload = parseJwt(token);
+            const now = Math.floor(Date.now() / 1000);
+
+            if (!payload || payload.exp < now) {
+                // Token expirado
+                localStorage.removeItem('token');
+                window.location.href = "/";
+            }
+
+            // Caso queira: 
+            console.log("Token válido. Bem-vindo!");
+        }
+    </script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/painel">
+                <i class="bi bi-shield-check me-2"></i>
+                RTS IntegraX</a>
+            <!-- Botão de menu -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Fim do botão de menu -->
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+                aria-labelledby="offcanvasDarkNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Menu Opções</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle username-btn" href="#" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Carregando...
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="/controle_usuarios"> <i
+                                            class="bi bi-person-gear"></i> Controle de Usuarios</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#" onclick="logout()">Sair</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/painel"><i
+                                    class="bi bi-speedometer2"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/lista_tickets"><i class="bi bi-ticket"></i> Tickets</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/pessoas"><i class="bi bi-people"></i> Pessoas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/finanxIndex"><i class="bi bi-cash-coin"></i> Finanx</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex mt-3" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container main-content">
+        <!-- Seção de boas-vindas -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card welcome-card p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="mb-2 fw-bold" id="welcome-title">Bem-vindo ao RTS IntegraX</h1>
+                            <p class="mb-0">Sistema integrado de gestão empresarial</p>
+                        </div>
+                        <div class="col-md-4 text-end d-none d-md-block">
+                            <i class="bi bi-graph-up-arrow display-4 opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </main>
+
+    <script src="bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "/"; // ou login.html, se estiver separado
+                return;
+            }
+
+            const nomeUsuario = localStorage.getItem("usuario_nome") || "Usuário";
+
+            const btnUsuario = document.querySelector(".username-btn");
+            const welcomeTitle = document.getElementById("welcome-title");
+
+            if (btnUsuario) {
+                btnUsuario.innerHTML = `<i class="bi bi-person-circle me-2"></i> ${nomeUsuario}`;
+            }
+
+            if (welcomeTitle) {
+                welcomeTitle.textContent = `Bem-vindo, ${nomeUsuario} 👋`;
+            }
+
+        });
+
+        async function logout() {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    // Já está deslogado
+                    window.location.href = "/";
+                    return;
+                }
+
+                const response = await fetch("/api/autenticacao/logout", {
+                    method: "POST", // ou DELETE, se quiser mais semântico
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    localStorage.clear();
+                    window.location.href = "/"; // Redireciona para a home após logout
+                } else {
+                    const result = await response.json();
+                    console.error("Erro no logout:", result.message);
+                    alert("Erro ao sair: " + result.message);
+                }
+            } catch (err) {
+                console.error("Erro ao tentar logout:", err);
+                alert("Erro inesperado ao sair.");
+            }
+        }
+
+    </script>
+</body>
+
+</html>
