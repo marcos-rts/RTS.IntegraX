@@ -47,6 +47,10 @@ router.use('/people', rotasPessoas);
 const rotasPeopleVinculo = require('../modules/people/peopleVinculo.routes');
 router.use('/people/vinculo', rotasPeopleVinculo);
 
+// ⚙️ Empresa
+const rotasEmpresa = require('../modules/empresa/routes/empresa.routes');
+router.use('/empresa', rotasEmpresa);
+
 // Auditoria 
 const rotasAuditoria = require('./audit');
 router.use('/auditoria', rotasAuditoria);
