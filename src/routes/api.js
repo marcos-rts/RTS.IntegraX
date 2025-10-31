@@ -41,8 +41,11 @@ router.get('/status', authMiddleware, status);
 router.get('/grupo', authMiddleware, grupo);
 
 // ⚙️ Pessoas
-const rotasPessoas = require('../modules/people/people.route');
+const rotasPessoas = require('../modules/people/people.routes');
 router.use('/people', rotasPessoas);
+
+const rotasPeopleVinculo = require('../modules/people/peopleVinculo.routes');
+router.use('/people/vinculo', rotasPeopleVinculo);
 
 // Auditoria 
 const rotasAuditoria = require('./audit');
